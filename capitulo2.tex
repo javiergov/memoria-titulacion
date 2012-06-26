@@ -1,0 +1,261 @@
+\chapter{Investigación sobre protocolos de ruteo}
+%Breve introducción
+La primera etapa del proyecto consiste en investigar los algoritmos de ruteo que se han propuesto en la literatura, explorando la clasificación de estos y describiendo en detalle los principales algoritmos jerárquicos. Posteriormente, se describen los protocolos que provee el sistema TinyOS (el que utiliza el TMoteSky, y sobre el cuál se desarrollarán las siguientes etapas de este trabajo) y los que especifica el estándar de red Zigbee. Al final el capítulo, se revisan los resultados obtenidos por algoritmos que se han propuesto en la literatura y la selección de uno de ellos para su implementación.
+
+\section{Algoritmos de ruteo propuestos en la literatura}
+%Introducción
+En la literatura se han propuesto diversos algoritmos de ruteo y que se clasifican de distintas maneras. La clasificación más recurrente se realiza '' por topología de la red '' \cite{WSNSurvey} que agrupa los protocolos como: ''flat routing'', ''Hierarchical routing'' y ''Geo routing''.\\
+
+\textbf{Flat routing:} En este tipo de algoritmos, todos los nodos tienen el mismo rol en el proceso de ruteo participando en el reenvío de los mensajes. Se asume que el tráfico ocurre de manera aleatoria y direccionado a cualquier punto de la red. Estos protocolos tienen la ventaja de balancear la carga en la red y ser flexibles en cuanto a tolerar las fallas o cambios en la red.\\
+
+\textbf{Hierachical routing:} Estos algoritmos utilizan estructuras jerárquicas, donde los nodos asumen distintos roles en el proceso de ruteo. Estos protocolos están orientados a la recolección, donde el tráfico se genera de manera aleatoria o sincronizada, y direccionado a uno o varios puntos de recolección.\\
+
+\textbf{Geographical Routing:} Estos algoritmos utilizan la posición geográfica del nodo para realizar el proceso de ruteo. Usualmente estos protocolos se dividen en dos sub categorías: ''Basados en posición'', donde se realiza el ruteo de mensajes unicast (dirigidos a un nodo en particular) en función de la posición geográfica o relativa de un nodo; y los del tipo ''Geocasting'' donde los mensajes son ruteados hacia grandes grupos de nodos, en función de la posición del grupo.\\
+
+Para sistemas de recolección de datos que necesitan operaciones de bajo consumo, se indica que los algoritmos jerárquicos son los más adecuados, ya que están diseñados para este tipo de escenarios \cite{WSNSurvey}. A continuación, en las secciones 2.1.1, 2.1.2 y 2.1.3, se describirán los algoritmos jerárquicos más recurrentes en la literatura.
+
+%Descripción de algunos algoritmos
+%Protocolo LEACH
+\subsection{Low Energy Adaptive Clustering Hierarchy}
+%¿Qué es LEACH?
+Low Energy Adaptive Clustering Hierarchy (LEACH) \cite{LeachOriginal}es un algoritmo para redes de sensores inalámbricos, diseñado para: extender el tiempo de autonomía de la red, mediante la distribución de las tareas de red de manera homogénea; y reducir el tráfico de mensajes hacia la estación base, mediante el uso de agregación de datos.\\
+
+%En general, ¿Cómo funciona?
+LEACH organiza la red en clusters, donde cada cluster está formado por un ``Cluster Head'' y ``Cluster Members''. En cada cluster, el Cluster Head es el encargado de recibir y reenviar los mensajes generados por los Clusters Member. Estos roles están asociados a distintos consumos energéticos según el modelo energético que se describe más adelante, debido a la distinta cantidad de mensajes que deben manejar. LEACH utiliza la rotación aleatoria del rol de Cluster Head para distribuir de manera homogénea el consumo energético dentro de la red de sensores. Para permitir escalabilidad y robustez, utiliza coordinación local de los nodos, permitiendo una red dinámica. Además, sugiere realizar agregación de datos para disminuir el tráfico de mensajes a hacia la estación base.
+
+\begin{center}
+\begin{figure}[h!]
+\centering
+ \includegraphics[scale=0.5]{imgs/EstructuraLeach.eps} 
+\caption{Estructura de clusters de LEACH.}
+\end{figure}
+\end{center}
+
+%Descripción detallada
+
+%Descripción del modelo energético
+%\subsubsection{Descripción del modelo energético utilizado para el diseño de LEACH}
+%LEACH fue ideado para realizar un uso eficiente de la energía basándose en el ``modelo energético de primer orden``. Este modelo plantea que la %energía utilizada para la transmisión de un paquete es la suma entre la energía utilizada en la electrónica de transmisión y la energía utilizada para amplificar la señal para obtener una relación de señal ruido aceptable.
+%\begin{center}
+% $
+%  E_{Tx}(k,d)=E_{elec}*k+\epsilon_{amp}*k*d^2
+% $
+%\end{center}
+
+%Para la energía utilizada en la recepción, el modelo solo considera la energía utilizada en la electrónica de recepción.
+%\begin{center}
+% $
+%   E_{Rx}(k) = E_{elec}*k
+% $
+%\end{center}
+
+%Descripción del funcionamiento
+\subsubsection{Descripción del funcionamiento}
+El algoritmo se construye bajo los siguientes supuestos:
+\begin{enumerate}
+ \item Cada nodo de la red puede modificar su potencia de transmisión.
+ \item Cada nodo de la red tiene comunicación directa con el recolector de datos.
+ \item La red es homogénea, todos los nodos tienen los mismos recursos energéticos y de radio transmisión.
+\end{enumerate}
+
+LEACH organiza la red en forma jerárquica, dividiéndola en clusters. Cada cluster posee un ``cluster head'' encargado de:
+
+\begin{itemize}
+ \item Recolectar los datos entregados periódicamente por los cluster members.
+ \item Utilizar una función de agregación para eliminar los datos redundantes.
+ \item Enviar los datos agregados hacia el punto de recolección utilizando comunicación directa.
+ \item Vía broadcast, proveer a los cluster members una programación TDMA (Time Division Multiple Access), asignándole a cada cluster member una ventana de tiempo para transmitir información.
+\end{itemize}
+
+La organización de la red se realiza en forma periódica mediante rondas, cambiando en cada ronda la distribución y composición de los clusters. Cada ronda está dividida en dos fases: Fase Setup y Fase Steady. La fase setup consiste en dos etapas: primero, se realiza la selección del cluster head; segundo, se realiza la formación del cluster. La fase steady consiste en la recolección, agregación y envío hacia el punto de recolección de los datos.\\
+
+El proceso de selección del cluster head asegura que este rol sea asignado  a un nodo durante el tiempo de duración de una ronda y pase a otro cuando comience la siguiente ronda, de manera que el consumo energético asociado a este rol se distribuya por todos los nodos de la red.\\
+
+El proceso de selección del cluster head sigue el siguiente algoritmo.
+
+\begin{enumerate}
+ \item Un nodo n cualquiera genera un número flotante aleatorio, v, entre 0 y 1.
+ \item El nodo compara v con el ``umbral de selección de cabeza de cluster'',T(n).
+ \item El nodo se convierte en cabeza de cluster si v\textless T(n).
+\end{enumerate}
+ 
+El valor del umbral de selección de cabeza de cluster, T(n), está diseñado para asegurar que exista una cantidad de nodos, con probabilidad P, que sea elegida como cluster head en una ronda.
+
+\[T(n) = \left\{ 
+\begin{array}{l l}
+  0 & \quad \mbox{si $n$ }\notin G\\
+  P/(1-P*(r mod(1/P))) & \quad \mbox{if $n$ is odd}\\
+\end{array} \right. \] 
+
+G representa el conjunto de nodos que ha sido seleccionado como cluster head en las últimas 1 sobre P rondas, y r denota la ronda actual. El parámetro P denota la probabilidad requerida de cluster heads dentro del total de nodos de la red. En general, P es un parámetro arbitrario, sin embargo, existen proposiciones para calcular el parámetro P para optimizar el consumo energético \cite{LeachOptimo}. Cuando el proceso de selección ha terminado, cada cluster head informa su nuevo rol en la red vía broadcast. Cuando un nodo que no ha sido elegido como cluster head recibe el aviso de una cluster head, el nodo debe asociarse a ese cluster, convirtiéndose en cluster member. Si el nodo recibe varios avisos de cluster head, el criterio de decisión es asociarse al cluster head del cuál recibió el aviso con el mayor RSSI (Receive Signal Strength Indication, que indica la intensidad de la señal en dBm) o LQI (Link Quality Indicator, que indica la calidad del enlace de capa MAC, con valor adimensional entre 0 y 255).\\
+
+El protocolo LEACH, en su forma original, considera que todos los nodos tienen comunicación directa con el punto de recolección, por lo que la red no utilizaría una ''comunicación multi-hop real''. Para solucionar este problema se han propuesto algunas modificaciones como: Multi-path, Multi-hop Hierarchical Routing\cite{mumhr}, que es una extensión de LEACH que utiliza comunicación entre cabezas de clusters; y M-LEACH{mleach}, donde se permite que sólo los nodos que tienen comunicación con el punto de recolección tomen el rol de cabeza de cluster, y se plantea un esquema de ''clusters multi-hop'' para el resto de los nodos.
+
+%Protocolo PEGASIS
+\subsection{Power-Efficient Gathering in Sensor Information Systems}
+%¿Qué es PEGASIS?
+Power-Efficient Gathering in Sensor Information Systems (PEGASIS) es un protocolo diseñado para: Extender la autonomía de la red aumentando la eficiencia de la energía y distribuyendo de manera uniforme el consumo a través de todos los nodos de la red; reducir el retraso en que incurre el envío de los mensajes en el camino hacia el punto recolector de datos.\\
+
+%¿Cómo funciona?
+Este algoritmo organiza la red en cadenas que realizan el ruteo y agregación de los mensajes que son enviados por los nodos miembros de una cadena hacia el nodo recolector de datos. Dentro de una cadena existen un líder de cadena y el resto funcionan sólo como miembros de la cadena. El líder se encarga de la organización de la cadena y de entregar los mensajes hacia el recolector de datos, mientras que los miembros se encargan de reenviar los mensajes en dirección hacia el líder y realizar agregación de datos para reducir el tráfico. PEGASIS utiliza una rotación circular (estilo round-robin) para distribuir el rol del líder y, en consecuencia, el consumo energético asociado a ese rol. PEGASIS utiliza el mismo modelo energético que se describió en la sección 2.1.1 para LEACH.
+
+\begin{center}
+\begin{figure}[h!]
+\centering
+ \includegraphics[scale=0.5]{imgs/EstructuraPegasis.eps} 
+\caption{Estructura de cadenas de PEGASIS.}
+\end{figure}
+\end{center}
+
+\subsubsection{Descripción del funcionamiento}
+El algoritmo de operación funciona de la siguiente manera:
+\begin{enumerate}
+ \item Un nodo que se considere como el más lejano de el punto de recolección, inicia la construcción de una cadena asociando a su nodo más cercano en dirección hacia el punto de recolección.
+ \item El nodo recién asociado, asocia a la cadena al nodo más cercano en dirección hacia el punto de recolección.
+ \item El paso 2 continúa hasta que todos los nodos de la red se encuentren asociados a una cadena.
+ \item Cuando todos los nodos están asociados, comienza la etapa de rondas. 
+\end{enumerate}
+
+Al inicio de cada ronda, se elige el nuevo líder de la cadena utilizando la función de elección de líder, L(r).
+
+\begin{center}
+ $
+   L_{r}(r) = r \, mod\,  N 
+ $
+\end{center}
+Donde $L_{r}$ corresponde al ID del nodo líder, $N$ al número total de nodos en la red y $r$ a la ronda actual.\\
+
+Esta versión de PEGASIS no cumple el objetivo de disminuir el retraso en la entrega del mensaje hacia el recolector de datos, es más, lo incrementa, por lo que se ha desarrollado otra versión llamada Hierarchical Pegasis\cite{hpegasis}. Además, Hierarchical Pegasis organiza las cadenas por niveles de profundidad y utiliza comunicación entre cadenas para obtener una comunicación multi-hop.
+
+\subsection{Threshold sensitive Energy Efficient sensor Network protocol}
+TEEN es un algoritmo jerárquico que recoge las ideas de LEACH (ver sección 2.1.1), división en cluster y comunicación directa aleatoria, llevándolas a un contexto de red reactiva. Las redes de sensores reactivas son aquellas en que un nodo reacciona inmediatamente a cambios repentinos y drásticos del valor del atributo sensado. 
+
+\subsubsection{Descripción del funcionamiento}
+El algoritmo de operación funciona de la siguiente manera:
+\begin{enumerate}
+ \item Organiza la red en clusters, utilizando el algoritmo LEACH.
+ \item Periódicamente se distribuye a los cabeza de cluster un umbral para los datos ruteados.
+ \item Los miembros del cluster toman mediciones periódicamente y las envían a la cabeza del cluster.
+ \item Si el valor medido supera el umbral establecido, la cabeza del cluster reenviará el mensaje hacia el punto de recolección.
+ \item El rol de cabeza de cluster rota a través de los miembros del cluster al igual que en LEACH. 
+\end{enumerate}
+
+La utilización de un umbral para las mediciones generadas por los nodos no tiene un impacto en la selección de ruta para los mensajes, sino que es utilizada para reducir la magnitud del tráfico hacia el punto de recolección.
+%Protocolo HEED
+%\subsection{Hybrid, Energy-Efficient, Distributed}
+%Hybrid, Energy-Efficient, Distributed (HEED) es un protocolo de clusters distribuídos (similar a LEACH) que provee un algoritmo de control de topología que estructura la red en base a un costo híbrido función de la energía y la comunicación. Los principales objetivos son: Prolongar el tiempo de vida de la red distribuyendo el consumo energía, terminar el proceso de formación de cluster en un número constante de iteraciones, acotar el overhead de control linealmente en función del número de nodos y producir cluster heads bien distribuídas. Con el objetivo de alcanzar  mayor área de cobertura de la red, este algoritmo permite la comunicación inter-cluster.\\
+
+%El diseño de HEED está basado sobre los siguientes supuestos:
+%\begin{itemize}
+ %\item Todos los nodos tienen control de su potencia de transmisión.
+ %\item Los sensores se mantienen en posiciones fijas.
+ %\item Los links son simétricos.
+ %\item Los nodos no tienen información sobre su posición.
+%\end{itemize}
+
+ %En este paper se asume que la principal causa de fallas es el agotamiento de las baterías. JEJE..buena justificación.
+
+
+%\subsection{Descripción del funcionamiento}
+%La primera etapa en la operación de este protocolo es la formación de los clusters.  Para formar un cluster, el protocolo considera los siguientes parámentros.
+
+%\begin{description}
+ %\item \textbf{Energía residual:} Puede ser obtenida directamente de un sensor de voltaje o estimada si es que se conocen parámetros como energía consumida por bit sensado, energía para procesamiento, y energía para comunicación.
+
+ %\item \textbf{Costo de comunicación:} Se refiere a un indicador que puede ser función de la proximidad electromagnética entre vecinos o la densidad de un cluster. 
+ %\end{description}
+
+%El primer parámetro se utiliza para elegir inicialmente el set de clusters, el segundo se utiliza como variable de decisión para que un nodo cluster member seleccione a que cluster se unirá.
+
+\section{Protocolos de ruteo implementados en TinyOS}
+
+TinyOS provee, por defecto, una pila de comunicación por radio que implementa sólo hasta la comunicación directa. Sin embargo, los desarrolladores unificaron en dos protocolos de red las necesidades más recurrentes de los usuarios\cite{What2ndGenHolds}. Estos protocolos se proveen de forma opcional y el programador debe habilitarlos por medio del cableado de los componentes e instrucciones adicionales en el Makefile.
+
+\subsection{Dissemination }
+%¿Qué es diseminación?
+Dissemination\cite{TEP118} es un protocolo orientado a mantener la consistencia eventual de variables compartidas a lo largo de la red. Cada nodo mantiene copias locales de las variables compartidas, cuando el servicio de diseminación le informa a un nodo que el valor se ha actualizado, este intercambia paquetes con un nodo que tenga el valor actual. Así, luego de un periodo de tiempo, todos los nodos tendrán el valor actualizado.\\
+
+%¿Cómo funciona?
+La implementación de Dissemination utiliza el algoritmo Trickle \cite{TricklePaper} para comunicar los valores de las variables compartidas. La idea de Trickle es que periódicamente los nodos comunican vía broadcast su copia del set de variables compartidas a sus vecinos, pero no realizan esta función si es que han recibido recientemente una copia idéntica de las variables compartidas a las que tienen almacenada. Cuando un nodo recibe una copia antigua del set de variables compartidas, realiza un broadcast para actualizar el set de sus vecinos. De esta forma, los nodos mantienen actualizadas las variables compartidas utilizando una inundación controlada de los mensajes de actualización.
+
+%Carácterísticas
+%Me aburrió también
+
+
+%\subsection{TYMO}
+%¿Qué es TYMO?
+%Tymo es la implementación del protocolo DYMO (ref) sobre TinyOS. Es un protocolo punto a punto (aclaración), que mantiene pequeñas tablas de ruteo para cumplir con las limitaciones de memoria de un dispositivo embebido.\\ 
+%¿Cómo funciona?
+%Cuando un nodo necesita una ruta, disemina un mensaje Route Request(RREQ), el mensaje se distribuye por la red vía flooding(aclaración). Cuando el nodo llega al nodo destino o un nodo que tenga una ruta actualizada hacia el destino, responde con un Route Reply (RREP). TYMO permite que un mensaje RREQ o RREP acumule información de la ruta que sigue dentro del mismo mensaje, así un nodo origen, destino o intermedio puede obtener una gran cantidad de información de ruteo cuando recibe el mensaje. Cuando las rutas no son usadas por mucho tiempo, son eliminadas para que las entradas relacionadas en la tabla puedan ser reutilizadas. DYMO utiliza variable simples para determinar la calidad de una ruta, como el número de secuencia de los mensajes y la cuenta de saltos.
+
+%Se puede rellenar con un poquito más cierto....
+
+\subsection{Collection Tree Protocol}
+%¿Qué es CTP?
+CTP \cite{TEP123} provee una comunicación del tipo ''mejor esfuerzo'' entre un nodo y alguna raíz en la red, con la cual el nodo está relacionado. Es un protocolo que utiliza topología de árbol: algunos nodos pueden asumir el rol de raíz, recolectando los datos sensados por todos sus nodos hijos; los nodos que conforman las ramas se ocupan de tomar mediciones y reenviar hacia sus padres la información recolectada por sus hijos.\\
+
+%¿Cómo funciona?
+En CTP se forma un árbol de recolección, mediante asociaciones que utilizan el RSSI como variable de selección. Es un protocolo sin direcciones, ya que todos los mensajes son direccionados a la raíz. Utiliza tablas de ruteo que almacenan un indicador acumulativo que evalúa la congestión de una ruta (el ETX) como gradiente para establecer el próximo salto de un mensaje.\\
+
+Este protocolo ha sido especificado en el TEP 123 (TinyOS Enhancement Proposals) para su implementación. La especificación se ha finalizado en Enero del año 2009 y actualmente se están desarrollando pruebas sobre la implementación que ya está incluida en la distribución de TinyOS 2.X.
+
+%\subsection{Berkeley Low-Power IP Stack}
+%Damn it, este protocolo es bakan y cumple todo.
+%¿Qué es BLIP?
+%Berkeley Low-Power IP Stack (BLIP) es un protocolo que implementa IPv6 para redes de dispositivos TinyOS. Actualmente permite formar redes IP multihop con nodos que utilizan TinyOS y permite interoperabilidad con redes con otras redes IP, sin embargo, no cumple el estándar completamente. BLIP es la segunda implementación de este protocolo sobre TinyOS 2.x y en la última versión ha incluído soporte para el servicio LPL de TinyOS (aclaración).\\
+
+%¿Cómo funciona?
+%Es una red IP existen dispositivos hosts y routers. Cada mote que corre el stack BLIP funciona como un router, es capáz de reenviar paquetes y tomar decisiones de ruteo. Además, en BLIP existen los ``Edge routers'', que son los routers que pueden comunicar una red con otra, es decir, estos routers pueden funcionar como gateway para la red de sensores inalámbricos.
+
+%Agregar características ---ya me aburrí.
+
+\section{Selección de un esquema de recolección}
+%De lo general a lo particular
+Luego de investigar los algoritmos el objetivo es seleccionar el esquema de recolección que pueda generar los mejores resultados para la aplicación  descrita en la sección 1.3. Dado que la principal variable de diseño para un protocolo de redes de sensores inalámbricos es la energía consumida por los nodos y por la red, las métricas para comparar los algoritmos serán las relacionadas con el consumo energético. Se excluye el algoritmo TEEN, dado que es una modificación mínima a LEACH y que la aplicación para el sistema de monitoreo requiere que las mediciones sean recolectadas periódicamente.
+
+%Sección para comparar protocolos propuestos e implementados sobre sus métricas
+\subsection{Análisis comparativo de resultados}
+Para comparar los algoritmos descritos en la sección 2.1, se revisan publicaciones para determinar cuáles son las principales métricas para evaluar los protocolos descritos. La principales métricas que se utilizan para evaluar algoritmos de ruteo en la literatura son:
+
+\begin{itemize}
+\item \textbf{Porcentaje de nodos muertos, según la cantidad de rondas:} Esta métrica es la que se encuentra en todas las publicaciones que analizan estos protocolos. Como se ha descrito antes, una ronda corresponde al intervalo regular de tiempo en el cual la topología de la red se mantiene estática. Por otro lado, el concepto de ''nodo muerto'' varía según la publicación pero, en general, se refiere a un nodo que ha utilizado tanta cantidad de energía, que ya no puede realizar los procesos de comunicación inalámbrica.
+
+\item \textbf{Delay (retardo):} Esta métrica se refiere a la cantidad de tiempo que transcurre entre la generación de un paquete de datos en un punto específico de la red y el arribo de ese mensaje al punto de recolección de la red.
+
+%\item \textbf{Energía total disipada en la red:} Esta métrica se refiere a la energía disipada por la red, obtenida mediante la utilización de modelos energéticos, que proveen un valor para la energía en función de: distancia entre nodos, largo de los mensajes, supuestas características eléctricas y condiciones energéticas iniciales.
+\end{itemize}
+
+Según los resultados, los retardos en la transmisión de un mensaje desde fuente a destino son del orden de los milisegundos, en consecuencia, no son significativos frente a la tasa de generación de mensajes que se utilizan, por ejemplo, en el monitoreo de variables de suelo para aplicaciones relacionadas con la agronomía, donde la tasa de generación de mensajes es del orden de un mensaje por minuto. Por esta razón, se privilegian los resultados de las métrica ''porcentaje de nodos muertos, según la cantidad de rondas''.\\
+
+En la publicación original que introduce el algoritmo PEGASiS, se realiza una comparación entre el algoritmo LEACH y PEGASIS. Los resultados que se muestran en la figura 2.3 fueron obtenidos realizando una simulación en el simulador de redes NS2, utilizando una energía inicial de 1 [J] y un área de despliegue de 100[$m^2$].
+
+\begin{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{imgs/AnalisisComparativoProtocolosPAPERPEGASIS.eps}
+\caption{Comparación entre LEACH y PEGASIS de la publicación \cite{PegasysOriginal}, utilizando el número de rondas en función del porcentaje de nodos muertos.}
+\end{figure}
+\end{center}
+
+Según los resultados de esta publicación, se concluye que PEGASIS  permite un tiempo de operación de los nodos más extenso que LEACH, e incluso lo triplica.\\
+
+En la publicación \cite{PaperComparacion} se realiza una evaluación de los algoritmos LEACH y PEGASIS. Para esta evaluación se utiliza el simulador SENSE, desplegando 2000 nodos en un área de 100[$m^2$], con una tasa de generación de mensajes de 1 mensaje por segundo y una energía inicial de 2[J].
+
+\begin{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{imgs/ComparativaRondasVsMuertos.eps} 
+\caption{Comparación entre el número de rondas y el porcentaje de nodos muertos}
+\end{figure}
+\end{center}
+%También, en términos de energía disipada en la red, PEGASIS es superior a LEACH, como muestra la figura 2.5.
+%\begin{center}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[scale=0.375]{imgs/ComparativaEnergiaDisipada.eps} 
+%\caption{Comparación entre la energía total disipada en la red por los algoritmos}
+%\end{figure}
+%\end{center}
+Como se muestra en la figura 2.4, el algoritmo PEGASIS es el que permite un mayor número de ronda, con más nodos vivos en la red. Con estos resultados, se decide seleccionar el algoritmo PEGASIS para la implementación del protocolo de red. La implementación de este protocolo se describirá en el capítulo 3, sin embargo, dado que fue insuficiente en términos de generar una red multi-hop y desempeño energético, en el capítulo 4 se describe el diseño de un protocolo de árbol de recolección que permite satisfacer las metas propuestas en este trabajo.
+
+%\section{Dificultades de esta etapa}

@@ -1,0 +1,199 @@
+%capitulo1.tex
+\chapter{Introducción}
+%Introducción nueva
+%¿Qué son las redes de sensores inalámbricos?
+Durante las últimas dos décadas, los avances en las tecnologías de microprocesadores, micro-sensores y tranceptores han permitido el desarrollo de sistemas, en los cuáles, un grupo de dispositivos pueden interactuar en forma de red inalámbrica para monitorizar y actuar sobre el ambiente. Estas redes son denominadas ''Redes de Sensores Inalámbricos'' y han generado una gran cantidad de nuevas aplicaciones y líneas de investigación. Estas redes se caracterizan por: requerir poco mantenimiento, pueden ser desplegadas en lugares de difícil acceso y son de bajo costo. En la actualidad estas redes se han utilizado, principalmente, en aplicaciones militares, médicas, ambientales, agropecuarias y hogareñas.\\
+
+Una de las principales aplicaciones de estas redes es la construcción de sistemas de monitoreo que recolectan mediciones de variables físicas en zonas donde el monitoreo cableado representa costos muy elevados o no es posible por la falta de redes de distribución eléctrica\cite{WileyWSN}.\\
+%¿Cuáles son las áreas de investigación y desarrollo de WSN?
+%Las principales temas de investigación (medidas en términos de frecuencia de publicaciones) son: Despliegue, seguimiento de objetivos, localización, recolección de datos, ruteo y agregación, seguridad, protocolos de acceso al medio (MAC), acceso a bases de datos y sincronización del tiempo. Estos temas son tratados en más del cincuenta porciento del total de publicaciones\cite{WileyWSN} .\\ %buscar como continuar después de una itemezación con dos puntos y separados por comas.
+
+%Presentar el tema del ruteo y recolección de datos
+Dentro de un sistema de recolección de datos, basado en una red de sensores inalámbricos, es necesario contar con un protocolo de ruteo que permita direccionar los datos hacia uno o varios puntos de recolección dentro de la red. Dadas las características y limitaciones de los sensores inalámbricos, el principal objetivo de estos protocolos es reducir el consumo de energía de la red, y a la vez, mantener su funcionalidad frente a las diferentes fallas que se puedan presentar\cite{WSNSurvey}.\\
+
+%IR DE LO GENERAL A LO PARTICULAR!
+%El capítulo de introducción debe comenzar explicando que son las 	WSNs.
+\section{Redes de sensores inalámbricos}
+%Cosas que hay que dejar claras:
+%	-Es un sistema distribuído.	OK
+%	-Como nacen las WNSs.
+%	-Formada por motes.	OK
+%	-Qué cosas permiten las WSNs y por qué las permiten
+Una red de sensores inalámbricos es un sistema distribuido formado por sensores autónomos desplegados espacialmente, que en forma cooperativa, reúnen información del ambiente que los rodea. Los dispositivos utilizados para formar estas redes son conocidos como ''motes'' y poseen capacidad de procesamiento, capacidades sensoriales, capacidad de comunicación inalámbrica y son autónomos energéticamente.
+
+\section{Aplicaciones}
+%En el mundo
+De los trabajos publicados se está en conocimiento de que las redes de sensores se están aplicando en\cite{WileyWSN}: \\
+
+\textbf{Alerta de desastres}: La aplicación más recurrente en esta área es la detección de incendios, donde los dispositivos utilizan sensores de temperatura y algún sistema de localización para alertar en caso de incendio y/o entregar a los servicios de emergencia información relacionada con la distribución del incendio.\\
+
+\textbf{Edificios inteligentes}: Principalmente, el uso de redes de sensores inalámbricos para entregar información a los sistemas de control de aire acondicionado y ventilación. También permiten la reducción de costos frente a los sistemas actuales que funcionan en su mayoría utilizando dispositivos cableados. También se han propuesto sistemas para monitorear los niveles de estrés mecánico en la estructura de los edificios construidos en territorios de alta actividad sísmica.\\
+
+\textbf{Agricultura de precisión}: Las redes de sensores inalámbricas aplicadas a la agricultura están, generalmente, construidas para realizar mediciones de suelo: humedad, temperatura y sales. Se ha determinado que un sensor por hectárea es suficiente para obtener datos necesarios para monitorear el estado de los cultivos.\\
+
+%En chile
+
+%Red para monitoreo forestal
+En Chile, durante los años 2006 y 2007 se desarrolló el proyecto ''Redes inalámbricas de sensores para la detección de incendios forestales y monitoreo de variables de estado de combustibles para el recurso forestal de la Región de Valparaíso''\cite{ProyectoForestal}. El proyecto fue desarrollado en conjunto por ADDERE Ltda., CONAF, Universidad de Concepción, Forestal ACE Internacional S.A., ONEMI, CORMA y la Agencia Chilena del Espacio. El objetivo de este proyecto era monitorear el estado de los combustibles forestales y detectar los posibles focos de incendio en tiempo real, debido a que anualmente se queman más de seis mil hectáreas sólo en la Región de Valparaíso, causando pérdidas materiales por más de cincuenta millones de dólares.\\
+
+%Wiseconn
+Wiseconn es una empresa chilena que se ha dedicado a desarrollar productos para la agricultura de precisión utilizando redes de sensores inalámbricos. Actualmente utilizan tecnología basada en la especificación Zigbee para recolectar datos relacionados con mediciones de suelo \cite{Wiseconn}.
+
+%Austec
+
+\section{Protocolo de ruteo para un sistema de recolección de datos}
+%\section{Visión general de los requerimientos}
+%Hablar de la aplicación objetivo y cuáles son sus requerimientos 
+%La implementación de un protocolo de ruteo se realiza como parte de un sistema de recolección de datos orientado a. Por ejemplo, el sistema se puede desplegar en un terreno de cultivo, donde se desee principalmente medir la temperatura y la humedad del suelo, luego concentrar esos datos en un Gateway que enviaría esos datos a través de una red ethernet a un sistema computacional que almacena, analiza y presenta esos datos a través de una aplicación web. \\
+
+%Títulos alternativos
+El objetivo de este trabajo es implementar un protocolo de ruteo multihop como parte de un sistema de recolección de datos que está construido sobre una red de sensores inalámbricos. Este sistema está orientado principalmente al monitoreo de variables físicas principalmente relacionadas con la agricultura, como la humedad y la temperatura de los suelos, en zonas de difícil acceso y que no cuentan con redes de distribución eléctrica.
+
+\begin{figure}[H]
+\includegraphics[scale=0.625]{imgs/ArquitecturaGeneral.eps} 
+\caption{Arquitectura general del sistema de recolección.}
+\end{figure}
+
+En la figura 1.1, se describe la arquitectura del sistema de recolección de datos. Este sistema tiene como objetivo principal: mover los datos desde los puntos en la red donde se realizan las mediciones, hasta el punto en la red donde los datos son concentrados y enviados por otro medio de transmisión en el camino a su destino final. Para realizar esta tarea se debe implementar una capa de red, que se encargue de controlar la topología de la red y establecer rutas para los mensajes que transportan los datos. El sistema está ideado para utilizar una red de entre 30 y 50 nodos, donde todos los nodos (excluyendo el Gateway) son energéticamente autónomos y su tiempo de operación debe alcanzar el orden de meses.
+
+Los requerimientos establecidos para la implementación del protocolo son los siguientes:
+
+\begin{enumerate}
+\item \textbf{Rutear los mensajes hacia el Gateway:} Se debe implementar un protocolo que realice el ''mejor esfuerzo'' en transportar los mensajes desde un nodo origen, reenviar los mensajes por nodos intermedios y entregarlos al Gateway.Se debe contemplar que el nodo puede recibir mensajes de múltiples nodos en un periodo de tiempo reducido, por lo que debe de alguna manera almacenar los mensajes recibidos y enviarlos en orden, minimizando la pérdida de mensajes.\\
+
+\item \textbf{Tolerar falla de desaparición de nodos:} En el contexto de la comunicación multi-hop son muchas las fallas e inconsistencias que se pueden generar, sin embargo, el protocolo multi-hop debe al menos tolerar la desaparición de nodos de la red, es decir, si un nodo es sacado de la red o agota su batería, entonces la red no debe dejar de funcionar y los nodos que se queden sin ruta, deben buscar otra si es que existe.\\
+
+\item\textbf{Reducir el consumo energético:} Dado que la principal variable de diseño, en todos los aspectos, de una red de sensores inalámbricos es el consumo energético, el protocolo implementado debe realizar operaciones que permitan gestionar el consumo y alcanzar un tiempo de operación del orden de meses. \\
+\end{enumerate}
+
+En el marco de este trabajo, los objetivos generales son los siguientes:
+\begin{enumerate}
+  \item Informar sobre los protocolos de ruteo de mensajes para redes de sensores inalámbricos.
+  \item Desarrollar una red de sensores inalámbricos, utilizando la plataforma de hardware TmoteSky.
+  \item Desarrollar una aplicación para la recolección de datos de la red.
+  \item Evaluar el consumo energético de la red implementada.
+\end{enumerate}
+
+ El primer objetivo se desarrolla en profundidad en el capítulo 2. El segundo objetivo se desarrolla en los capítulos 3, 4 y 5, donde se plantea un diseño de protocolo y posteriormente como se implementa éste. El tercer objetivo se desarrolla en los capítulos 3 y 5 como parte de las verificaciones del sistema. Finalmente, en el capítulo 5 se evalúa el consumo energético el protocolo.\\
+ 
+\section{Estado del Arte}
+El estado del arte para un sistema de recolección de datos se describe utilizando la siguiente estructura: primero, se revisan los algoritmos más recurrentes en la literatura orientados a la recolección de datos; segundo, se describen los algoritmos implementados para las plataformas más populares; finalmente, se describe el software y hardware de desarrollo disponible.
+
+\subsection{Protocolo de ruteo}
+Según el modelo OSI para el diseño de comunicación entre computadores, la capa de red es responsable de todo lo relacionado con entrega de paquetes de un computador origen a uno destino. Esto incluye el direccionamiento lógico de mensajes y el ruteo de paquetes a través de una o varias redes. Un componente de la implementación de la capa de red son los algoritmos de ruteo. \\
+
+%\begin{figure}[H]
+ %\centering
+ %\includegraphics[scale=0.8]{imgs/PilaModeloOSI.eps}
+ %\caption{Pila de red establecida por el Modelo OSI}
+%\end{figure}
+
+Los algoritmos de ruteo, son métodos que permiten definir rutas dentro de una red para transmitir paquetes de datos. La estrategia de ruteo elegida puede tener un impacto significativo en el desempeño de la red\cite{WSNSurvey}.\\
+
+%Las redes de sensores inalámbricos son extremadamente versátiles, por lo que la forma en que éstas son desplegadas, dependerá de la naturaleza de la aplicación. Las redes pueden estar compuestas de nodos estáticos o móviles. Por ejemplo: para aplicaciones de monitoreo, los sensores son desplegados en un área y, usualmente, se mantienen estáticos mientras recolectan información; para aplicaciones en el área de la salud, los nodos pueden ser adheridos a insumos o personas para monitorear sus signos vitales, en este caso, la red debe permitir la movilidad de los nodos.\\
+
+Un primer enfoque para diseminar datos en la red, es enviar los datos recolectados por un nodo en un salto (comunicación directa) hacia el gateway, sin embargo, si el nodo está muy lejos del gateway, puede que éste nunca reciba el mensaje. Por lo tanto, el siguiente enfoque son los protocolos multi-hop, donde varios nodos intermedios se encargan de llevar un paquete de datos desde fuente a destino. En un algoritmo multi-hop, cada nodo ejecuta el algoritmo de ruteo que determinará cuál es el próximo destino de un paquete en la red.
+
+\subsection{Algoritmos de ruteo propuestos en la literatura}
+Se han propuesto diversos algoritmos de ruteo en la literatura, sin embargo, en este trabajo se describirán en detalle los algoritmos de ruteo jerárquicos, que según \cite{WSNSurvey} son los más indicados para aplicaciones de recolección de bajo consumo. Dentro de los algoritmos de ruteo jerárquico, los más recurrentes son: LEACH, PEGASIS y TEEN. Se profundizará en estos protocolos en el siguiente capítulo.
+
+%En esta sección debería dar una breve reseña  de cada protocolo, con sus referencias.
+
+\subsection{Protocolos implementados}
+En los últimos años, se han implementado diversas capas de red para distintos sistemas.  Cada implementación de capa de red, está asociada a un protocolo de red en particular. En el sistema TinyOS, existen dos implementaciones de red que son distribuidas junto con el sistema: Dissemination (Diseminación) y Collection Tree Protocol (Protocolo de árbol de recolección). Por otro lado, Texas Instruments ha implementado dos tipos de red para su hardware: Z-Stack, la implementación de Zigbee de TI; y SimpliciTI, un protocolo de red simple para construir redes de topología estrella. En el siguiente capítulo, se realizará una descripción detallada de estos protocolos.
+
+\subsection{Hardware de desarrollo}
+%De lo general a lo particular
+% Qué tipo de hardware existe?
+En la actualidad, existe una gran variedad de hardware que puede ser utilizado para el desarrollo e implementación de una red de sensores inalámbricos. Como se ha mencionado antes, un sensor inalámbrico (mote) está compuesto al menos por: Un microcontrolador, que permite administrar cada recurso del nodo; un transceptor, que permite comunicar el nodo con otros dispositivos; sensores y actuadores, que permiten al nodo interactuar con el entorno; batería, si es que el nodo está diseñado para que opere de manera autónoma. Los principales fabricantes del hardware para estas redes son: Texas Instruments, Nordic Semiconductors, Atmel y Jennic.\\
+
+%Debo incluir info sobre los motes que soportan tinyos
+\subsubsection{Plataformas TinyOS}
+Algunas de las plataformas de desarrollo soportadas actualmente por TinyOS 2.1 son:
+
+\begin{center}
+\begin{table}[H]
+\caption{Algunas plataformas de hardware soportadas por TinyOS} 
+\begin{tabular}{|l|p{10cm}|}
+\hline \textbf{Plataforma} & \textbf{Descripción} \\ 
+
+\hline Intelmote2 \cite{IntelMote2Web} &  Plataforma basada en el procesador PXA271 XScale, tranceptor CC2420, posee dos conectores de 31 y 21 pines para sensores,  e interfaz USB. Utiliza dos baterías AA\\ 
+
+%\hline Iris \cite{IrisDatasheet} & Plataforma basada en el SoC XM2110CA de Atmel, conector de expansión de 51 pines para sensores. Utiliza dos baterías AA \\ 
+
+\hline Mica2 \cite{Mica2Datasheet} &  Plataforma basada en el Soc de bajo consumo Atmel ATmega 128L, conector de expansión de 51 pines para sensores. Utiliza dos baterías AA. \\ 
+
+\hline Micaz \cite{MicazDatasheet} &  Plataforma basada en el Soc de bajo consumo Atmel ATmega 128L, conector de expansión de 51 pines para sensores. \\ 
+
+%\hline Shimmer \cite{ShimmerWiki} &  Plataforma diseñada para vestir, basada en el microprocesador de bajo consumo MSP430F1611. Incorpora un tranceptor Bluetooth WML-C46A y un tranceptor CC2420. Posee un lector de tarjetas Micro-SD para almacenamiento masivo. Incluye un acelerómetro de 3-ejes. Tiene una batería recargable de Ion-Litio integrada.\\ 
+
+\hline TelosB (TmoteSky) \cite{TelosBDatasheet} & Plataforma basada en el microcontrolador de bajo consumo MSP430, utiliza el transceptor CC2420, incluye sensores de radiación solar total y radiación fotosintétizable. Utiliza dos pilas AA.  \\ 
+
+%\hline Tinynode \cite{TinyNodeWeb} &  Plataforma basada en el microcontrolador de bajo consumo MSP430, utiliza el tranceptor de bajo consumo Xemics  XE 1205, conector de expansión de 31 pines para conectar sensores e interfaces de comunicación serial.\\ 
+\hline 
+
+\end{tabular}
+
+\end{table} 
+\end{center}
+%Se omiten Mica, Mica2dot, eyesIFX  y telos a porque parece que están descontinuados
+
+
+\subsubsection{Plataformas Zigbee}
+Texas Instruments es uno de los principales impulsores de esta tecnología, ellos comercializan las siguientes plataformas de desarrollo.
+%Debo incluir info sobre los motes que soportan Zigbee, simpliciti.
+\begin{table}[H]
+\centering
+\caption{Plataformas de desarrollo Zigbee}
+\begin{tabular}{|l|p{10cm}|}
+\hline \textbf{Plataforma} & \textbf{Descripción} \\ 
+\hline CC2430ZDK & Kit de desarrollo para redes Zigbee que incluye tarjetas de desarrollo para el SoC CC2430. Poseen interfaz USB y utiliza dos baterías AA. \\ 
+\hline CC2530ZDK & Kit de desarrollo para redes Zigbee que incluye tarjetas de desarrollo para el SoC CC2530. Poseen interfaz USB y utiliza dos baterías AA.\\ 
+\hline 
+\end{tabular} 
+\end{table}
+
+\subsubsection{Otras plataformas}
+A continuación se describen otras plataformas para redes de sensores inalámbricos.
+\begin{table}[H]
+\centering
+\caption{Otras plataformas de desarrollo para redes de sensores inalámbricos}
+\begin{tabular}{|l|p{10cm}|}
+\hline \textbf{Plataforma} & \textbf{Descripción} \\ 
+%\hline ATAVRRZ201 \cite{ATAVRRZ201}& Kit de desarrollo para redes Zigbee basado en el microcontrolador ATMega1281V y el tranceptor AT86RF230.\\ 
+\hline AVR Raven & Kit de demostración para redes Zigbee que incluye un dispositivo que integra tres chips: el ATmega3290P para manejar los dispositivos I/O; el ATMega1284P para ejecutar la pila de comunicación; y la radio AT86RF230. Estas tarjetas incluyen un Display, un parlante, micrófono, memoria flash, reloj de tiempo real, botones y switchs. Utiliza una batería de tipo botón o alimentación externa desde 5V hasta 12V.\\
+\hline EM430F6137RF900 & Plataforma basada en el SoC CC430, que integra un MSP430 y una radio CC1100 en un chip. Incluye un conector para Display LCD que se distribuye junto con la plataforma. Puede utilizar dos baterías AAA. \\ 
+\hline ez430 Chronos & Plataforma de desarrollo embebida en un reloj deportivo. Esta plataforma está basada en el SoC CC2430, e incluye acelerómetro y sensor de presión, además de los de temperatura y voltaje del CC430. Utiliza una batería de celda tipo botón.\\ 
+\hline SunSpot & Los dispositivos SunSPOTs son motes para redes de sensores inalámbricos desarrollados por Sun Microsystems. Estos dispositvos utilizan el estándar IEEE 802.15.4 para comunicación inalámbrica y tienen integrada la máquina virtual de Java (Squawk). Además, cada SunSPOT cuenta con acelerómetro, sensor de temperatura, sensor de luz, 8 leds tri-color y 2 switches. \\ 
+\hline 
+\end{tabular} 
+\end{table}
+
+
+\subsection{Software para redes de sensores inalámbricos}
+%TinyOS, ZStack, SimpliciTI, etc
+%Breve descripción de tinyOS e indicación para revisar el anexo XX.
+\subsubsection{TinyOS}
+TinyOS es un sistema operativo embebido de código abierto, diseñado especialmente para desarrollar aplicaciones para redes de sensores inalámbricos. Su desarrollo comenzó en la Universidad de Berkeley a fines de los años 90 y actualmente su desarrollo está a cargo de la TinyOS Alliance. TinyOS está diseñado para permitir concurrencia, operación con recursos limitados, soporte de un rango amplio de aplicaciones y hardware, y adaptación a la evolución del hardware. TinyOS es un sistema conducido por eventos  programado en NesC, un dialecto derivado de C que reduce el consumo de memoria, utiliza la programación orientada a componentes y provee la detección de ``race conditions''. \\
+
+\subsubsection{Contiki}
+Contiki es otro sistema operativo embebido de código abierto, diseñado para ser portable, multi-tarea, y con un consumo de memoria reducido. Contiki es desarrollado en el Swedish Instute of Computer Science y actualmente cuenta con desarrolladores de la industria como Cisco y Atmel. Este sistema provee comunicación vía IPv4 e IPv6, mediante la utilización de una versión reducida de la pila IP diseñada para microcontroladores. Además, provee un sistema de archivos para almacenar información en la memoria flash de los nodos. Actualmente, Contiki soporta el hardware TmoteSky (Telosb).
+
+%Breve descripción de ZStack, basarse en pagina de ti del zstack
+\subsubsection{Z-Stack}
+Z-Stack es la implementación del standard Zigbee desarrollada por Texas Instruments para su portafolio de hardware compatible con el IEEE 802.15.4. La versión actual implementa las especificaciones Zigbee 2007, Zigbee Pro y Zigbee 2006. Los chips que soportan este software son: CC2530, MSP430+CC2520, CC2430 y MSP430+CC2420. 	Esta implementación se construye sobre el sistema operativo OSAL que provee herramientas como Tasks (Tareas), Timers y un manejo más amigable de las interrupciones. Es importante destacar que ninguna de las versiones implementa la topología Cluster-Tree para una red completa de sensores independientes energéticamente que propone la especificación.
+
+%Breve descripción de SimpliciTI, basarse en pagina de ti de simpliciti
+\subsubsection{SimpliciTI}
+SimpliciTI es un protocolo de bajo consumo desarrollado por Texas Instruments 	para sus productos Sub-1GHz y portafolio compatible con el IEEE 802.15.4. Es un protocolo reducido que permite implementar redes con topología estrella, donde dispositivos always-on  coordinan la red. A diferencia de Z-Stack, SimpliciTI no está construido sobre un sistema operativo, por lo que no provee abstracciones de hardware ni herramientas de programación como OSAL.	
+
+%Breve descripción de la de los sunspots, basarse en documentacion
+\subsubsection{Java y SunSpot}
+Los SunSPOTs son distribuidos junto a un kit de desarrollo que trae las herramientas, tutoriales y ejemplos necesarios para realizar la programación de estos dispositivos. El kit incluye el IDE Netbeans y todos los accesorios (compiladores, depuradores, interfaz de software para comunicación USB) incorporados al IDE. Estos dispositivos son programados en JAVA, utilizando la máquina virtual Squawk para ejecutar el bytecode en el dispositivo. La máquina virtual java Squawk es un desarrollo experimental de código abierto con el objetivo de acelerar la portabilidad y funcionalidad de la máquina virtual Java. Las principales características que permiten su implementación para un dispositivo embebido, son el tamaño reducido del bytecode generado (35\%  a 45\% de una clase equivalente en J2ME)  y una arquitectura que permite ahorrar memoria del dispositivo.
+
+%Breve descripción de alguna otra de otro fabricante..freescale o atmel.
+
+
+
+
+

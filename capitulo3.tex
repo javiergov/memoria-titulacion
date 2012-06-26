@@ -1,0 +1,296 @@
+\chapter{Implementación del algoritmo PEGASIS}
+La implementación del algoritmo de ruteo PEGASIS, requiere desarrollar un software en el lenguaje NesC que utilice las herramientas de TinyOS para la plataforma TMoteSky.TinyOS ofrece por defecto el ''Radio Stack'', una pila de comunicación organizada en capas que abarca desde el manejo del hardware necesario para que el MSP430 interactúe con el CC2420, hasta la capa ActiveMessage que interactúa directamente con la aplicación. Esta pila permite a una aplicación enviar mensajes usando comunicación directa, de largo fijo y direccionados a un TOS\textunderscore NODE\textunderscore ID en particular. Los protocolos de red ya implementados, CTP y Dissemination, están construidos sobre la capa ActiveMessage y ,a través de interfaces, proveen servicios de comunicación como Receive, Send, Intercept y Snoop. En este capítulo se describe el diseño e implementación de este software, y además, las herramientas de medición que se desarrollaron para validar y evaluar esta implementación. 
+%Que y como se implementa
+
+\section{Descripción de la implementación}
+La implementación del algoritmo PEGASIS comienza con la programación de un componente nesC que provea a una aplicación una capa de red, construida sobre el Radio Stack. La configuración se denomina CollectionC y está implementada en el archivo CollectionC.nc. Esta configuración es la que describe el componente de ruteo y es la que la aplicación debe cablear para utilizar las interfaces que provee. Con el objetivo de proveer a la aplicación de las funcionalidades necesarias para que pueda enviar mensajes utilizando este componente, se crea la interfaz SendData en el archivo SendData.nc.
+
+%Diagrama del Stack
+%\begin{center}
+%\begin{figure}[H]
+ %\centering
+ %\includegraphics[scale=0.4]{imgs/Stack.eps}
+ %\caption{Stack}
+%\end{figure}
+%\end{center}
+
+
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.6]{imgs/DiagramaComponentePegasis.eps}
+ \caption{Diagrama de componentes de implementación de algoritmo PEGASIS}
+\end{figure}
+
+NetworkProtocolP.nc es el archivo donde se escribe  el módulo que implementa la selección del próximo salto de un mensaje de datos que envía la aplicación, utilizando el algoritmo PEGASIS. NetworkProtocol implementa la interfaz SendData, y provee a la aplicación el comando send(uint8\_ t sensorId, uint16\_ t data), que permite a la aplicación enviar este mensaje utilizando este algoritmo.\\
+
+%Lógica
+Una vez creada la estructura del componente de ruteo, se diseña la lógica en función de la especificación del protocolo. El funcionamiento de este componente se representa como una máquina de estados, donde cada estado se asocia a una etapa en la formación de la red. Los cambios de estado, se realizarán en función a eventos externos (mensajes recibidos) e internos (timers gatillados).\\
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.6]{imgs/MaquinaDeEstadosPEGASIS.eps}
+ \caption{Diagrama de componentes de implementación de algoritmo PEGASIS}
+\end{figure}
+
+\subsection{Formación de la cadena}
+
+Cada dispositivo comienza en el estado START, una vez que reciben un mensaje CONTROL START, el dispositivo avanza al estado CHAIN SETUP. En este estado, los nodos realizan la formación de la red, como se describe en el diagrama de flujo de la figura 3.3.
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.6]{imgs/DiagramaFlujoAsociacionPegasis.eps}
+ \caption{Diagrama de flujo de formación de cadena}
+\end{figure}
+
+Como se muestra en la figura 3.3, el primer proceso que se realiza corresponde a determinar si el nodo es el más lejano al Gateway, esto se realiza revisando la información entregada por el programador en el archivo Locations.h, que se utiliza para entregar a la aplicación una matriz con las posiciones relativas de todos los nodos al Gateway. Si corresponde al nodo más lejano, entonces el dispositivo buscará en su tabla de locaciones (Locations.h) el nodo más cercano y le enviará un mensaje CHAIN JOIN para iniciar el proceso de asociación a la cadena, quedando a la espera del mensaje JOIN OK. Cuando lo recibe, actualiza la información del vecino en la tabla de información de nodos, asignándole un estado ''IN CHAIN'' que se refiere a que el nodo asociado está en la cadena. A continuación, actualiza la variable de red ''up\_node'' que es la que almacena el TOS\_NODE\_ID del vecino con que el nodo está asociado hacia arriba en la cadena, con la ID del vecino que acaba de asociar.\\
+
+  Si el vecino ya ha aceptado una invitación previa, éste responderá con un mensaje de rechazo JOIN\_DENIED, y en consecuencia, el nodo actualizará la tabla, asignándole un estado ''IN CHAIN'' y volviendo a buscar el vecino más cercano para reintentar la asociación, omitiendo el que ya intentó asociar.\\
+  
+  Si inicialmente, el nodo no era el más lejano, se mantiene en el estado CHAIN SETUP y esperará por un mensaje CHAIN JOIN. Cuando recibe el mensaje de asociación, y se asocia a la cadena, actualizará la variable de red ''down\_node'', que la que almacena el TOS\_NODE\_ID del vecino con que el nodo está asociado hacia abajo en la cadena, con el ID del vecino que lo asoció.\\ 
+  
+  Cuando los nodos han asociado un vecino por abajo y por arriba en la cadena, invocan el cambio de estado con una entrada CHAIN READY, que les permite entrar en el estado LEADER\_WAIT\_STATE. Los extremos de la cadena, el nodo más lejano y el nodo más cercano al GATEWAY, identifican su condición usando la tabla de locaciones y cierran el proceso de formación de cadena asociando sólo un vecino.
+  
+ \subsection{Espera del líder}
+ 
+Una vez que cada nodo termina su proceso de asociación, entra al estado LEADER\_WAIT\_STATE. Cuando el nodo entra a este estado, revisa si le corresponde ser líder en función de la variable roundcount, que es la que almacena el ID del round y que se obtiene de los mensajes recibidos durante la etapa de formación de la cadena. Si el nodo es líder, espera el tiempo ROUND\_SETUP\_PERIOD (configurable en el archivo Config.h) y luego envía un mensaje de cadena START\_ROUND hacia arriba y hacia abajo en la cadena. El tiempo que espera inicialmente es para esperar que el proceso de asociación sea completado por todos los nodos, por defecto, se configura en 100 milisegundos.\\
+
+Posteriormente, el mensaje de START\_ROUND se disemina por la cadena, y de este, cada nodo de la cadena extrae el ID del líder y en que dirección de la cadena se encuentra con respecto a él (arriba o abajo). Esta información, permite al nodo direccionar los mensajes de datos que se generarán en el estado ''ROUND''. Cada nodo luego de enviar el mensaje START\_ROUND espera ROUND\_SETUP\_PERIOD milisegundos antes de cambiar al estado ''ROUND''.
+
+ \subsection{Ronda}
+ Cuando el líder de la cadena, indica el inicio de la ronda, los dispositivos entran en el estado ''ROUND'', y se deben mantener en este estado por el periodo de tiempo ''ROUND\_PERIOD'', configurable en el archivo ''Config.h''. En este estado, el componente de red permite a la aplicación enviar mensajes de red hacia el GATEWAY. Además, en este estado, los nodos pueden reenviar los mensajes de sus vecinos, en dirección hacia el líder de la cadena. Si el nodo es el líder, será el encargado de reenviar los mensajes de datos hacia el GATEWAY y además, se encargará de dar fin a la ronda, después de ROUND\_PERIOD milisegundos.
+
+\subsection{Tolerancia a fallas}
+Dentro de las fallas que pueden ocurrir se decidió implementar la tolerancia para los siguientes eventos: Muerte de un nodo, reincorporación de un nodo muerto y estancamiento de la máquina de estados.
+
+%Nodo perdido
+\subsubsection{Muerte de un nodo}
+Un dispositivo se considera como ''nodo muerto'', cuando la carga restante de la batería  no le permite realizar las operaciones de comunicación inalámbrica.
+
+Primero, se implementa la forma de detectar un nodo muerto. Utilizando la interfaz PacketAcknowledgements, que provee el componente ActiveMessageC,  el nodo emisor de un mensaje puede solicitar en el mensaje que el receptor responda con un ACK. Así, el nodo emisor del mensaje puede detectar si el mensaje fue recibido con éxito por el receptor o no. 
+
+Se decide incorporar el requerimiento de ACKs a los mensajes de datos. La detección del envío del ACK, se realiza específicamente en el evento ''DataAMSend.sendDone'' utilizando el comando ''PacketAcknowledgements.wasAcked''. Si el emisor del mensaje de datos no recibe el ACK, este inicia el siguiente proceso:
+
+\begin{enumerate}
+\item Actualiza la información del nodo en la tabla motePos (tabla de información de nodos), asignando al nodo muerto como ''perdido''.
+
+\item A continuación, realiza un post de la tarea ''sendDeadMote'', que se encargará de enviar un mensaje de información, vía broadcast, para comunicar al resto de los dispositivos la información que describe el nodo muerto.
+
+\item Luego, realiza un cambio de estado con entrada  DEAD\_MOTE, que causará que el nodo vuelva al estado de ''Formación de cadena''.
+
+\item Finalmente, el resto de los nodos reciben el mensaje de información y realizan los pasos 1 y 3, actualizando la información sobre el nodo perdido y reiniciando la formación de la cadena.
+\end{enumerate}
+
+Cuando se realiza la nueva formación de la cadena, los nodos no consideran los dispositivos que se encuentren como ''Perdidos'' en la tabla de información, para no volver a caer en la misma falla.\\
+
+Inicialmente, se incorporó el requerimiento de ACK a los mensajes de datos, sin embargo, en la ronda de pruebas de esta funcionalidad se descubrió que la pérdida de ACKs era frecuente. Este fenómeno, causaba un continuo reinicio del proceso de formación de la red, por lo que finalmente se optó por trasladar la detección de nodos muertos a los mensajes de cadena (que se envían para formar la cadena e informar del líder al inicio de cada ronda) para reducir la cantidad de ''falsas alarmas''.
+
+%Nodo Nuevo
+\subsubsection{Reincorporación de un nodo muerto a la red}
+Cuando se habilita nuevamente un nodo previamente muerto y el resto de los nodos no son capaces de incorporarlo a la red, se está en presencia de una falla. Por esta razón, se decide implementar un mecanismo que permita a la red, detectar los nodos que están nuevamente ''vivos'' y no han sido incorporados a la red.
+
+La implementación de este sistema, comienza con la incorporación del mensaje ALIVE al conjunto de mensajes de información. Cuando un nodo que está en la red recibe un mensaje ALIVE, e identifica que el emisor es un nodo que está fuera de la red, inicia un mecanismo de incorporación del nodo perdido a la red. El proceso de incorporación funciona de la siguiente manera:
+
+\begin{enumerate}
+\item Cada nodo inicia sus operaciones enviando un mensaje de información ALIVE a la dirección de broadcast.
+
+\item El mensaje de información se propaga por la cadena, y cada nodo actualiza la información del nodo, quitándole el estado de nodo perdido.
+
+\item Finalmente, luego de recibir el mensaje de información, cambian su estado de red con entrada ''NEW\_MOTE'', pasando al estado de formación de cadena.
+\end{enumerate}
+
+Con este proceso, los nodos perdidos pueden ser incorporados nuevamente a la cadena, cuando han recargado su batería.
+
+\subsubsection{Estancamiento de la máquina de estados de red}
+Dado que algunas de las entradas de la máquina de estados de red corresponden a mensajes generados por otros nodos, es posible que un nodo no reciba alguno de estos mensajes y se quede estancado en algún estado. Para tolerar esta falla, se implementa un timer que se ejecuta periódicamente y se denomina ''ALIVE\_TIMER''. Este timer funciona similar a un Watchdog Timer, pero en vez de solucionar el estancamiento del programa, soluciona el estancamiento de la máquina de estados de la red. Cuando este timer se gatilla revisa dos parámetros: el contador de rondas y el estado. Si el contador de rondas y el estado son los mismos en dos revisiones, entonces el timer inicia el proceso de reinicio de la máquina de estados, colocando al nodo en estado de formación de la red, y enviando un mensaje de información ALIVE. Así, se genera nuevamente el proceso de formación de la cadena, y el nodo vuelve a sincronizar su máquina de estados con la del resto de la red. El periodo del ALIVE\_TIMER se ha configurado por defecto en el doble del tiempo de duración de una ronda.
+
+%Mensajes
+\section{Descripción de los mensajes}
+Para la implementación del protocolo, se construyeron cuatro tipos de mensajes. Estos mensajes son construidos como estructuras de datos que se entregan como ''payload'' al componente ActiveMessageC.  Los mensajes son identificados por el componente ActiveMessageC según su identificador AM\_TYPE. Este identificador, permite al sistema multiplexar mensajes entre distintos servicios, análogo a un puerto TCP/UDP. En el cuadro 3.1, se muestra la asignación de identificadores AM\_TYPE.
+
+\begin{table}[H]
+  \centering
+  \caption{AM Types asignados a cada mensaje}
+ \includegraphics[scale=0.6]{imgs/MensajesPegasisAMTypes.eps}
+\end{table}
+
+\subsection{Mensajes de Control}
+Este mensaje se utiliza para iniciar o detener la red. Es una estructura que con sólo un atributo, un entero sin signo de 16 bits denominado ''cmd''. 
+
+\begin{table}[H]
+  \centering
+  \caption{Descripción de la estructura de un mensaje de control.}
+ \includegraphics[scale=0.6]{imgs/MensajesPegasisControl.eps}
+\end{table}
+
+Este mensaje fue inicialmente incluido para que el Gateway iniciara o detuviera la red, pero en el transcurso del desarrollo, también se incluyó el mensaje en el resto de los nodos para que les permitiera iniciar la máquina de estados de red de nodos encendidos posteriormente.
+
+\subsection{Mensajes de Información}
+Este tipo de mensajes se utiliza para intercambiar información entre nodos. Cada nodo cuenta con una tabla de información de nodos, motePos, que permite a los nodos mantener información sobre el resto de los nodos de la red.
+ 
+\begin{table}[H]
+  \centering
+  \caption{Descripción de la estructura de un mensaje de información.}
+ \includegraphics[scale=0.6]{imgs/MensajesPegasisInfo.eps}
+\end{table}
+
+\subsection{Mensajes de Cadena}
+Los mensajes de cadena, son los mensajes que los nodos utilizan para realizar el proceso de formación de la cadena. Estos mensajes, son direccionados dentro de la cadena, y son reenviados por cada eslabón.
+
+\begin{table}[H]
+  \centering
+  \caption{Descripción de la estructura de un mensaje de cadena.}
+ \includegraphics[scale=0.6]{imgs/MensajesPegasisCadena.eps}
+\end{table}
+
+En el cuadro 3.4, se describe la estructura de un mensaje de cadena. Se implementaron cuatro tipos: CHAIN\_JOIN, para iniciar el proceso de asociación a la cadena; CHAIN\_JOIN\_OK, para dar una respuesta afirmativa al proceso de asociación; CHAIN\_JOIN\_DENIED, para dar una respuesta negativa al proceso de asociación; y CHAIN\_START\_ROUND, con el que el líder de la cadena da inicio a una ronda.
+
+\subsection{Mensajes de Datos}
+Los mensajes de datos, son los mensajes que se utilizan para enviar los datos al Gateway. Es un mensaje de largo fijo, que provee (además de la cabecera) dos bytes para un identificador del sensor y dos bytes para el valor medido por el sensor. Este mensaje es sólo un ejemplo de como un mensaje de datos podría ser, dependiendo de la aplicación, ya que un mensaje de datos podría transportar datos de más de un sensor, y datos de mayor tamaño (por ejemplo, un sensor análogo podría generar datos flotantes o dobles, típicamente de cuatro y ocho bytes respectivamente).
+
+\begin{table}[H]
+  \centering
+  \caption{Descripción de la estructura de un mensaje de datos.}
+ \includegraphics[scale=0.6]{imgs/MensajesPegasisDatos.eps}
+\end{table}
+
+%Pruebas
+\section{Pruebas de funcionamiento}
+Para verificar el comportamiento lógico y secuencial del componente de ruteo implementado, se implementa un sistema Sniffer descrito en el Anexo ''Implementación e WSNSniffer''.  Se realiza la verificación de las siguientes funcionalidades: Secuencia de formación de cadena, Reenvío de mensajes,  Rotación del líder, Muerte de nodo, Reincorporación de nodo.
+
+\subsection{Secuencia de formación de cadena}
+Como se describió en la sección 2.1.2, el nodo más lejano en la cadena es el que debe iniciar la formación de la cadena. Por esto, se decide simular una distribución forzada de los nodos en un plano XY, utilizando una ''matriz de distribución'' descrita en el archivo Locations.h. 
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.6]{imgs/TopologiaLinealPegasis.eps}
+ \caption{Distribución del despliegue forzado de los nodos}
+\end{figure}
+
+En el cuadro 3.6, se muestra el resultado entregado por el WSNSniffer para esta prueba.
+
+\begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba de formación de cadena }
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisFormacionCadena.eps}
+\end{table}
+
+El proceso de formación de cadena se gatilla en el timestamp 0:30:09:652, cuando se envía el mensaje de Control tipo 0, que corresponde al CONTROL\_START. La secuencia de asociaciones es iniciada por el nodo 4 en el timestamp 0:30:09:747 con el primer mensaje de cadena tipo 0, que corresponde al mensaje CHAIN\_JOIN. Como se muestra en la figura 3.4, el nodo más lejano según la configuración del archivo Locations.h es el nodo 4, por lo tanto se verifica que el nodo más lejano es el que está iniciando la construcción de la cadena. El nodo 3 responde a la asociación en el timestamp 0:30:09:763 con un mensaje de cadena tipo 0x1, que corresponde al CHAIN\_JOIN\_OK. A continuación el nodo 3, inicia el mismo proceso de asociación realizado anteriormente por el nodo 4, y continúa hasta que en el timestamp 0:30:09:847 el nodo 1 recibe un mensaje de cadena tipo 0x2, que corresponde al mensaje CHAIN\_JOIN\_DENIED. El nodo 1 vuelve a intentar con otro nodos, hasta que en el timestamp 0:30:09:875, se rinde y cierra la cadena. Este comportamiento es correcto, ya que se implementó que cuando el nodo no encontrara vecinos que no estén asociados a una cadena, el nodo cierre la cadena. En el timestamp 0:30:09:939 emerge el nodo 1 como líder enviando un mensaje de cadena tipo 0x3, que corresponde al mensaje CHAIN\_START\_ROUND.
+
+\subsection{Reenvío de mensajes y rotación del líder}
+Como se describió en la sección 2.1.2, los mensajes de datos, son ruteados a través de la cadena hasta que llegan al líder de la cadena, que es el nodo que envía el mensaje directamente al Gateway. Siguiendo con la prueba realizada en la sección anterior, en los cuadros 3.7, 3.8, 3.9, 3.10 y 3.11, se muestran extractos del reporte entregado por el sniffer para esta prueba que muestran como los mensajes de datos son ruteados en la cadena y como el rol de líder se desplaza dentro de la cadena. La duración de la ronda para esta prueba está configurada en 10 segundos, y el intervalo de generación de mensajes de datos es de 1 segundo.
+
+\begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba de reenvío y rotación, con rol de líder en el nodo 1 }
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisReenvioRotacion.eps}
+\end{table}
+
+En el cuadro 3.7, se observa que los mensajes de datos son reenviados por los nodos en la cadena hacia el nodo líder, que corresponde al nodo 1. Se observa también que el nodo 1 no genera datos, esto es exclusivamente debido a la implementación, que deshabilita el envío de mensajes en un nodo cuando es líder.
+
+\begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba de reenvío y rotación, con rol de líder en el nodo 2}
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisReenvioRotacion2.eps}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba de reenvío y rotación, con rol de líder en el nodo 3}
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisReenvioRotacion3.eps}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba de reenvío y rotación, con rol de líder en el nodo 4}
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisReenvioRotacion4.eps}
+ \end{table}
+ 
+ \begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba de reenvío y rotación, con rol de líder en el nodo 1}
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisReenvioRotacion5.eps}
+ \end{table}
+ 
+ En los cuadros 3.8, 3.9, 3.10 y 3.11 se observa como el rol del líder va rotando en la cadena, según  la función planteada en 2.1.2. En el cuadro 3.8, específicamente en el timestamp 0:30:19:732, se observa que emerge como líder el nodo 2 para el round 0x1; a continuación se observa que los mensajes viajan dentro de la cadena en dirección al nodo 2. Posteriormente, en el cuadro 3.9 timestamp 0:30:29:574, emerge el nodo 3 como líder; y a continuación, los mensajes viajan dentro de la cadena en dirección al nodo 3. Luego, en el cuadro 3.10 timestamp 0:30:39:404, emerge el nodo 4 como líder; y a continuación, los mensajes viajan dentro de la cadena en dirección al nodo 4. Finalizando un ciclo de la rotación, en el cuadro 3.11 timestamp 0:30:49:234, nuevamente emerge el nodo 1 como líder. 
+
+
+\subsection{Muerte de nodo}
+En la sección 3.1.4 se describió la lógica que sigue la implementación para tolerar la muerte de nodos. Continuando con la prueba revisada en las secciones anteriores, se removieron las baterías del nodo 3, para que dejara de interactuar con los otros nodos; y posteriormente, se observó con el Sniffer el resultado de este evento en el comportamiento de la red. \\
+
+En el cuadro 3.12 se observa en el timestamp 1:07:40:965, el nodo 3 no reenvía el mensaje recibido desde el nodo 4. Esto sucede porque al nodo 3 ya se le han removido las baterías para simular un nodo muerto. Cuando el nodo 2 emerge como líder en el timestamp 1:07:42:863, el nodo 2 descubre que el nodo 3 no está presente, luego de enviarle el mensaje de cadena dar inicio de la nueva ronda. El nodo 2, realiza un broadcast el mensaje de información tipo 0x01 (DEAD\_MOTE) para informar al resto de los nodos que el nodo 3 ha desaparecido. A continuación, el nodo 4 inicia nuevamente la formación de la cadena y, posteriormente, en el timestamp 1:07:43:692 se reanuda el envío de datos hacia el nodo 2.
+
+\begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba tolerancia a la muerte de nodos}
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisMuerteNodo.eps}
+ \end{table}
+
+\subsection{Reincorporación de nodo}
+Continuando con el experimento revisado en las secciones anteriores, para probar la reincorporación de un nodo perdido a la red, se vuelven a colocar las baterías del nodo 3. En el cuadro 3.13, se muestra el Extracto del reporte generado por el sniffer.
+
+\begin{table}[H]
+  \centering
+  \caption{Extracto del reporte entregado por WSNSniffer para la prueba tolerancia a la reincorporación de un nodo}
+ \includegraphics[scale=0.6]{imgs/ResultadosPruebaPegasisNuevoNodo.eps}
+ \end{table}
+ 
+En el cuadro 3.13 timestamp 1:08:24:628, se observa que el nodo 3 se reincorpora a la red avisando con un mensaje de información tipo 0x0 (ALIVE). El nodo 2 responde con un mensaje de control 0x0 (START) para que el nodo 3 inicie su máquina de estados; a continuación, el nodo 4 inicia nuevamente la construcción de la cadena y la operación de la red continúa normalmente.
+%Evaluación energética
+\section{Evaluación energética}
+
+%Explicar el método de medición
+\subsection{Sistema de medición}
+Para realizar las evaluaciones de consumo energético, se implementa un sistema de medición de corriente consumida por el TMoteSky. El sistema utiliza un porta pila modificado con la adición de una resistencia de 10[$\Omega$] y la adquisidora de datos USB-1208FS (del fabricante Measurement Computing). Adicionalmente, se utiliza una aplicación desarrollada en C\# que obtiene los datos de la adquisidora y despliega gráficamente la magnitud de la corriente medida en el tiempo, y posteriormente entrega los valores medios del voltaje y corriente para la medición.
+
+%Agregar figura de la arquitectura del sistema de medición de corriente
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.6]{imgs/SistemaMedicionCorriente.eps}
+ \caption{Sistema de medición de corriente consumida por el TMoteSky}
+\end{figure}
+
+Para obtener la corriente media, la adquisidora realiza una medición por un periodo de tiempo configurable en la aplicación. Durante la medición, la adquisidora mide el voltaje en la resistencia, y dado que el valor de la resistencia es conocido, la aplicación obtiene la magnitud de la corriente utilizando la ley de Ohm. \\
+
+\subsection{Descripción de la medición}
+%Explicar el experimento
+El experimento consiste en medir la corriente media consumida por el TMoteSky cuando utiliza la aplicación de ejemplo desarrollada para generar tráfico en la red, sobre el protocolo PEGASIS implementado. El principal objetivo es determinar si efectivamente, gracias a la rotación del líder,  hay un cambio significativo en el consumo energético, y si ese cambio permite extender el ciclo de operación de los nodos y la red. Además, se realiza un segundo experimento con el protocolo modificado para que el rol de líder se mantenga sólo en un nodo, y así contrastar los resultados con el primer experimento. En ambos experimentos, la medición de la corriente se realiza en el mote número 2, según el despliegue que se muestra enla figura 3.4. \\
+
+Los parámetros utilizados para el primer experimento se resumen en el cuadro 3.14.
+
+\begin{table}[H]
+  \centering
+  \caption{Parámetros de la medición de consumo de corriente de la implementación de PEGASIS}
+ \includegraphics[scale=0.6]{imgs/CuadrosMedicionesPegasisParametrosExperimento1.eps}
+ \end{table}
+ 
+ Con estos parámetros se obtuvieron los resultados que se observan en el cuadro 3.15.
+
+%Presentar resultados
+\begin{table}[H]
+  \centering
+  \caption{Resultados de la medición de consumo de corriente de la implementación de PEGASIS}
+ \includegraphics[scale=0.6]{imgs/CuadrosMedicionesPegasisResultadosExperimento1.eps}
+ \end{table}
+
+El segundo experimento consistió en modificar el código del protocolo, para que el rol del líder no rotara y se mantuviera en el nodo 4. En el cuadro 3.16, se muestran los resultados.
+
+\begin{table}[H]
+  \centering
+  \caption{Resultados de la medición de consumo de corriente de PEGASIS estático}
+ \includegraphics[scale=0.6]{imgs/CuadrosMedicionesPegasisResultadosExperimento2.eps}
+ \end{table}
+
+%Comentar resultados
+
+%Conclusión
+Según los resultados obtenidos, prácticamente no hay diferencia en la corriente consumida si es que el protocolo utiliza rotación del líder o no. Es más, según los resultados es muy difícil que con esta implementación se logre alcanzar el objetivo de extender la duración del ciclo de operación de los nodos hasta al menos un mes, ya que el nodo consume continuamente 17 mA. Al revisar la medición completa (figura 3.6), se observa que el problema radica en el consumo del dispositivo cuando la radio está en estado idle, ni transmitiendo, ni recibiendo.\\
+
+%Agregar gráfico pichigateado de las mediciones descritas.
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.4]{imgs/GraficoCorrienteEstatico.eps}
+ \caption{Sistema de medición de corriente consumida por el TMoteSky}
+\end{figure}
+
+Para solucionar el problema y cumplir con los objetivos propuestos, se propone un nuevo esquema de recolección de datos, con un sistema de ruteo basado en un árbol simple, pero con mecanismos más agresivos para ahorrar energía. En el capítulo 4 se describe el diseño, implementación y pruebas de este nuevo enfoque. 

@@ -1,0 +1,125 @@
+\listfiles
+\documentclass[12pt,spanish,letterpaper,oneside]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,activeacute,es-lcroman]{babel}											%para incluir los caracteres españoles en el código fuente.
+\usepackage{graphicx}
+\usepackage{float}														%para que las tablas queden en donde 
+																					%el lugar donde está puesto el código fuente.
+\usepackage{listings}
+\usepackage{color}
+\usepackage{url}
+\usepackage[breaklinks]{hyperref}
+\usepackage{breakurl}													%Con esto por fin se rompieron las líneas del url
+
+\usepackage{listings}													%Para código fuente
+\usepackage{fancyvrb}
+\usepackage{anysize}													%para establecer los márgenes
+\usepackage{fancyhdr}													%Para modificar la posición del número de página
+
+%Título
+\title{Evaluación, selección e implementación de un protocolo de ruteo para un sistema 
+          de recolección de datos basado en una red de sensores inalámbricos}
+          
+%Información del autor
+\author{
+	Luis Espinoza Severino									\\
+	Ingeniería Civil Electrónica								\\
+	Universidad Técnica Federico Santa María		\\	
+	email:\url{luis.espinozas@alumnos.utfsm.cl}	\\
+																		\\
+	Profesor Guía: Agustín González Valenzuela	\\
+	Profesor Co-referente: Leopoldo Silva Bijit		\\
+} 
+%Márgenes
+\marginsize{4cm}{3cm}{3cm}{3cm}
+%Fecha	
+\date{Noviembre de 2010}
+\sloppy
+
+
+%Colocar el número de página abajo a la derecha
+
+%Configuración de las páginas planas.(Con esto logré la posición del número
+%en la tabla de contenidos, primera página de capítulo, etc.
+ \pagestyle{fancyplain}
+ \fancyhf{}
+ \rfoot{\thepage}
+ 
+ %\pagenumbering{roman} 
+%Estructura del documento
+\begin{document}
+	%\frontmatter
+	%Incluir Portada
+	\input{portada.tex}
+	
+	%Comenzar numeración romana
+	\renewcommand{\thepage}{\roman{page}}
+ 	\setcounter{page}{1}
+	
+	%Índice General
+	\tableofcontents
+	\addcontentsline{toc}{chapter}{Índice General}
+
+	%Índice de Figuras 
+ 	\listoffigures
+ 	\addcontentsline{toc}{chapter}{Índice de Figuras}
+
+	%Índice de Tablas
+ 	\listoftables
+ 	\addcontentsline{toc}{chapter}{Índice de Tablas} 
+ 
+   \input{resumen.tex}
+   \addcontentsline{toc}{chapter}{Resumen}
+
+   \input{abstract.tex} 
+   \addcontentsline{toc}{chapter}{Abstract} 
+ 
+ 	\mainmatter
+	%Reiniciar numeración y cambiar a números áraes
+	\renewcommand{\thepage}{\arabic{page}} 
+	\setcounter{page}{1}
+	
+	%Configuración del estilo de las páginas generales.(Como el cuerpo)
+	\pagestyle{fancy}
+	%Colocar el número de página abajo a la derecha
+    \fancyhf{}
+    \rfoot{\thepage}
+    \lhead{\leftmark} 	
+	\thispagestyle{fancy}
+ 	
+	%Incluir capítulo 1
+	\input{capitulo1.tex}
+	
+	%Incluir capítulo 2
+	\input{capitulo2.tex}
+	
+	%Incluir capítulo 3
+	\input{capitulo3.tex}
+	
+	%Incluir capítulo 4
+	\input{capitulo4.tex}
+	
+	%Incluir capítulo 5
+	\input{capitulo5.tex}
+	
+	%Incluir capítulo 5
+	\input{capitulo6.tex}
+	
+	\input{bibliografia.tex}
+
+	%Cambiar nombre de Apéndice a Anexos
+	\renewcommand{\appendixname}{Anexo}
+
+	%Comienzo de anexos
+	\appendix
+	%Incluir anexo A
+    \input{AnexoProgramacionTinyos.tex}
+    \
+    %Incluir anexo B
+    \input{AnexoWSNSniffer.tex}
+    
+    %Incluir anexo C
+    \input{AnexoLPL.tex}
+    
+\end{document}
+

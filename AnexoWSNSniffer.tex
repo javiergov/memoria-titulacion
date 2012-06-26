@@ -1,0 +1,73 @@
+
+\chapter{Implementación de WSNSniffer}
+Para evaluar el comportamiento lógico de la red de sensores inalámbricos, fue necesario contar con una aplicación que permitiera visualizar los mensajes intercambiados  entre los  nodos de la red. Lamentablemente, no se ha publicado una aplicación de escritorio que permita realizar esto, sin embargo, junto con TinyOS se distribuyen las herramientas necesarias para desarrollar un sistema que cumpla con los siguientes objetivos.
+
+\begin{itemize}
+ \item Capturar los mensajes intercambiados por nodos de la red.
+ \item Enviar esos mensajes por el puerto USB del TmoteSky.
+ \item Presentar los mensajes en una aplicación de escritorio, que utilice una interfaz gráfica de usuario.
+ \item Generar reportes en forma de tablas excel, para contar con resultados persistentes.
+\end{itemize}
+
+Utilizando las herramientas que provee TinyOS para el lenguaje de programación Java, se implementó una aplicación de escritorio que cumpliera con los objetivos descritos anteriormente. Además, se modificó la aplicación nesC ''BaseStation'' para que escuchara todos los mensajes que se hay en el canal y se instaló en un TMoteSky para que alimentara de mensajes a la aplicación Sniffer de escritorio. Ambas aplicaciones conforman el sistema que se muestra en la figura B.1
+\begin{figure}[H]
+	\centering
+ 	\includegraphics[scale=1]{imgs/ArquitecturaSistemaSniffer.eps} 
+ 	\caption{Arquitectura del Sistema Sniffer}
+\end{figure}
+
+En las próximas secciones se describen las etapas de este sistema implementado.
+
+\section{Etapa de captura y envío por USB de los mensajes detectados en el canal}
+Dentro de las aplicaciones nesC que incluye TinyOS se encuentra la aplicación "BaseStation". Esta aplicación funciona como un puente entre los mensajes que el mote recibe por el aire y un PC. Como el puerto serial está conectado a un microcontrolador USB, los mensajes pueden ser leídos por un PC a través de este puerto.  Por defecto, la aplicación "BaseStation" sólo escucha los mensajes que son direccionados al TOS\textunderscore NODE\textunderscore ID del nodo. Para habilitar que escuche todos los mensajes en el canal se debe modificar el archivo Makefile de la aplicación agregar el flag -DCC2420\textunderscore NO\textunderscore ADDRESS \textunderscore RECOGNITION. De esta forma, queda implementada la primera etapa del sistema Sniffer.
+
+\section{Etapa de presentación del detalle de los mensajes}
+Para implementar una aplicación que presente los mensajes recibidos de la red se opta por desarrollar una aplicación de escritorio Java. Las razones de esta elección son las siguientes:
+
+\begin{itemize}
+\item TinyOS incluye herramientas programadas en este lenguaje para interactuar con un nodo por comunicación serial.
+\item Permite el desarrollo rápido de interfaces gráficas de usuario.
+\item Permite la integración rápida con bases de datos y APIs para generar archivos Excel.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+ 	\includegraphics[scale=0.30]{imgs/SnifferScreenshot.eps} 
+ 	\caption{Captura de pantalla de la aplicación WSNSniffer}
+\end{figure}
+
+Se utiliza el IDE Netbeans para crear una aplicación con una interfaz gráfica que consta de una pequeña barra de menú y tres pestañas: la primera pestaña muestra la vista ''BaseStation'', que está pensada para ser usada con un mote utilizando la aplicación ''BaseStation'' y recibe los mensajes direccionados al Gateway y muestra, en función del nodo, el dato medido actualizado con el último valor recibido; en la segunda pestaña se muestra la vista ''Sniffer'', pensada para ser utilizada con un mote corriendo la aplicación Sniffer, que muestra todos los mensajes captados en el canal de comunicación; finalmente, la última pestaña muestra estadísticas sobre los mensajes recibidos. Cada pestaña utiliza una JTable para mostrar la información correspondiente.
+
+\section{Recepción de mensajes por el puerto serie}
+%intro
+Como se mencionó antes, la aplicación BaseStation en el TmoteSky, reenvía los mensajes recibidos por la radio a través de la UART del MSP430, que mediante un microcontrolador USB, son enviados al puerto USB. Los mensajes reenviados por el puerto serie son compatibles con la estructura ActiveMessages, que es la misma que se utiliza para intercambiar mensajes por radio, por lo que los mensajes que llegan por el puerto serie a la aplicación  son exactamente los mismos que recibe el mote por radio.\\
+
+% La pila ActiveMessage implementa la generación de ACKs por mensajes recibidos, pero estos mensajes no se pueden capturar, ya que los ACKs utilizados son de bajo nivel y no se proveen funciones para obtener estos mensajes en las capas de alto nivel.\\
+
+%La clase MoteIF
+Para recibir un ActiveMessage por el puerto USB, la colección de herramientas Java de TinyOS provee la interfaz a nivel de aplicación "net.tinyos.message.MoteIF". Esta clase recibe de la aplicación un  \textbf{packet source}, que es un medio de comunicación por el cuál la clase MoteIF intercambia paquetes ActiveMessage con TinyOS corriendo en el TMoteSky. Un packet source puede ser un puerto serial, un socket TCP o la herramienta SerialForwarder. Para el desarrollo de esta aplicación, se opta por utilizar como packet source el puerto serial.\\
+
+%Manejo de eventos, registrar listeners.
+La clase MoteIF, permite registrar "listeners" (aclaración) para mensajes ActiveMessage de un "MessageType" en particular. Así, utilizando un manejador de eventos, se puede gestionar la información de un mensaje recibido. Dada esta estructura de recepción de mensajes, la aplicación sólo puede gestionar los mensajes de "MessageType" conocidos, es decir, que el programador sabe cuáles son los "Message Type" que se están intercambiando en el canal. En consecuencia, si no se registra un Listener, la clase MoteIF ignorará el mensaje. El método MoteIF.RegisterListener, recibe como entrada una clase Message o una clase heredera de esta y una implementación de la interfaz MessageListener. La clase que implementa la interfaz MessageListener, debe implementar el método void messageReceived(int to, Message m), que es el método que maneja el evento de recepción del mensaje al MessageType asociado.\\
+
+%Clases de mensaje y Mig
+En esta aplicación se utilizan dos implementaciones de la interfaz MessageListener: TopologyMsgListener y MHDataMsgListener, que corresponden a las dos clases de mensajes que gestiona la aplicación: TopologyMsg y MHDataMsg. Las clases de mensajes implementadas se ocupan de estructurar los mensajes recibidos, es decir, entregan los métodos get y set necesarios para cada campo del mensaje, una sobrecarga del método toString, que permite crear un string con toda la información que describe el mensaje y los métodos para crear nuevos mensajes desde la aplicación. Estas clases son en parte creadas con la herramienta "MIG" que se distribuye con TinyOS. MIG (Message Interface Generator) es una herramienta que genera código Java, Python o C para gestionar los ActiveMessage declarados en el archivo de cabecera ".h" que contiene las estructuras  que utilizan las aplicaciones nesC de los motes.\\
+
+Sin embargo, la herramienta MIG no puede generar la clase requerida para el tipo de mensaje MHDataMsg, debido a que el largo de este tipo de mensajes no es fijo. Para solucionar este problema, se utiliza MIG para generar la cabecera de los mensajes y el manejo de el campo "data", de largo variable, se implementa dentro de la misma clase pero de forma manual. El comando que se utiliza para generar una clase java a partir de la descripción de un mensaje en un .h es:\\
+
+\begin{verbatim}
+mig -target=telosb -java-classname=TopologyMsg java Messages.h 
+Topology_Msg -o TopologyMsg.java
+
+mig -target=telosb -java-classname=DebugMsg java Messages.h 
+Debug_Msg -o DebugMsg.java
+\end{verbatim}
+
+Luego de capturar los mensajes, estos se ingresan a una JTable para presentarlos visualmente. Se asignan colores a los mensajes de topología, para diferenciarlos claramente de los mensajes de datos en las pruebas. 
+
+\section{Generación de archivos Excel}
+La cantidad de mensajes que puede escuchar el sniffer en una prueba puede ir desde decenas hasta millones. Cuando una aplicación está presentando millones de mensajes, es posible la aplicación se vuelva inestable y se arriesga a perder los datos recolectados. Por lo tanto, es necesario pasar esa información a otro medio. Se estudia la posibilidad de incorporar una base de datos a la aplicación y también, la posibilidad de generar archivos Excel copiando la tabla presentada en la aplicación a un archivo permanente. Debido a que la base de datos requiere mucho más desarrollo y que la generación de algún tipo de archivo o reporte será necesario en cualquier caso, se opta por utilizar una API que genere archivos Excel.\\
+
+Para generar un archivo Excel, se utiliza la Java Excel API, que es una librería de código abierto que permite leer, escribir, modificar y crear planillas Excel. Esta API se distribuye en el archivo jxl.jar. Para que el usuario pueda generar un archivo Excel, se agrega un botón en el menú archivo, que ejecuta la rutina para exportar la tabla a un archivo Excel.\\
+
+En el CD adjunto a este trabajo, se encuentra el proyecto Netbeans que implementa esta aplicación. En el se encuentra el código fuente y también las versión jar. Además, se incluye también la versión del WSNSniffer para el protocolo PEGASIS. Es importante destacar que para que estos programas funcionen correctamente, es necesario tener correctamente instaladas las herramientas de TinyOS que permiten la comunicación serial con los motes.

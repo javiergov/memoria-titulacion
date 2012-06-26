@@ -1,0 +1,161 @@
+\chapter{Diseño de un protocolo con topología de árbol}
+
+Debido a los resultados obtenidos en la evaluación energética de la implementación del protocolo PEGASIS descrita en el capítulo 3, se decidió diseñar e implementar un nuevo enfoque de recolección de datos, utilizando una técnica que permita reducir el consumo del TMoteSky en los tiempos de idle listening. Se optó por implementar un árbol de ruteo, similar a la construcción de red propuesta en el estándar IEEE 802.15.4, construido para utilizar la herramienta Low Power Listening para reducir el consumo de corriente del dispositivo. \\
+
+\section{Visión general del diseño}
+
+El diseño comienza con la búsqueda de una estrategia de ahorro energético que permita reducir el consumo de corriente del TMoteSky, atacando el problema del consumo de corriente del chip CC2420 en estado idle. Posteriormente, se diseña el '' Componente de recolección'', un esquema de formación y control de la topología, que permite establecer una red con topología de árbol multihop y mantener la recolección de datos incluso si se presentan nodos muertos. 
+
+\section{Estrategias de ahorro energético}
+El perfil del consumo de corriente del TMoteSky, está dominado principalmente por el consumo del transceptor CC2420.
+
+\begin{table}[H]
+  \centering
+  \caption{Principal consumo de corriente en el TMoteSky  \cite{TelosBConsumo}}
+ \includegraphics[scale=0.5]{imgs/ConsumoTmoteSky.eps}
+\end{table}
+
+Como se muestra en el cuadro 4.1, el consumo del CC2420 representa más del 90\% del consumo total del dispositivo.\\
+
+Para los dispositivos que soportan TinyOS, se han planteado dos estrategias de ahorro energético: La primera consiste en utilizar un ciclo de trabajo sincronizado, donde los dispositivos mantienen sus radios apagadas por periodos largos de tiempo y las enciendan por periodos cortos, realizando este ciclo de manera sincronizada en toda la red; o, utilizar la técnica ''Low Power Listening'', que consiste en apagar la radio y encenderla periódicamente, por periodos de tiempo cortos, para sensar el canal y detectar cuando otro dispositivo quiere transmitir un mensaje.\\
+
+La primera estrategia requiere un protocolo de sincronización de tiempo, que consiste en un conjunto de operaciones y mensajes que se intercambian en la red para mantener secciones o la totalidad de la red sincronizada en el tiempo. TinyOS provee un protocolo llamado ''Flooding Time Sync Protocol'' (Protocolo de sincronización de tiempo por inundación, FTSP), que consiste en inundar la red con el tiempo del nodo con menor TOS\_NODE\_ID en la red (''tiempo global''). Sin embargo, se ha documentado que la implementación para la radio CC2420 hereda un bug de la implementación de la interfaz PacketTimeStamp para el CC2420\cite{FtspBug}. El error causa que continuamente los receptores del mensaje de sincronización obtengan un tiempo global errado por decenas de milisegundos, lo que eventualmente causa la pérdida de sincronización.\\
+
+La estrategia ''Low Power Listening'' tiene el objetivo de disminuir el consumo de corriente, disminuyendo el tiempo de idle listening y a su vez permite que la red sea asincrónica. Para lograr estos objetivos, la implementación toma las medidas siguientes:
+
+\begin{itemize}
+\item Se implementa un ciclo de poder para la radio (ciclo LPL), es decir, ciclo de radio encendida y radio apagada.
+\item La radio se mantiene encendida el tiempo suficiente para detectar un carrier en el canal.
+\item Si detecta un carrier, se mantiene encendida la radio para recibir el mensaje.
+\item Cuando se envía un mensaje, se extiende el tiempo de duración del preámbulo hasta el tiempo de duración del ciclo LPL.
+\end{itemize}
+
+\begin{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.625]{imgs/GraficoTiemposLPLsoloLPL.eps} 
+\caption{Gráfico del consumo de corriente que tiene el TmoteSky con módulo LPL activado, cuando realiza operaciones escucha en bajo consumo.}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.625]{imgs/GraficoTiemposLPLTX.eps} 
+\caption{Gráfico del consumo de corriente que tiene el TmoteSky con módulo LPL activado, cuando transmite un paquete con extensión de preámbulo.}
+\end{figure}
+\end{center}
+
+ Debido a la ausencia de un protocolo robusto de sincronización de tiempo implementado para TinyOS y a que implementar un protocolo de esta naturaleza está fuera del alcance de este trabajo, se decidió utilizar la estrategia ''Low Power Listening'' para gestionar el consumo de corriente del TMoteSky. En el  Anexo C, se describe en detalle la utilización de este componente y se realiza una caracterización del consumo para distintos escenarios.
+
+\section{Diseño del componente de recolección}
+
+Al igual que la implementación del protocolo PEGASIS, se construye el protocolo de red sobre la pila de comunicación ''Radio Stack'' que provee TinyOS. Además, se decide incluir otras mejoras no exploradas antes: Una cola de reenvío, para reducir las posibilidades de perder mensajes; y mensajes de datos con carga de largo variable, para dar libertad a la aplicación usuaria del protocolo a que utilice una estructura de datos arbitraria para sus datos. Siguiendo el mismo esquema de implementación que CTP y Dissemination, el protocolo debe implementar las funciones Send y Receive, que proveerán las funciones de red necesarias para que el nodo pueda enviar y recibir mensajes al Gateway.
+%Diagrama del Stack
+%\begin{center}
+%\begin{figure}[H]
+ %\centering
+ %\includegraphics[scale=0.4]{imgs/Stack.eps}
+ %\caption{Stack}
+%\end{figure}
+%\end{center}
+\subsection{Formato de mensajes}
+En las próximas secciones se mencionarán de forma recurrente los mensajes definidos para esta implementación, por lo que a continuación se describen los dos tipos de mensajes diseñados para el protocolo árbol: Mensajes de Topología y Mensajes de Datos Multihop.\\ 
+
+Los mensajes de topología son todos los mensajes intercambiados para la formación y mantención de la topología de árbol de la red, a los cuales se les asigna el AM Type 0x20.
+%Topology Message
+\begin{table}[H]
+  \centering
+  \caption{Descripción de la estructura de un mensaje de topología.}
+ \includegraphics[scale=0.5]{imgs/MensajesProtocoloMultihopTopologia.eps}
+\end{table}
+
+Dentro de los mensajes de topología establecen los siguientes tipos: ''beacon request'', ''beacon response'', ''join request'', ''join response ok'' y ''join response denied''.
+
+%Multihop Message Header
+\begin{table}[H]
+  \centering
+  \caption{Descripción de la estructura de un mensaje de datos.}
+ \includegraphics[scale=0.5]{imgs/MensajesProtocoloMultihopMensajeDato.eps}
+\end{table}
+
+Los mensajes de datos multi-hop son los que transportan los datos generados por la aplicación a través de la red, a los cuales se les asigna el AM Type 0x21. Para estos mensajes sólo se define la cabecera, ya que el resto del mensaje variará según como sea definido por la aplicación.
+
+%Secuencias
+\subsection{Descripción de secuencias y lógica}
+En esta sección se describen las secuencias de mensajes y la lógica que se implementa para la formación de una red con topología de árbol. Para formar el árbol de asociación se utiliza el esquema planteado por la IEEE 802.15.4 \cite{IEEE802154}, 
+%Secuencia de Asociación
+\subsubsection{Secuencia de Asociación}
+Para formar el árbol de recolección se utiliza un sistema de beacons (faros). Los nodos descubren la red enviando un mensaje de ''Beacon Request'', que sólo será respondido por un nodo que ya se encuentre en la red. El Gateway asume el rol de raíz y primer beacon, y en consecuencia, a partir del descubrimiento del Gateway, la red se ramifica en forma de árbol. La secuencia de asociación que propone este esquema consiste en el intercambio de cuatro mensajes:\\
+ 
+ \textbf{BEACON\textunderscore REQUEST:} Este mensaje es utilizado para permitir que el nodo emisor encuentre la red. Debe incluir al menos la dirección origen, para permitir que los nodos que estén en la red le respondan con un mensaje BEACON\textunderscore RESPONSE, y debe ser direccionado a la dirección de broadcast.\\
+ 
+ \textbf{BEACON\textunderscore RESPONSE:} Este mensaje se envía en respuesta a un BEACON\textunderscore REQUEST. Sólo puede ser enviado por un nodo que ya esté asociado a la red y debe proveer la información necesaria para que el nodo que está ingresando a la red pueda decidir entre varios mensajes BEACON\textunderscore RESPONSE el que estime como el mejor candidato para negociar una asociación.\\
+ 
+ \textbf{JOIN\textunderscore REQUEST:} Si el nodo que está tratando de asociarse a la red ha recibido mensajes BEACON\textunderscore RESPONSE y ha determinado un nodo candidato para realizar la negociación de asociación, envía un mensaje de JOIN\textunderscore REQUEST dirigido al nodo candidato. Este mensaje debe contener al menos la dirección de origen del nodo que realiza este requerimiento.\\
+ 
+ \textbf{JOIN\textunderscore RESPONSE:} Un nodo que está en la red que recibe un JOIN\textunderscore REQUEST debe responder al nodo que ha solicitado la asociación con la red en forma positiva o negativa. Este mensaje debe contener al menos la dirección origen y la respuesta a la asociación.\\
+ 
+ %Diagrama de secuencia de asociación
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.45]{imgs/DiagramaSecuenciaAsociacion.eps}
+ \caption{Diagrama UML de secuencia de asociación}
+\end{figure}
+
+En la figura 4.3 se muestra la secuencia que se desea implementar para asociar un nodo que entra a la red (Nodo A) con otro que ya está en la red (Nodo B). Primero, nodo A envía un mensaje broadcast BEACON\textunderscore REQUEST, el nodo B escucha el mensaje y envía un BEACON\textunderscore RESPONSE. El nodo A espera un tiempo arbitrario, denominado "BEACON\_REQUEST\_INTERVAL" , que permite que el nodo A reciba y almacene temporalmente varios mensajes BEACON\textunderscore RESPONSE. Si el nodo ha recibido mensajes beacon request y ha determinado un candidato para solicitar la asociación a la red, envía un JOIN\textunderscore REQUEST al candidato. Si no ha encontrado ningún candidato, vuelve a enviar un BEACON\textunderscore REQUEST.
+
+%Secuencia de Multihop
+\subsubsection{Secuencia de envío y reenvío de mensajes multihop}
+En esta secuencia se intercambian dos tipos de mensajes.\\
+
+\textbf{MH\textunderscore DATA:} Estos mensajes pueden ser generados por un nodo que está asociado a la red y son los que transportan datos entregados por la capa de aplicación. Estos mensajes deben ser capaces de ser generados con largo variable, para permitir a la aplicación que envíe dentro de estos mensajes las estructuras de datos que estime convenientes. La cabecera debe ser de un largo definido y debe al menos incluir: la dirección de origen del mensaje, un número de secuencia y el largo del mensaje. La dupla formada por la dirección del mensaje y número de secuencia funciona como una ''clave primaria'' que permite identificar, de forma única, un mensaje. La identificación de un mensaje es útil para tolerar fallas y la organización de los mensajes en el destino final, por ejemplo, una base datos. Estos mensajes pueden ser generados por un nodo, o bien, recibidos por un nodo para posteriormente ser reenviados.\\
+
+\textbf{ACK:} Este tipo de mensaje debe ser generado cada vez que un nodo recibe un mensaje MH\textunderscore DATA para informar al nodo fuente del mensaje, que el nodo intermedio o destino ha recibido el mensaje correctamente. Estos mensajes son de sólo un salto, ya que como este protocolo es diseñado para realizar el "mejor esfuerzo" no se implementan ACKs multihop.\\
+
+%Diagrama de secuencia multihop
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.45]{imgs/DiagramaSecuenciaMultihop.eps}
+ \caption{Diagrama de secuencia de asociación}
+\end{figure}
+
+En la figura 4.4 se observa la secuencia de envío de un mensaje Multihop. El nodo A determina que su próximo salto es el nodo B y envía un mensaje MH\textunderscore DATA al nodo B. El nodo B responde con un ACK si recibe el mensaje correctamente, sino no envía mensaje alguno.  Luego el nodo B determina que el próxima salto es el nodo C y reenvía el mensaje recibido hacia el nodo C. Está secuencia debe continuar a través de todos los nodos intermedios hasta que finalmente llega al Gateway.
+
+%Secuencia de Reconexión
+\subsubsection{Secuencia de reconexión}
+Puede suceder que un nodo presente algún tipo de falla, agote su batería o simplemente desaparezca aparentemente de la red. En ese caso, los nodos que rutean mensaje a través de él, deben detectar que este nodo ya no está presente. Ya que los nodos cuando reciben un mensaje de datos deben confirmar con un ACK, un nodo puede identificar que un nodo ha desaparecido aparentemente por la pérdida de ACKs.\\
+
+%Diagrama de Reconexión
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.45]{imgs/DiagramaSecuenciaReconexion.eps}
+ \caption{Diagrama de secuencia de renovación de la asociación}
+\end{figure}
+
+La secuencia de desconexión y reconexión comienza con la pérdida sucesiva de ACKs, digamos que el nodo A está ruteando mensajes a través del nodo B, y el nodo B aparentemente desaparece. Cuando el nodo A intenta enviar un mensaje MH\textunderscore DATA al nodo B,éste no responde con un ACK, por lo tanto el nodo A puede identificar un ACK perdido. Luego de un número definido arbitrariamente de ACKs perdidos, el nodo A deja la asociación con el nodo B. Posteriormente, el nodo A vuelve a buscar un padre utilizando la secuencia de asociación descrita anteriormente.
+
+%Secuencia BROADCAST
+\subsubsection{Secuencia de MHData Broadcast}
+ Es posible, que la aplicación requiera enviar un mensaje de datos para configurar la aplicación de uno, varios o todos los nodos. Al no utilizar direcciones, ni tablas de ruteo que indiquen el camino a un nodo en particular, no se puede generar una ruta específica a un nodo X desde el Gateway. Otros protocolos similares de recolección (ver CTP más Dissemination) realizan esta funcionalidad mediante una inundación o diseminación del mensaje, a través de toda la red. Para emular este comportamiento, se decide diseñar una funcionalidad de "broadcast de red" para los mensajes de datos, que pueda ser utilizada por cualquier nodo de la red. El esquema que se propone es el siguiente:
+
+\begin{itemize}
+\item Se agrega al mensaje MH\textunderscore DATA los campos: bcast\textunderscore seqnum, para que un nodo pueda diferenciar los mensajes de broadcast; y bcast\textunderscore radio, para establecer cuál es el radio (en términos de reenvío) de alcance del broadcast.
+
+\item Cuando un nodo se prepara para enviar un mensaje de broadcast, debe especificar que este mensaje es de broadcast, asignar un valor de  bcast\textunderscore seqnum coherente y un radio de alcance.
+
+\item El nodo que recibe un mensaje de broadcast debe utilizar el bcast\textunderscore seqnum para decidir si es necesario reenviar o no el mensaje.
+
+\item Una vez que ha decidido reenviar el mensaje, debe decrementar el valor del bcast\textunderscore radio para indicar a los próximos saltos que el mensaje ya ha avanzado un nodo en el radio de alcance.
+\end{itemize}
+
+\subsubsection{Encolamiento y reenvío de mensajes}
+Para reducir la pérdida de mensajes, se diseña una cola de mensajes que permita encolar los mensajes generados por el nodo y los mensajes recibidos desde otros nodos que deben ser reenviados. Una cola FIFO permite un ordenamiento intrínseco de los mensajes, donde el primer mensaje ingresado estará asociado a la cabeza de la cola FIFO (head) y el último estará en la cola (tail).\\ 	
+%Diagrama de encolamiento de mensajes
+%\begin{figure}[H]
+ %\centering
+ %\includegraphics[scale=0.625]{imgs/DiagramaColaFifo.eps}
+% \caption{Diagrama de encolamiento de mensajes}
+%\end{figure}
+
+Las secuencias, funcionalidades y componentes descritos se implementarán en forma de una Configuración NesC, de forma similar a como se realiza con PEGASIS en el capítulo 3. En el próximo capítulo se describirá como se implementa este diseño para TinyOS, utilizando LPL para realizar las operaciones en ultra bajo consumo. Además se revisan las pruebas de verificación para cada componente y funcionalidad, junto con la evaluación energética correspondiente.
