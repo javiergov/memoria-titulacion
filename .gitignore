@@ -20,3 +20,11 @@ build/
 # Backup files
 *.swp
 *~.nib
+
+# basura por LaTeX
+*.aux
+*.lof
+*.log
+*.lot
+*.out
+*.toc
