@@ -1,28 +1,38 @@
 \newpage
 \thispagestyle{empty}
 \begin{center}
- \Large \textbf{Evaluación, selección e implementación de un protocolo de ruteo para un sistema de recolección de datos basado en una red de sensores inalámbricos}\\
+ \Large \textbf{Diseño e implementación de aplicación cliente en dispositivos iOS para la reproducción de medios en un servidor de streaming timeshift.}\\
 
 \normalsize Memoria para optar al título de Ingeniero Civil Electrónico, mención Computadores \\
-\normalsize Luis Enrique Espinoza Severino \\
+\normalsize Javier González Ovalle \\
 \normalsize Profesor Guía: Agustín González Valenzuela \\
-\normalsize Noviembre 2010
+\normalsize Junio de 2012
 
 \Large \textbf{Resumen}
 
 \end{center}
 \normalsize
+\textbf{Objetivos del Trabajo:}\\
 
+\normalsize
 %Siguiendo el esquema de AHidalgo.pdf
 
 %Primer parrafo, descripción breve de los objetivos
-El objetivo de este trabajo es implementar un protocolo de ruteo multi-hop que permita a un sistema de recolección de datos, construido sobre una red de sensores inalámbricos, transportar los datos generados por los sensores a un punto de recolección en la red.\\ 
+Nuevos avances se han realizado en el manejo de transmisiones en vivo de medios como audio y/o video, que permiten emular la característica principal de dispositivos de sobremesa del tipo Programmable (Digital) Video Recorders (PVR ó DVR), la cual es la posibilidad de pausar, retroceder o avanzar,cuando es posible, la linea de tiempo de reproducción. Esto se logra gracias a aplicaciones que interactuan con servidores de flujo de datos de audio y video para lograr un registro de la reproducción. Donde el cliente se comunica para recibir los datos y retornar comandos\\ 
 
 %Segundo párrafo, contextualizaciòn del problema
-El sistema de recolección objetivo está orientado principalmente al monitoreo de variables físicas relacionadas con la agricultura como la humedad y la temperatura de los suelos, en zonas de difícil acceso y que no cuentan con redes de distribución eléctrica. La red de sensores inalámbricos que se utiliza para este trabajo está implementada sobre la plataforma de hardware TmoteSky y la plataforma de software TinyOS. En este contexto, se investigan e implementan protocolos que permitan extender el tiempo de autonomía de los nodos al orden de meses.\\
+Se busca suplir la necesidad de un reproductor de audio y/o video que permita la interacci\'on con un servidor de streaming (flujo) de datos, con habilidad de Time-Shift. Esto es la habilidad de retroceder o avanzar (si es posible) en la linea de tiempo de la reproducci\'on del audio o del video al que el usuario atiende.\\
+
+Esto ya se logra en computadores de escritorio gracias a un reproductor de streaming basado en la tecnolog\'ia Flash de Adobe. Los reproductores embebidos en p\'aginas web reproducen el stream en base al protocolo Real Time Messaging Protocol (RTMP), el cual permite llamadas de control entre cliente y servidor para manejar la linea de tiempo. Sin embargo se busca llegar a una mayor audiencia portando la capacidad de reproducci\'on en dispositivos que utilizan el sistema operativo iOS de Apple.\\
+
+El objetivo de este trabajo se debe a que Apple por pol\'iticas internas, no apoya la distribuci\'on de Adobe Flash. Por lo tanto se busca implementar una soluci\'on que permita la reproducci\'on de la transmisi\'on con Time-Shift y que adem\'as concuerde con las pol\'iticas de distribuci\'on para las aplicaciones iOS en la AppStore.\\
  
+\large
+\textbf{Trabajo a Desarrollar:}\\
+
+\normalsize
 %Tercer y cuarto párrafo, que y como se realizó
-Para comenzar, se realiza una investigación de los algoritmos de ruteo para redes de sensores que se han propuesto en la literatura y los protocolos que se han implementado en algunas plataformas. Posteriormente, se realiza una implementación del protocolo PEGASIS y un diseño e implementación de un protocolo de ruteo con topología de árbol que utiliza el componente ''Low Power Listening'' para reducir el consumo energético. Finalmente, se realiza una evaluación energética en la que se determina que con la utilización del componente ''Low Power Listening'' es posible implementar una red con un tiempo de autonomía energética del orden requerido.\\
+El trabajo comenzar\'a con la investigaci\'on de los protocolos propuestos por Apple para la distribuci\'on de medios (audio y/o video). En base a estos protocolos buscar similitudes con el sistema de streaming para computadores de escritorio. Adem\'as se debe implementar un m\'etodo de marcaci\'on de tiempo en el stream de datos destinado a dispositivos m\'oviles, de forma que el servidor los env\'ie para que el cliente los interprete. Este cliente debe ser una aplicaci\'on que reciba y env\'ie comandos compatibles con el servidor Wowza para controlar la informaci\'on del medio a reproducir. Finalmente se debe dise\~nar una interfaz gr\'afica que represente la linea de tiempo y permita controlar la reproducci\'on.\\
 
 %Palabras clave.
-\textbf{Palabras Claves:} redes, sensores, ruteo, protocolos, algoritmos, energía.
+%	\textbf{Palabras Claves:} redes, sensores, ruteo, protocolos, algoritmos, energía.
