@@ -28,3 +28,7 @@ build/
 *.lot
 *.out
 *.toc
+
+#	basura de texmaker
+*.synctex.gz
+*.pdf
