@@ -48,7 +48,8 @@
 \begin{document}
 	%\frontmatter
 	%Incluir Portada
-	\input{portada.tex}
+	%\input{portada.tex}
+	\include{portada.tex}
 	
 	%Comenzar numeración romana
 	\renewcommand{\thepage}{\roman{page}}
@@ -66,10 +67,10 @@
  	\listoftables
  	\addcontentsline{toc}{chapter}{Índice de Tablas} 
  
-   \input{resumen.tex}
+   \include{resumen.tex}
    \addcontentsline{toc}{chapter}{Resumen}
 
-   \input{abstract.tex} 
+   \include{abstract.tex} 
    \addcontentsline{toc}{chapter}{Abstract} 
  
  	\mainmatter
