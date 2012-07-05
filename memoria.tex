@@ -48,8 +48,8 @@
 \begin{document}
 	%\frontmatter
 	%Incluir Portada
-	%\input{portada.tex}
-	\include{portada.tex}
+	\input{portada.tex}
+	%\include{portada.tex} si le pongo include no me aparece con la compilación rápida
 	
 	%Comenzar numeración romana
 	\renewcommand{\thepage}{\roman{page}}
@@ -67,10 +67,10 @@
  	\listoftables
  	\addcontentsline{toc}{chapter}{Índice de Tablas} 
  
-   \include{resumen.tex}
+   \input{resumen.tex}
    \addcontentsline{toc}{chapter}{Resumen}
 
-   \include{abstract.tex} 
+   \input{abstract.tex} 
    \addcontentsline{toc}{chapter}{Abstract} 
  
  	\mainmatter
