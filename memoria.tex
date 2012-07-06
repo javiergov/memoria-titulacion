@@ -3,13 +3,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,activeacute,es-lcroman]{babel}	%para incluir los caracteres españoles en el código fuente.
 \usepackage{graphicx}
-\usepackage{float}	%para que las tablas queden en donde el lugar donde está puesto el código fuente
+\usepackage{float}		%para que las tablas queden en donde el lugar donde está puesto el código fuente
 \usepackage{listings}
 \usepackage{color}
 \usepackage{url}
 \usepackage[breaklinks]{hyperref}
 \usepackage{breakurl}	%Con esto por fin se rompieron las líneas del url
-
 \usepackage{listings}	%Para código fuente
 \usepackage{fancyvrb}
 \usepackage{anysize}	%para establecer los márgenes
@@ -70,8 +69,8 @@
    \input{resumen.tex}
    \addcontentsline{toc}{chapter}{Resumen}
 
-   \input{abstract.tex} 
-   \addcontentsline{toc}{chapter}{Abstract} 
+   % \input{abstract.tex} 
+   % \addcontentsline{toc}{chapter}{Abstract} 
  
  	\mainmatter
 	%Reiniciar numeración y cambiar a números áraes
@@ -87,7 +86,7 @@
 	\thispagestyle{fancy}
  	
 	%Incluir capítulo 1
-	% \input{capitulo1.tex}
+	\input{capitulo1.tex}
 	
 	%Incluir capítulo 2
 	% \input{capitulo2.tex}
