@@ -12,7 +12,7 @@
 
 \end{center}
 \normalsize
-\textbf{Objetivos del Trabajo:}\\
+\textbf{Objetivos del Trabajo:} \\
 
 \normalsize
 %Siguiendo el esquema de AHidalgo.pdf
@@ -25,14 +25,26 @@ Se busca suplir la necesidad de un reproductor de audio y/o video que permita la
 
 Esto ya se logra en computadores de escritorio gracias a un reproductor de streaming basado en la tecnolog\'ia Flash de Adobe. Los reproductores embebidos en p\'aginas web reproducen el stream en base al protocolo Real Time Messaging Protocol (RTMP), el cual permite llamadas de control entre cliente y servidor para manejar la linea de tiempo. Sin embargo se busca llegar a una mayor audiencia portando la capacidad de reproducci\'on en dispositivos que utilizan el sistema operativo iOS de Apple.\\
 
-El objetivo de este trabajo se debe a que Apple por pol\'iticas internas, no apoya la distribuci\'on de Adobe Flash. Por lo tanto se busca implementar una soluci\'on que permita la reproducci\'on de la transmisi\'on con Time-Shift y que adem\'as concuerde con las pol\'iticas de distribuci\'on para las aplicaciones iOS en la AppStore.\\
+El objetivo de este trabajo se debe a que Apple por políticas internas, no apoya la distribuci\'on de Adobe Flash. Por lo tanto se busca implementar una soluci\'on que permita la reproducci\'on de la transmisi\'on con Time-Shift y que adem\'as concuerde con las pol\'iticas de distribuci\'on para las aplicaciones iOS en la AppStore.\\
  
 \large
 \textbf{Trabajo a Desarrollar:}\\
 
 \normalsize
 %Tercer y cuarto párrafo, que y como se realizó
-El trabajo comenzar\'a con la investigaci\'on de los protocolos propuestos por Apple para la distribuci\'on de medios (audio y/o video). En base a estos protocolos buscar similitudes con el sistema de streaming para computadores de escritorio. Adem\'as se debe implementar un m\'etodo de marcaci\'on de tiempo en el stream de datos destinado a dispositivos m\'oviles, de forma que el servidor los env\'ie para que el cliente los interprete. Este cliente debe ser una aplicaci\'on que reciba y env\'ie comandos compatibles con el servidor Wowza para controlar la informaci\'on del medio a reproducir. Finalmente se debe dise\~nar una interfaz gr\'afica que represente la linea de tiempo y permita controlar la reproducci\'on.\\
+El trabajo comenzar\'a con la investigaci\'on de los protocolos propuestos por Apple para la distribuci\'on de medios (audio y/o video). En base a estos protocolos buscar similitudes con el sistema de streaming para computadores de escritorio. Adem\'as se debe implementar un m\'etodo de marcaci\'on de tiempo en el stream de datos destinado a dispositivos m\'oviles, de forma que el servidor los env\'ie para que el cliente los interprete. Este cliente debe ser una aplicaci\'on que reciba y env\'ie comandos compatibles con el servidor Wowza para controlar la informaci\'on del medio a reproducir. Finalmente se debe dise\~nar una interfaz gr\'afica que represente la linea de tiempo y permita controlar la reproducción.\\
+
+\textbf{Evaluaciones a Realizar:}
+\normalsize
+\begin{itemize}
+\item	Comprobar la transmisión y recepción de datos en HTTP Live Stream u otro protocolo compatible con iOS, a través de un servidor de streaming dedicado y un dispositivo con iOS.
+\item	Comprobar el intercambio de mensajes de control a través de un enlace entre el cliente móvil y el servidor de streaming.
+\item	Pruebas comparativas de la reproducción en dispositivo móviles y computadores de escritorio.
+\end{itemize}
+
+\textbf{Resultados esperados:}\\
+\normalsize
+Se espera que la reproducción en dispositivos móviles de las transmisiones en vivo se asemejen a la experiencia de reproducción en computadores de escritorio.\\
 
 %Palabras clave.
-%	\textbf{Palabras Claves:} redes, sensores, ruteo, protocolos, algoritmos, energía.
+%	\textbf{Palabras Claves:} streaming, iOS, video, audio, apple, iPhone.
