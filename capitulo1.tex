@@ -94,9 +94,11 @@ Actualmente se encuentra en desarrollo en Chile el producto SocialStream, para c
 Una herramienta que permite registrar en el momento, una transmisión en vivo, ya sea de audio o video. Posibilitando al consumidor del contenido, retroceder a un punto en específico, pausar  y avanzar (limitado por el punto más reciente de la transmisión). 
 A diferencia de dispositivos de sobremesa (set top boxes) como lo son TiVo u otros DVR, el registro de la transmisión es encargado al servidor que provee los contenidos a los clientes que se conectan, y esto contenidos no son guardados localmente.
 Este sistema nos significan los siguientes beneficios: 
-•	Ahorro para el consumidor, espacio en sus dispositivos de almacenamiento
-•	Cierto control del proveedor sobre la distribución  y copia de los contenidos
-•	La posibilidad de portar a otras plataformas como consolas de videojuegos o dispositivos móviles.
+\begin{itemize}
+\item Ahorro para el consumidor, espacio en sus dispositivos de almacenamiento
+\item Cierto control del proveedor sobre la distribución  y copia de los contenidos
+\item La posibilidad de portar a otras plataformas como consolas de videojuegos o dispositivos móviles.
+\end{itemize}
 
 Las bases de esta herramienta se fundan sobre Adobe Flash gracias a su protocolo RTMP. Y considerando el estado actual de las relaciones entre Apple y Adobe (carta de Steve Jobs, exCEO de Apple) surge nuestro principal problema:
 
@@ -104,7 +106,45 @@ Las bases de esta herramienta se fundan sobre Adobe Flash gracias a su protocolo
 
 En las plataformas de escritorio y algunos smartphones, esto no significa un problema. Sin embargo los dispositivos de Apple con el sistema operativo iOS no presentan compatibilidad con estas tecnologías Flash.
 
+\clearpage 
+\begin{figure}[h!]
+	\centering
+	% \fbox{ } % la encierra en un cuadrado, sirve para código también
+	 \includegraphics[scale=0.47]{imgs/sshot_Android_sstream.jpg}
+ 	\caption{Reproducción de SocialStream en Android OS.}
+ 	\label{sshot_Android_sstream}
+\end{figure}
+%\vspace{3cm}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{imgs/sshot_iOS_sstream.png}
+	\caption{Reproducción de SocialStream en iOS}
+	\label{sshot_iOS_sstream}
+\end{figure}
+
+	De las figuras \ref{sshot_Android_sstream} y \ref{sshot_iOS_sstream} se puede notar claramente el problema que genera en iOS la falta de soporte de tecnologías Adobe.
+
+\newpage
 \subsection{Posibles Soluciones}
+
+A la fecha, las herramientas de distribución de audio y/o video por streaming, están limitadas a los reproductores provistos por la interfaz de programación de aplicaciones (API) de iOS. En donde al reproducir contenido por streaming presentan la opción de retroceder la cantidad de  tiempo almacenada en el buffer de datos. \\
+
+%\clearpage
+\begin{figure}[h!]
+	\includegraphics[scale=0.55]{imgs/sshot_iOS_hls.png}
+	\caption{Reproducción de flujo video por HTTP Live Streaming}
+	\label{sshot_iOS_hls}
+\end{figure}
+
+De la figura \ref{sshot_iOS_hls} se puede notar el botón a la izquierda en la barra inferior de  la pantalla, este hace retroceder en 30 segundos la reproducción.\\
+
+Esta característica es propia del framework MediaPlayer. que simplifica de gran manera la necesidad de mostrar video en el dispositivo. Este uso también se puede aplicar para la reproducción  de  audio y video.
+Se debe dejar claro que Apple es sumamente restrictivo en el uso de la API de iOS. \\
+Para el desarrollo de aplicaciones, estas deben utilizar solo llamadas al sistema que estén indicadas en sus documentos guía, por lo tanto una vía para desarrollar una solución de reproductor que provea la posibilidad de saltar en la línea del tiempo de reproducción sin importar que tan larga sea la transmisión en vivo, depende de las bases MediaPlayer. \\
+
+En la documentación actual de iOS v4.3 se encuentra AVPlayer (audio video player) [link] que pone a disposición las llamadas y manejo de datos de audio y/o video.
+
+
 \subsection{Soluciones actuales}
 \subsection{Pros y Contras de una nueva solución}
 \subsection{El beneficio de llegar a nuevas audiencias}
@@ -119,13 +159,13 @@ En las plataformas de escritorio y algunos smartphones, esto no significa un pro
 
 %IR DE LO GENERAL A LO PARTICULAR!
 %El capítulo de introducción debe comenzar explicando que son las 	WSNs.
-\section{Redes de sensores inalámbricos}
+%\section{Redes de sensores inalámbricos}
+
 %Cosas que hay que dejar claras:
 %	-Es un sistema distribuído.	OK
 %	-Como nacen las WNSs.
 %	-Formada por motes.	OK
 %	-Qué cosas permiten las WSNs y por qué las permiten
-Una red de sensores inalámbricos es un sistema distribuido formado por sensores autónomos desplegados espacialmente, que en forma cooperativa, reúnen información del ambiente que los rodea. Los dispositivos utilizados para formar estas redes son conocidos como ''motes'' y poseen capacidad de procesamiento, capacidades sensoriales, capacidad de comunicación inalámbrica y son autónomos energéticamente.
 
 \section{Aplicaciones}
 %En el mundo
@@ -200,18 +240,14 @@ Los algoritmos de ruteo, son métodos que permiten definir rutas dentro de una r
 
 Un primer enfoque para diseminar datos en la red, es enviar los datos recolectados por un nodo en un salto (comunicación directa) hacia el gateway, sin embargo, si el nodo está muy lejos del gateway, puede que éste nunca reciba el mensaje. Por lo tanto, el siguiente enfoque son los protocolos multi-hop, donde varios nodos intermedios se encargan de llevar un paquete de datos desde fuente a destino. En un algoritmo multi-hop, cada nodo ejecuta el algoritmo de ruteo que determinará cuál es el próximo destino de un paquete en la red.
 
-\subsection{Algoritmos de ruteo propuestos en la literatura}
-Se han propuesto diversos algoritmos de ruteo en la literatura, sin embargo, en este trabajo se describirán en detalle los algoritmos de ruteo jerárquicos, que según \cite{WSNSurvey} son los más indicados para aplicaciones de recolección de bajo consumo. Dentro de los algoritmos de ruteo jerárquico, los más recurrentes son: LEACH, PEGASIS y TEEN. Se profundizará en estos protocolos en el siguiente capítulo.
+% \subsection{Algoritmos de ruteo propuestos en la literatura}
 
 %En esta sección debería dar una breve reseña  de cada protocolo, con sus referencias.
+%\subsection{Protocolos implementados}
 
-\subsection{Protocolos implementados}
-En los últimos años, se han implementado diversas capas de red para distintos sistemas.  Cada implementación de capa de red, está asociada a un protocolo de red en particular. En el sistema TinyOS, existen dos implementaciones de red que son distribuidas junto con el sistema: Dissemination (Diseminación) y Collection Tree Protocol (Protocolo de árbol de recolección). Por otro lado, Texas Instruments ha implementado dos tipos de red para su hardware: Z-Stack, la implementación de Zigbee de TI; y SimpliciTI, un protocolo de red simple para construir redes de topología estrella. En el siguiente capítulo, se realizará una descripción detallada de estos protocolos.
-
-\subsection{Hardware de desarrollo}
+%\subsection{Hardware de desarrollo}
 %De lo general a lo particular
 % Qué tipo de hardware existe?
-En la actualidad, existe una gran variedad de hardware que puede ser utilizado para el desarrollo e implementación de una red de sensores inalámbricos. Como se ha mencionado antes, un sensor inalámbrico (mote) está compuesto al menos por: Un microcontrolador, que permite administrar cada recurso del nodo; un transceptor, que permite comunicar el nodo con otros dispositivos; sensores y actuadores, que permiten al nodo interactuar con el entorno; batería, si es que el nodo está diseñado para que opere de manera autónoma. Los principales fabricantes del hardware para estas redes son: Texas Instruments, Nordic Semiconductors, Atmel y Jennic.\\
 
 %Debo incluir info sobre los motes que soportan tinyos
 \subsubsection{Plataformas TinyOS}
