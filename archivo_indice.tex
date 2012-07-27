@@ -1,12 +1,77 @@
 %archivo_indice.tex
-% capitulo1.tex
-\chapter{Introducción}
-\section{segunda sección}
+\chapter{Diseño e Implementación}
+El siguiente capitulo consta de las bases necesarias para realizar la solución.
+%\part{Primera parte}
+\section{Protocolo HTTP Live Stream}
+	\subsection{Especificación}
+		\subsubsection{Draft Apple}
+		\subsubsection{Caracteristicas a utilizar}
+			
+	\subsection{Herramientas dispuestas por Apple}
+		\subsubsection{id3Tag Generator}
+		\subsubsection{MediaStream Segmenter}
+		\subsubsection{MediaFile Segmenter}
+	\subsection{Ejemplo de transmisión}
+\clearpage	
+\section{Componentes}
+	\subsection{Servidor HTTP}
+		\subsubsection{Obtención del Stream}	
+		\subsubsection{Sementación del Video}
+		\subsubsection{Playlist Dispatcher}
+	\subsection{Cliente iOS}
+		\subsubsection{Recopilación de datos del Stream}
+		\subsubsection{Reproducción con AV Framework}
+	\subsection{Intercambio de información entre componentes}
+\clearpage
+\section{Interfaz Gráfica}
+	\subsection{Apple Design Guidelines}
+	\subsection{Componentes de UIKit}
+		\subsubsection{UIDatePicker}
+		\subsubsection{UIButton}
+		\subsubsection{...etc}
+\clearpage
+\section{Integración Redes Sociales}
+	\subsection{Twitter}
+		\subsubsection{API Twitter}
+		\subsubsection{Sharekit vs. Twitter Framework}
+		\subsubsection{Seguimiento de Hashtag}
+		\subsubsection{Post en Twitter}
+		\subsubsection{Extracción de información de un Tweet}
+	\subsection{Bit.ly}
+		\subsubsection{API Bit.ly}
+		\subsubsection{Seguimiento de un Hipervínculo}
+		\subsubsection{Expansión de atajo bit.ly}
+\clearpage
+\section{Registro en iOS}
+	\subsection{Schemes}
+	\subsection{Redireccionamiento via Web}
+		\subsubsection{PHP Script}
+		\subsubsection{Respuestas según User Agent}
+		
+\chapter{Pruebas de funcionamiento}
 
-\subsection{Como SE hizo}
+\section{Cambio de tiempo y/o canal}
+\section{Proceso corriendo en fondo} % background
+\section{Cambio de ancho de banda}
+	\subsection{WiFi}
+	\subsection{3G}
+\section{Cambio de transmisión mediante Twitter}
+	\subsection{Dentro de la aplicación}
+	\subsection{Scheme registrado en iOS}
+\section{Enlaces Twitter en otros dispositivos}
+	\subsection{PC Escritorio}
+		\subsubsection{Chrome}
+		\subsubsection{Safari}
+		\subsubsection{Firefox}
+		\subsubsection{Opera}
+	\subsection{Android y otros móviles incompatibles}
+\section{Comparación con SocialStream Flash}
 
-%\subparagraph{paragrapth}
-
-\subsubsection{bala asdf}
-
-\subsection{lesub2}
+\chapter{Anexos}
+	\section{Hardware}
+		\subsection{Macintosh}
+		\subsection{iPhone, iPad, iPod Touch}
+	\section{Sistemas operativos}
+		\subsection{OSX}
+		\subsection{iOS}
+	\section{Frameworks}
