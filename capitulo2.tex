@@ -1,80 +1,63 @@
-\chapter{Investigación sobre protocolos de ruteo}
-%Breve introducción
+% capitulo de implementación
+\chapter{Diseño e Implementación}
+\section{Arquitectura de la solución}
+El siguiente capitulo consta de las bases necesarias para realizar la solución. Esta se compone de 2 elementos principales. 
+\begin{itemize}
+\item Servidor: Encargado de recodificar (si es necesario) la fuente de audio o video y segmentarla para su distribución.
+\item Cliente: Aplicación ejecutada en iOS, encargada de comunicarse al servidor para pedir el flujo de video y entregar información en twitter.
+\end{itemize}
+% poner figura aqui
+La figura presenta una idea general del sistema.\\
 
+Respecto a los componentes principales, estos se componen de distintos modulos que serán explicados con más detalle a lo largo del capítulo.
 
-\section{Algoritmos de ruteo propuestos en la literatura}
-%Introducción
+El protocolo utilizado para entregar el contenido audiovisual es HTTP Live Streaming, los motivos de esta elección se deben a requerimientos obligatorios designados por Apple para su sistema operativo iOS.
 
-%Descripción de algunos algoritmos
-%Protocolo LEACH
-\subsection{Low Energy Adaptive Clustering Hierarchy}
+%en resumen un acercamiento a como funciona la cosa
 
-%En general, ¿Cómo funciona?
-
-%Descripción detallada
-
-%Descripción del modelo energético
-\subsubsection{Descripción del modelo energético utilizado para el diseño de LEACH}
-
-
-%Descripción del funcionamiento
-\subsubsection{Descripción del funcionamiento}
-
-%Protocolo PEGASIS
-\subsection{Power-Efficient Gathering in Sensor Information Systems}
-%¿Qué es PEGASIS?
-
-%¿Cómo funciona?
-% ...
-
-\subsubsection{Descripción del funcionamiento}
-\subsection{Threshold sensitive Energy Efficient sensor Network protocol}
-
-\subsubsection{Descripción del funcionamiento}
-
-%Protocolo HEED
-\subsection{Hybrid, Energy-Efficient, Distributed}
-
-
-\subsection{Descripción del funcionamiento}
-
-\section{Protocolos de ruteo implementados en TinyOS}
-
-\subsection{Dissemination }
-%¿Qué es diseminación?
-
-%¿Cómo funciona?
-
-%Carácterísticas
-%Me aburrió también
-
-
-\subsection{TYMO}
-
-
-%Se puede rellenar con un poquito más cierto....
-
-\subsection{Collection Tree Protocol}
-%¿Qué es CTP?
-
-%¿Cómo funciona?
-
-\subsection{Berkeley Low-Power IP Stack}
-%Damn it, este protocolo es bakan y cumple todo.
-%¿Qué es BLIP?
-
-%¿Cómo funciona?
-
-
-%Agregar características ---ya me aburrí.
-
-\section{Selección de un esquema de recolección}
-%De lo general a lo particular
-
-%Sección para comparar protocolos propuestos e implementados sobre sus métricas
-\subsection{Análisis comparativo de resultados}
-
-%También, en términos de energía disipada en la red, PEGASIS es superior a LEACH, como muestra la figura 2.5.
-
-
-\section{Dificultades de esta etapa}
+%\part{Primera parte}
+\section{Protocolo HTTP Live Stream}
+	\subsection{Especificación}
+		\subsubsection{Draft Apple}
+		\subsubsection{Caracteristicas a utilizar}
+			
+	\subsection{Herramientas dispuestas por Apple}
+		\subsubsection{id3Tag Generator}
+		\subsubsection{MediaStream Segmenter}
+		\subsubsection{MediaFile Segmenter}
+	\subsection{Ejemplo de transmisión}
+\clearpage	
+\section{Reproducción y Control de Stream de Video}
+	\subsection{Servidor HTTP}
+		\subsubsection{Obtención del Stream}	
+		\subsubsection{Sementación del Video}
+		\subsubsection{Playlist Dispatcher}
+	\subsection{Cliente iOS}
+		\subsubsection{Recopilación de datos del Stream}
+		\subsubsection{Reproducción con AV Framework}
+	\subsection{Intercambio de información entre componentes}
+\clearpage
+\section{Interfaz Gráfica}
+	\subsection{Apple Design Guidelines}
+	\subsection{Componentes de UIKit}
+		\subsubsection{UIDatePicker}
+		\subsubsection{UIButton}
+		\subsubsection{...etc}
+\clearpage
+\section{Integración Redes Sociales}
+	\subsection{Twitter}
+		\subsubsection{API Twitter}
+		\subsubsection{Sharekit vs. Twitter Framework}
+		\subsubsection{Post en Twitter}
+		\subsubsection{Seguimiento de Hashtag}
+		\subsubsection{Extracción de información de un Tweet}
+	\subsection{Bit.ly}
+		\subsubsection{API Bit.ly}
+		\subsubsection{Seguimiento de un Hipervínculo}
+		\subsubsection{Expansión de atajo bit.ly}
+\clearpage
+\section{Registro en iOS}
+	\subsection{Schemes}
+	\subsection{Redireccionamiento via Web}
+		\subsubsection{PHP Script}
+		\subsubsection{Respuestas según User Agent}
