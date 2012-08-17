@@ -60,8 +60,8 @@ También existe una variante donde la lista de reproducción contiene referencia
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.5]{imgs/HLS_diagram_wwdc2010.eps}
-	\caption{Flujo de trabajo de HTTP Live Streaming}
-	\label{diagramaHLSwwdc2010}	
+	\caption{Flujo de trabajo de HTTP Live Streaming}	
+	\label{diagramaHLSwwdc2010}
 \end{figure}		
 		La figura \ref{diagramaHLSwwdc2010} presenta un ejemplo de distribucion de multimedia a través de HTTP Live Streaming.\\
 		
@@ -81,9 +81,10 @@ Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 
 \item \#EXT-X-TARGETDURATION: Esta marca corresponde a la mayor duración que puede poseer cualquier segmento, es decir los segmentos enumerados en la lista no pasarán del tiempo especificado por esta marca.
 Además este valor indica al cliente cada cuanto tiempo debe realizar una petición al servidor web por la lista.
-\label{TAG-targetduration}	
+\label{TAG-targetduration}
 
-\item \#EXT-X-MEDIASEQUENCE: Corresponde a la versión de la lista de reproducción segun los segmentos incluidos en la lista de reproducción.
+\item \label{TAG-mediasequence} \#EXT-X-MEDIASEQUENCE: Corresponde a la versión de la lista de reproducción segun los segmentos incluidos en la lista de reproducción.
+
 
 \item \#EXTINF: Esta marca indica la duración del segmento que se encuentra junto a él.\\
 \end{prop}
@@ -106,15 +107,24 @@ Además este valor indica al cliente cada cuanto tiempo debe realizar una petici
 	\label{ejemploM3U8}	
 \end{figure}			
 
-El ejemplo visto en la figura \ref{ejemploM3U8} destaca una marca extra: \#EXT-X-ENDLIST, la cual indica al cliente que la lista de reproducción está completa y no necesita ser actualizada. Esta marca toma gran importancia al definir un flujo de medios ``en vivo'' ya que al estar ausente el cliente pedirá una nueva versión de la lista de reproducción que incluya nuevos segmentos, el tiempo que indica la actualización depende de la marca \ref{TAG-targetduration} previamente explicada.
+El ejemplo visto en la figura \ref{ejemploM3U8} destaca una marca extra: \#EXT-X-ENDLIST, la cual indica al cliente que la lista de reproducción está completa y no necesita ser actualizada. Esta marca toma gran importancia al definir un flujo de medios ``en vivo'' ya que al estar ausente el cliente pedirá una nueva versión de la lista de reproducción que incluya nuevos segmentos, el tiempo que indica la actualización depende de la marca \ref{TAG-targetduration} previamente explicada.\\
 
+En el caso de contenido en vivo, la lista de reproducción toma el rol de \textbf{ventana de reproducción}  como la lista se actualiza con nuevos segmentos cada intervalo de \ref{TAG-targetduration} se evita un archivo de gran tamaño al eliminar segmentos ya pasados.
+
+Cabe destacar que la marca \ref{TAG-mediasequence} debe mantener consistencia con los nuevos segmentos, es decir si la lista elimina un segmento pasado y agrega uno nuevo, el numero de secuencia debe aumentar su valor.\\
+
+Para efectos de la solución de este trabajo de memoria el modo de flujo de datos a utilizar con HLS es del tipo ``en vivo''.
+\subsubsection{Segmentos}
+Los segmentos consisten en video codificado con h.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio permitiendo así transmitir un mejor sonido a menor ancho de banda.\\
+
+El contenedor de los medios es MPEG2-TS según la especificación del protocolo HLS. Las indicaciones de Apple sugieren tener cuidado con el overhead.
 		% mostrar figura de playlist, explicacion rapida de como funciona hls
-		\subsubsection{Draft Apple}
+\subsubsection{Draft Apple}
+Además de las marcas explicadas anteriormente son de gran utilidad para la solición diseñada las siguientes:\\
 		% aqui detallar los mensajes de la playlist utilizados
 		%		http://tools.ietf.org/html/draft-pantos-http-live-streaming-08
-		\subsubsection{Caracteristicas a utilizar}
+\subsubsection{Caracteristicas a utilizar}
 		% caracteristicas bacanes de hls, detallar lo que se puede hacer más aun
-			
 	\subsection{Herramientas dispuestas por Apple}
 		\subsubsection{id3Tag Generator}
 		\subsubsection{MediaStream Segmenter}
