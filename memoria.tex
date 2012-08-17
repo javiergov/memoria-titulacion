@@ -16,6 +16,25 @@
 \usepackage{times}
 % \renewcommand{\baselinestretch}{1.5} % para saltar 1.5 el espacio
 
+% configuración del código con lslistings
+\definecolor{light-gray}{gray}{0.4}
+\lstset{numberstyle=\tiny ,basicstyle = \ttfamily ,numbers=left, stepnumber=1, frame=shadowbox,tabsize=4,rulesepcolor=\color{light-gray}}
+
+% Proposition para enumerar y tener referencia a los puntos con un label http://tex.stackexchange.com/questions/11896/labels-for-itemize-in-proposition
+\newcounter{prop}[chapter]
+\renewcommand*{\theprop}{\thechapter.\arabic{prop}}
+
+\newenvironment{prop}{%
+  \refstepcounter{prop}%
+%  \paragraph{Proposition~\theprop}%
+%  \renewcommand*{\theenumi}{\theprop\,(\roman{enumi})}% esta no para que solo salga el numero romano
+  \renewcommand*{\theenumi}{(\roman{enumi})}%
+  \renewcommand*{\labelenumi}{(\roman{enumi})}%
+  \enumerate
+}{%
+  \endenumerate
+}
+
 %Título
 \title{Dise\~no e implementación de aplicaci\'on cliente en dispositivos iOS para la reproducci\'on de medios en un servidor de streaming timeshift.}
           
