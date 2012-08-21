@@ -71,22 +71,22 @@ En primera instancia se debe obtener contenido multimedia ya sea en un archivo f
 Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor web pueda proveerlos. En el caso que el contenido es un gran archivo, la codificación y segmentación se realiza una sola vez.
 
 \subsubsection{Lista de reproducción}
-
+\label{TAG-SECTION}
 La lista de reproducción en formato M3U8 es lo entregado al cliente, este puede ser una aplición iOS o el navegador web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra conocida del protocolo se le denomina entonces como marca (tag).
 Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 
 \begin{prop}
 
-\item \#EXTM3U: Es la primera marca que inicia una lista de reproducción, siempre debe estar al principio.
+\item \#EXTM3U: Corresponde a la primera marca que inicia una lista de reproducción, siempre debe estar al principio.
 
 \item \#EXT-X-TARGETDURATION: Esta marca corresponde a la mayor duración que puede poseer cualquier segmento, es decir los segmentos enumerados en la lista no pasarán del tiempo especificado por esta marca.
 Además este valor indica al cliente cada cuanto tiempo debe realizar una petición al servidor web por la lista.
 \label{TAG-targetduration}
 
-\item \label{TAG-mediasequence} \#EXT-X-MEDIASEQUENCE: Corresponde a la versión de la lista de reproducción segun los segmentos incluidos en la lista de reproducción.
+\item \label{TAG-mediasequence} \#EXT-X-MEDIASEQUENCE: Corresponde a la secuencia o versión de la lista de reproducción segun los segmentos que se incluyen dentro. Este valor se representa por un número entero y debe ser consecuente a los cambios en el contenido, es decir, si se agregan nuevos segmentos el valor de la secuencia debe aumentar, de esta forma el cliente puede saber que el flujo de contenido se está actualizando.
 
 
-\item \#EXTINF: Esta marca indica la duración del segmento que se encuentra junto a él.\\
+\item \label{TAG-extinfint} \#EXTINF: Esta marca indica la duración del segmento que se encuentra junto a él. Su valor está indicado por un número entero que representa los segundos.\\
 \end{prop}
 
 \begin{figure}[h!]
@@ -115,12 +115,27 @@ Cabe destacar que la marca \ref{TAG-mediasequence} debe mantener consistencia co
 
 Para efectos de la solución de este trabajo de memoria el modo de flujo de datos a utilizar con HLS es del tipo ``en vivo''.
 \subsubsection{Segmentos}
-Los segmentos consisten en video codificado con h.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio permitiendo así transmitir un mejor sonido a menor ancho de banda.\\
+Los segmentos consisten en video codificado con h.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio permitiendo así transmitir un mejor sonido a menor ancho de banda. en el anexo XXXX se especifican los codificadores compatibles para la reproducción en iOS, aun así se recomienda utilizar los nombrados anteriormente para mantener compatibilidad para clientes que estén adoptando el protocolo.\\
 
-El contenedor de los medios es MPEG2-TS según la especificación del protocolo HLS. Las indicaciones de Apple sugieren tener cuidado con el overhead.
+// TO DO
+% El contenedor de los medios es MPEG2-TS según la especificación del protocolo HLS. Las indicaciones de Apple sugieren tener cuidado con el overhead.
 		% mostrar figura de playlist, explicacion rapida de como funciona hls
-\subsubsection{Draft Apple}
-Además de las marcas explicadas anteriormente son de gran utilidad para la solición diseñada las siguientes:\\
+\subsubsection{Borrador IETF}
+Apple Inc. es la compañía desarrolladora de este protocolo. Para masificar su uso en dispositivos móviles ha dispuesto un borrador como propuesta para la estandarización del protocolo según la IETF (Internet Engineering Task Force).
+Debido a la popularidad de los dispositivos móviles con iOS, empresas importantes en el desarrollo de tecnologias para difusión de medios han adoptado el protocolo HLS como salida de productos dedicados a la codificación y/o transmisión de multimedia. Ejemplos como Adobe Systems con su producto Adobe Flash Media Server, Wowza Media Systems con Wowza Media Server y VideoLan con VLC Media Player demuestran que la documentación realizada por los ingenieros de Apple Inc. Roger Pantos y William May, Jr, deben sentar base para cualquier desarrollo asociado con el protocolo.\\
+
+Para el desarrollo de esta memoria se han implementado aplicaciones y scripts que utilizan las herramientas e instrucciones detalladas en el documento borrador. A lo largo de la investigación los ingenieros desarrolladores incorporaron caracteristicas nuevas que fueron aprovechadas para lograr el cometido de esta memoria.\\
+
+En el anexo YYYY se puede revisar detalladamente el documento completo. En esta sección se describen las marcas utilizadas aparte de las ya descritas en \ref{TAG-SECTION}.
+
+\begin{itemize}
+\item \#EXT-X-VERSION: Corresponde a la versión de la lista de reproducción, se utiliza para diferenciar distintos streams con protocolo HLS según las caracteristicas que se van incorporando. Para el trabajo de esta memoria se utiliza la versión 3 del protocolo.
+
+\item \#EXTINF: Si bien ya se ha descrito esta marca en \ref{TAG-extinfint}, a partir de la versión 3 del protocolo HLS, la marca \textbf{EXTINF} permite valores flotantes para mejorar por parte del cliente la exactitud en el seguimiento del tiempo de reproducción. 
+
+\item \#EXT-X-PROGRAM-DATE-TIME: Marca correspondiente a la 
+
+\end{itemize}
 		% aqui detallar los mensajes de la playlist utilizados
 		%		http://tools.ietf.org/html/draft-pantos-http-live-streaming-08
 \subsubsection{Caracteristicas a utilizar}
