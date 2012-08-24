@@ -133,52 +133,153 @@ En el anexo YYYY se puede revisar detalladamente el documento completo. En esta 
 
 \item \#EXTINF: Si bien ya se ha descrito esta marca en \ref{TAG-extinfint}, a partir de la versión 3 del protocolo HLS, la marca \textbf{EXTINF} permite valores flotantes para mejorar por parte del cliente la exactitud en el seguimiento del tiempo de reproducción. 
 
-\item \#EXT-X-PROGRAM-DATE-TIME: Marca correspondiente a la 
+\item \#EXT-X-PROGRAM-DATE-TIME: Marca correspondiente a la fecha asociada al primer segmento de datos que aparece en la lista de reproducción. La fecha se especifica utilizando el estandar ISO 8601, opcionalmente se puede incluir zona horaria. Un ejemplo del formato sería:
+
+\begin{lstlisting}
+#EXT-X-PROGRAM-DATE-TIME:2011-12-18T14:54:23-04:00
+\end{lstlisting}
+
+Correspondiente al día 18 de diciembre de 2011, a las 14:54:23 en la zona horaria GMT-4.
 
 \end{itemize}
 		% aqui detallar los mensajes de la playlist utilizados
 		%		http://tools.ietf.org/html/draft-pantos-http-live-streaming-08
-\subsubsection{Caracteristicas a utilizar}
-		% caracteristicas bacanes de hls, detallar lo que se puede hacer más aun
+\subsubsection{Lista de Variantes}
+Más allá de la lista de reproducción con segmentos, el protocolo HLS provee de caracteristicas anexas para mejorar la experiencia del usuario.
+Una de las caracteristicas a utilizar y que también es requisito para que las aplicaciones con multimedia remota puedan ser aprobada en la App Store es la necesidad de una variante del stream por donde se transmita solamente el audio.\\
+
+Para solucionar este requerimiento y obligación se utiliza una lista de variantes, la cual consiste en una lista de reproducción que incluye en su interior URLs hacia listas de reproducción normales ya explicadas anteriormente, la diferencia cae en que cada lista de reproducción tiene asociado un ancho de banda límite, de manera que el cliente pueda cambiar de stream dentro de la reproducción sin que el usuario note el cambio en la reproducción, exceptuando la calidad del audio o del video.\\
+
+Se utiliza la marca \textbf{\#EXT-X-STREAM-INF} para asociar cada una de las variantes del stream a cierto ancho de banda, además cada una lleva los siguientes atributos:
+
+\begin{itemize}
+
+\item PROGRAM-ID: Corresponde a un valor numérico entero, tiene como fin identificar una presentación en particular dentro de la ventana de transmisión de la lista de reproducción. Una lista de variantes puede contener multiples sublistas con distintos programas de forma que este atributo asocia las distintas variantes para una transmisión en particular, entiendase por show o evento a transmitir. Este atributo puede ser opcional.
+
+\item BANDWIDTH: Este atributo obligatorio representa el valor entero de los bits por segundo, como requisito principal el valor debe ser la cota mayor de la tasa de bits promedio de los segmentos (incluyendo el overhead del contenedor) que aparecen o aparecerán en la lista de reproducción. 
+
+\end{itemize}
+
+El enlace a las sublistas de variantes del stream pueden ser del tipo relativo o absoluto. Como requisito cada variante del stream debe poseer el mismo valor en segundos de Target Duration \ref{TAG-targetduration}.
+
+\begin{figure}[h!]
+	\centering
+	\begin{lstlisting}
+	#EXTM3U
+	#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=110000
+	varianteA/prog_index.m3u8
+	
+	#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=200000
+	varianteB/prog_index.m3u8
+
+	#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=350000
+	varianteC/prog_index.m3u8
+
+	#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=550000
+	varianteD/prog_index.m3u8
+
+	#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=900000
+	varianteD/prog_index.m3u8
+
+	\end{lstlisting}
+	\caption{Lista de variantes para HTTP Live Streaming}
+	\label{ejemploVariantPLS}	
+\end{figure}	
+
+En la figura \ref{ejemploVariantPLS} se observan tres variantes asociadas al mismo PROGRAM-ID de valor 1. La diferencia entre ellas recae en el ancho de banda límite.\\
+
+Por defecto la primera variante será la utilizada para comenzar la transmisión, y además se utilizará para revisar la calidad del enlace, si la velocidad de descarga de los segmentos da como resultado un mayor ancho de banda, el cliente cambiará a la variante con el mayor valor que pueda cubrir este calculo de ancho de banda.\\
+
+En el caso que exista por distintos motivos una caida en la calidad del enlace, la baja de velocidad de descarga debe ser alertada por el cliente de forma que pueda cambiar la variante en reproducción por otra asociada a un menor ancho de banda. Estos cambios deben ocurrir de manera automatica de modo que al usuario no se le vea afectado el flujo que está consumiendo.\\
+
+Tomando en cuenta este comportamiento, se deben tener consideraciones al armar la lista de variantes según el tipo de enlace que utilizarán sus clientes. Por ejemplo si tiene identificado que sus clientes se conectarán al servidor mediante WiFi es preferible que la lista de variantes tenga como primer elemento la variante de 550000 Kbps y en caso de que sus clientes se conecten al servidor mediante red celular, es preferible presentar como primer variante la de 110000 Kbps.
+	De esta forma el cliente reproducirá inmediatamente un stream acorde a su enlace. \\
+	
+En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el cliente podrá reproducir el contenido rápidamente con velocidades EDGE, y si el enlace lo permite podrá cambiar a una mejor variante. En caso que el cliente se conecte mediante WiFi, cargará el enlace de menor ancho de banda para realizar pruebas e inmediatamente descartarlo por uno de mejor calidad.
+
+% recomendaciones de apple, bitrates y bw
+
+
+
+% caracteristicas bacanes de hls, detallar lo que se puede hacer más aun
 	\subsection{Herramientas dispuestas por Apple}
+	Apple Inc. como desarrollador y promotor de esta tecnología ha dispuesto para los desarrolladores un set de aplicaciones para la creación de transmisiones con HTTP Live Streaming.
 		\subsubsection{id3Tag Generator}
+		desc id3tag
 		\subsubsection{MediaStream Segmenter}
+		desc mediastream seg
 		\subsubsection{MediaFile Segmenter}
+		desc mediafile seg
 	\subsection{Ejemplo de transmisión}
-	% explicar como se probó con resident evil y motorstorm
+	
+	explicar como se probó con resident evil y motorstorm
+	con variantes VOD y live
+	
 \clearpage	
 \section{Reproducción y Control de Stream de Video}
-	
+	explicar resumido la estructura como se conecta el server y el cliente, con un  diagrama
 	\subsection{Servidor HTTP}
-		\subsubsection{Obtención del Stream}	
+		\subsubsection{Obtención del Stream}
+		la recepcion de un stream RTMP, codificacion con vlc o ffmpeg y generar un archivo o stream udp
 		\subsubsection{Sementación del Video}
+		el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
 		\subsubsection{Playlist Dispatcher}
+		dispatcher que recibe epoch, el tipo (canal) y el bwPARAMETER del tipo de enlace Wifi o cellular		
+		
 	\subsection{Cliente iOS}
-		\subsubsection{Recopilación de datos del Stream}
+		descripcion general.
+		como se conecta al server, reachability, entrega a avplayer
 		\subsubsection{Reproducción con AV Framework}
+		avplayer, playeritem, asset tracks		
+		\subsubsection{Recopilación de datos del Stream}
+		kvo, notificaciones, periodic observers, la fecha y que se hace con ella
+		
 	\subsection{Intercambio de información entre componentes}
+	conexión, envio de epoch, recepcion de m3u8, start y last txt	
+	
 \clearpage
 \section{Interfaz Gráfica}
 	\subsection{Apple Design Guidelines}
+	las guias de diseño y recomendaciones de apple
 	\subsection{Componentes de UIKit}
 		\subsubsection{UIDatePicker}
+		foto, como se usa, el hack para horizontal
 		\subsubsection{UIButton}
+		play pausa, ibactions
 		\subsubsection{...etc}
+		volumen, slider de view controller tipo facebook, etc
 \clearpage
 \section{Integración Redes Sociales}
+	diagrama de como funciona el posteo y recepcion de twitts
 	\subsection{Twitter}
 		\subsubsection{API Twitter}
+		las llamadas de twitter que se utilizarán
 		\subsubsection{Sharekit vs. Twitter Framework}
+		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
 		\subsubsection{Post en Twitter}
+		como postear en twitter desde la app, action sheet
 		\subsubsection{Seguimiento de Hashtag}
+		las llamadas de url para el cliente de twitter
 		\subsubsection{Extracción de información de un Tweet}
+		como se parseó el json con los twitts y saber si eran sstream
 	\subsection{Bit.ly}
+		desmenuzar el enlace de bitly
 		\subsubsection{API Bit.ly}
-		\subsubsection{Seguimiento de un Hipervínculo}
+		las llamadas de la api que se utilizaron
 		\subsubsection{Expansión de atajo bit.ly}
+		como se expande un url de bitly y se usa en la app
+		\subsubsection{Seguimiento de un Hipervínculo}		
+		como se monitorean los twitts por bitly y se puede usar pa marketing, saber que es lo popular etc		
+
 \clearpage
 \section{Registro en iOS}
 	\subsection{Schemes}
+	explicar que son los schemes
 	\subsection{Redireccionamiento via Web}
+	explicar breve como funcionará la carga del scheme sstream, en web y mobile
 		\subsubsection{PHP Script}
+		explicar brevemente el script php 
 		\subsubsection{Respuestas según User Agent}
+		describir los casos según user agents
+		
+		
