@@ -203,17 +203,33 @@ En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el c
 
 % caracteristicas bacanes de hls, detallar lo que se puede hacer más aun
 	\subsection{Herramientas dispuestas por Apple}
-	Apple Inc. como desarrollador y promotor de esta tecnología ha dispuesto para los desarrolladores un set de aplicaciones para la creación de transmisiones con HTTP Live Streaming.
-		\subsubsection{id3Tag Generator}
-		desc id3tag
-		\subsubsection{MediaStream Segmenter}
-		desc mediastream seg
+	Apple Inc. como desarrollador y promotor de esta tecnología ha dispuesto para los desarrolladores un set de aplicaciones de línea de comandos para la creación de transmisiones con HTTP Live Streaming.
 		\subsubsection{MediaFile Segmenter}
-		desc mediafile seg
+Esta aplicación tiene como funcion multiplexar el contenido multimedia del archivo en un flujo de transporte MPEG2 (MPEG2-TS) y dividirlo en una serie de pequeños archivos de aproximadamente la misma duración. La aplicación también crea una lista de reproducción con referencias a los archivos del tipo Video en demanda (VOD).
+
+		\subsubsection{MediaStream Segmenter}
+Al igual que MediaFile Segmenter, esta herramienta segmenta el contenido multimedia en varios archivos, sin embargo toma como entrada un flujo de transporte MPEG2 a través de un enlace UDP [dirección:puerto] o también a través de la entrada estandar (stdin). De igual forma que mediafilesegmenter esta aplicación genera una lista de reproducción en formato \textbf{m3u8}.\\
+
+Como recibe de entrada un flujo de datos, permite generar listas de reproducción en vivo, generando segmentos mientras se reciben y actualizando la lista de reproducción con las referencias. Este tipo de flujo de medios es recomendable para difusión contínua, permitiendo además eliminar los segmentos que ya expiraron en la ventana de transmisión.
+
+		\subsubsection{Variant Playlist Creator}
+		Esta aplicación se utiliza en conjunto con MediaFile Segmenter para crear una lista de variantes a partir de multiples streams del tipo VOD. Esto se realiza indicando la opcion en MediaFile Segmenter \textit{--generate-variant-plist} que genera un archivo property list (XML) por cada variante del stream, estos archivos se entregan junto a las listas de reproducción para obtener la lista de variante.
+			
+		\subsubsection{MediaStream Validator}		
+		Esta herramienta simula una sesión HLS y verifica que las listas de variantes y reproducción junto a los segmentos cumplen la especificación HTTP Live Streaming. Si se encuentra algún problema en las pruebas de reproducción, se entrega un informe para diagnostico.
+		
 	\subsection{Ejemplo de transmisión}
+
+Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una pelicula ya comprimida en audio AAC y video h.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}.\\
+
+Considerando las herramientas y el escenario del contenido, la más indicada para transmitir a través de HLS es MediaStream Segmenter, para luego entregar su salida a un servidor web Apache que provea a través de internet. De esta forma clientes del tipo iPhone, iPad o Macintosh pueden consumir el contenido.
+
+
+
+
 	
-	explicar como se probó con resident evil y motorstorm
-	con variantes VOD y live
+%	explicar como se probó con resident evil y motorstorm
+%	con variantes VOD y live
 	
 \clearpage	
 \section{Reproducción y Control de Stream de Video}
