@@ -220,9 +220,56 @@ Como recibe de entrada un flujo de datos, permite generar listas de reproducció
 		
 	\subsection{Ejemplo de transmisión}
 
-Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una pelicula ya comprimida en audio AAC y video h.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}.\\
+Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una pelicula ya comprimida en audio AAC y video h.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}. Para realizar esta transimisión se utiliza el \textit{asistente de emisión/transcodificación}.\\
 
-Considerando las herramientas y el escenario del contenido, la más indicada para transmitir a través de HLS es MediaStream Segmenter, para luego entregar su salida a un servidor web Apache que provea a través de internet. De esta forma clientes del tipo iPhone, iPad o Macintosh pueden consumir el contenido.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{imgs/vlc_transmission.png}
+	\caption{Ajustes de la aplicación VLC.app para transmisión de película a través de UDP.}
+	\label{vlc_transmission}	
+\end{figure}
+
+
+Considerando las herramientas y el escenario del contenido, la más indicada para transmitir a través de HLS es MediaStream Segmenter ya que puede tomar como entrada el flujo de datos emitidos por UDP y luego entregar su salida a un servidor web Apache que provea a través de internet. De esta forma clientes del tipo iPhone, iPad o Macintosh pueden acceder al contenido multimedia.\\
+
+En la figura \ref{vlc_transmission} se puede observar que la emisión se ha realizado a una ip en específico utilizando el flujo de transporte MPEG2-TS. Este stream se entrega al \textbf{mediastreamsegmenter} con los siguientes parámetros en la línea de comandos.
+
+ \begin{lstlisting}
+	mediastreamsegmenter -s 7 -t 11 -D -i ejemplo.m3u8 
+	-f ~/Sites/hlsexample 127.0.0.1:1234
+\end{lstlisting}
+
+Estos parámetros indican a mediastreamsegmenter que para el ejemplo se genere una lista de reproducción con una ventana de transmisión de \textbf{7} segmentos (\textbf{-s}), los cuales tienen \textbf{11} segundos de duración (\textbf{-t}), además se le indica que los segmentos ya caducados deben ser eliminados (\textbf{-D}). \\
+
+La lista de reproducción lleva el nombre \textit{ejemplo.m3u8} (\textbf{-i}) y los archivos resultantes se deben guardar en el directorio con ruta \textit{$\sim$/Sites/hlsexample} (\textbf{-f}). Por ultimo se indica que la emisión UDP se halla en la dirección ip y puerto: \textit{127.0.0.1:1234}.\\
+
+El resultado de esto es un stream HLS al cual se puede acceder mediante un servidor web como por ejemplo Apache. En caso de este ejemplo los archivos se ubican en el subdirectorio \textit{hlsexample} del directorio asignado a Apache del usuario, para acceder al stream se utilizó un player HTML5 en el archivo \textit{index.html} ubicado junto al resto.
+
+ \begin{lstlisting}
+	<html>
+	<head></head>
+	<body>
+		<video src="ejemplo.m3u8" controls 
+		autoplay height="360" width="640">
+		</video>
+	</body>
+</html>\end{lstlisting}
+
+Nótese que la fuente al video es la lista de reproducción generada por \textbf{mediastreamsegmenter}, la cual se encuentra en constante actualización mientras la transmisión se lleva a cabo.\\
+
+Ya con el servidor web funcionando, la carga de esta página web permitirá la reproducción del stream en vivo mientras el navegador web sea compatible con el protocolo HTTP Live Streaming utilizando el player HTML5. En la actualidad los únicos navegadores compatibles son Safari y Mobile Safari, desarrollados por Apple.\\
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.6]{imgs/ipad-hlsexample.png}
+	\caption{Captura de pantalla de Mobile Safari en iPad}
+	\label{ipad-hlsexample}	
+\end{figure}
+
+En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del stream puede ser llevada a cabo por un dispositivo iOS accediendo a la página web creada.\\
+
+
+
+
 
 
 
@@ -231,12 +278,18 @@ Considerando las herramientas y el escenario del contenido, la más indicada par
 %	explicar como se probó con resident evil y motorstorm
 %	con variantes VOD y live
 	
-\clearpage	
 \section{Reproducción y Control de Stream de Video}
-	explicar resumido la estructura como se conecta el server y el cliente, con un  diagrama
+
+%	explicar resumido la estructura como se conecta el server y el cliente, con un  diagrama
+	Esta memoria busca entregar control al usuario de la linea temporal de un flujo de contenidos en vivo. Para realizar esto se ideó un sistema que intercambia marcas de tiempo entre el cliente y el servidor, de manera que el cliente pueda definir desde qué punto el servidor debe crear una lista de reproducción en vivo. \\
+	
+	Para entregar esta información se utilizó como métodos de entrada parámetros en la url que el cliente utiliza para conectarse. Además se puede mejorar la experiencia del usuario indicando al servidor el tipo de enlace que el cliente posee, es decir WiFi o red celular, y expandiendo aun más con un parámetro para definir el canal que se quiere ver, todo desde la misma aplicación.
+	
 	\subsection{Servidor HTTP}
+	El servidor consiste en dos módulos: segmenter y dispatcher, este último depende de los archivos guardados por el segmentador. El contenido puede ser obtenido de distintas fuentes pero estos deben cumplir con la especificación de HTTP Live Streaming, es decir entregar al segmentador un flujo de datos codificados con perfiles compatibles con iOS y encapsulados en MPEG2-TS.
 		\subsubsection{Obtención del Stream}
-		la recepcion de un stream RTMP, codificacion con vlc o ffmpeg y generar un archivo o stream udp
+%		la recepcion de un stream RTMP, codificacion con vlc o ffmpeg y generar un archivo o stream udp
+El contenido puede ser obtenido a partir de un 
 		\subsubsection{Sementación del Video}
 		el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
 		\subsubsection{Playlist Dispatcher}
