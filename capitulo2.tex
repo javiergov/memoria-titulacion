@@ -286,14 +286,30 @@ En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del st
 	Para entregar esta información se utilizó como métodos de entrada parámetros en la url que el cliente utiliza para conectarse. Además se puede mejorar la experiencia del usuario indicando al servidor el tipo de enlace que el cliente posee, es decir WiFi o red celular, y expandiendo aun más con un parámetro para definir el canal que se quiere ver, todo desde la misma aplicación.
 	
 	\subsection{Servidor HTTP}
-	El servidor consiste en dos módulos: segmenter y dispatcher, este último depende de los archivos guardados por el segmentador. El contenido puede ser obtenido de distintas fuentes pero estos deben cumplir con la especificación de HTTP Live Streaming, es decir entregar al segmentador un flujo de datos codificados con perfiles compatibles con iOS y encapsulados en MPEG2-TS.
+	El servidor consiste en dos módulos: segmenter y dispatcher, este último depende de los archivos guardados por el segmentador, a su vez el segmentador recibe los datos a través de una emisión UDP o por la entrada estandar \textbf{stdin}.
 		\subsubsection{Obtención del Stream}
 %		la recepcion de un stream RTMP, codificacion con vlc o ffmpeg y generar un archivo o stream udp
-El contenido puede ser obtenido a partir de un 
+El contenido puede ser obtenido de distintos tipos de fuentes pero este debe cumplir con la especificación de HTTP Live Streaming, es decir entregar al segmentador un flujo de datos codificados con perfiles compatibles con iOS y encapsulados en MPEG2-TS.
 		\subsubsection{Sementación del Video}
-		el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
-		\subsubsection{Playlist Dispatcher}
-		dispatcher que recibe epoch, el tipo (canal) y el bwPARAMETER del tipo de enlace Wifi o cellular		
+		% el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
+
+El segmentador utilizado fue desarrollado en la empresa AltaVoz S.A. interesada en el proyecto, los motivos de este desarrollo fueron debido a que las herramientas dispuestas por Apple funcionan sólamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar al \textbf{mediastreamsegmenter}, cortando el stream de entreada en pequeños archivos de cierta duración.\\
+
+ La gran diferencia recalca en el almacenamiento de los archivos resultantes, estos se guardan sin ser eliminados para mantener un gran registro de las transmisiones, el nombre de cada segmento corresponde a la fecha y hora de la recepción de la emisión en formato Unix time (POSIX time) y con extensión \textbf{.ts}. Para mantener orden en el sistema de archivos los segmentos se guardan en subdirectorios por cada hora de contenido, el nombre de estos subdirectorios también llevan Unix time para su catalogación.\\
+
+Una última caracteristica especial del segmentador es marcar el segmento más antiguo y el más reciente en dos archivos \textbf{\textit{start.txt}} y \textbf{\textit{last.txt}} respectivamente, de forma que el cliente pueda representar gráficamente al usuario la disponibilidad de contenido en el stream.
+		
+		\subsubsection{Emisor de la lista de reproducción}
+%		dispatcher que recibe epoch, el tipo (canal) y el bwPARAMETER del tipo de enlace Wifi o cellular		
+El \textit{Playlist Dispatcher} consiste en un script \textbf{php} disponible en Internet gracias a un servidor web que trabaje con un módulo PHP, el script \textit{playlist dispatcher} debe recibir parámetros del cliente a través de la cadena de consulta (\textit{query string}) de la dirección URL. Los parámetros son los siguientes:
+
+\begin{itemize}
+	\item \textbf{t}: Corresponde a la marca de tiempo que el cliente quiere recibir, esta debe ser indicada con el formato Unix Time (POSIX time).
+	\item \textbf{s}: Este parámetro indica al script el cual contenido entregar a través del stream, analogamente se puede considerar como el parámetro para definir cual canal de televisión el usuario quiere ver. El valor corresponde a una cadena de caracteres (\textit{string}).
+	\item \textbf{c}: Este último parámetro corresponde al tipo de conexión con la cual el cliente está conectado a Internet, pueden ser dos valores, 1 para red celular y 0 para WiFi. Este parámetro se utiliza para optimizar la lista de variantes que entrega el script.
+\end{itemize}
+		
+Con estos parámetros el script stream es capaz de generar una lista de variantes que referencia a otro script
 		
 	\subsection{Cliente iOS}
 		descripcion general.
