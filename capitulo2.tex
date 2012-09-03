@@ -309,24 +309,63 @@ El \textit{Playlist Dispatcher} consiste en un script \textbf{php} disponible en
 	\item \textbf{c}: Este último parámetro corresponde al tipo de conexión con la cual el cliente está conectado a Internet, pueden ser dos valores, 1 para red celular y 0 para WiFi. Este parámetro se utiliza para optimizar la lista de variantes que entrega el script.
 \end{itemize}
 		
-Con estos parámetros el script stream es capaz de generar una lista de variantes que referencia a otro script
+Con estos parámetros el playlist dispatcher retorna una lista de variantes con referencias a otro script que genera las listas de reproducción.
 		
 	\subsection{Cliente iOS}
-		descripcion general.
-		como se conecta al server, reachability, entrega a avplayer
+%		descripcion general.
+%		como se conecta al server, reachability, entrega a avplayer
+El cliente consiste en una aplicación ejecutada sobre el sistema operativo \textbf{iOS}, su funcion consiste en mantener un enlace al servidor contactandose directamente con el playlist dispatcher y descargar los segmentos que este le indique.\\
+
+Además debe presentar en la pantalla del dispositivo el video o reproducir el audio según el tipo de stream. Para realizar esto se utilizan componentes de la interfaz de programación de aplicaciones (\textbf{API} - \textit{Application Programming Interface}). El cliente debe permitir al usuario controlar controlar el contenido del stream con una interfaz gráfica simple y precisa.
+
 		\subsubsection{Reproducción con AV Framework}
-		avplayer, playeritem, asset tracks		
+%		avplayer, playeritem, asset tracks		
+Apple en su documentación indica referencias a componentes en iOS que son capaces de reproducir streams HLS, componentes de nivel más alto como por ejemplo un reproductor de video HTML5 anidado en una página web o la clase \textbf{MPMoviePlayerViewController} que pertenece a \textbf{Media Player Framework}, que consiste en una pantalla que incorpora controles como barras deslizadoras para video y botones de control, facilitando de gran manera a los desarrolladores presentar contenido multimedia. \\
+
+Sin embargo como este trabajo busca presentar una caracteristica nueva a lo que es la reproducción de streams, se debe desarrollar un componente que se asemeje al estandar MPMoviePlayerViewController (fig. \ref{IMG-mpmpvc-example}) incluyendo la caracteristica de control de contenido y compartir información a través de Twitter.
+
+Uno de los componentes que significó una gran ayuda en el desarrollo del cliente es \textit{AV Foundation Framework}, la cual es una estructura de más bajo nivel que \textbf{Media Player Framework} (fig. \ref{IMG-ios-tech-frameworks}) y que permite obtener mayor información de los componentes de un archivo o stream multimedia.
+
+% imagen
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{imgs/ios-tech-frameworks.png}
+	\caption{Infraestructuras tecnologicas para el manejo de multimedia en iOS}
+	\label{IMG-ios-tech-frameworks}	
+\end{figure}
+
+% imagen
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.3]{imgs/mpmpvc-example.png}
+	\caption{Aplicación reproduciendo stream HLS con MPMoviePlayerViewController}
+	\label{IMG-mpmpvc-example}	
+\end{figure}
+
 		\subsubsection{Recopilación de datos del Stream}
-		kvo, notificaciones, periodic observers, la fecha y que se hace con ella
+%		kvo, notificaciones, periodic observers, la fecha y que se hace con ella
+Utilizando observadores de notificaciones centralizadas (\textit{Notification Center}), observadores de cambio de valor (KVO - \textit{Key Value Observing}) y observadores periodicos (\textit{Periodic Observers}), es posible llevar un registro del contenido del stream, como tambien la mayoría de los cambios de estado del reproductor.
+
+% enumerar los datos obtenidos
+periodicos:
+fecha
+segundos
+
+
+notificaciones:
+buffer
 		
 	\subsection{Intercambio de información entre componentes}
 	conexión, envio de epoch, recepcion de m3u8, start y last txt	
+El ... …
 	
 \clearpage
 \section{Interfaz Gráfica}
+...
 	\subsection{Apple Design Guidelines}
 	las guias de diseño y recomendaciones de apple
 	\subsection{Componentes de UIKit}
+	...
 		\subsubsection{UIDatePicker}
 		foto, como se usa, el hack para horizontal
 		\subsubsection{UIButton}
@@ -337,6 +376,7 @@ Con estos parámetros el script stream es capaz de generar una lista de variante
 \section{Integración Redes Sociales}
 	diagrama de como funciona el posteo y recepcion de twitts
 	\subsection{Twitter}
+	...
 		\subsubsection{API Twitter}
 		las llamadas de twitter que se utilizarán
 		\subsubsection{Sharekit vs. Twitter Framework}
@@ -358,6 +398,7 @@ Con estos parámetros el script stream es capaz de generar una lista de variante
 
 \clearpage
 \section{Registro en iOS}
+...
 	\subsection{Schemes}
 	explicar que son los schemes
 	\subsection{Redireccionamiento via Web}
