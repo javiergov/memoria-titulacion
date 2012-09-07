@@ -322,9 +322,14 @@ Además debe presentar en la pantalla del dispositivo el video o reproducir el a
 %		avplayer, playeritem, asset tracks		
 Apple en su documentación indica referencias a componentes en iOS que son capaces de reproducir streams HLS, componentes de nivel más alto como por ejemplo un reproductor de video HTML5 anidado en una página web o la clase \textbf{MPMoviePlayerViewController} que pertenece a \textbf{Media Player Framework}, que consiste en una pantalla que incorpora controles como barras deslizadoras para video y botones de control, facilitando de gran manera a los desarrolladores presentar contenido multimedia. \\
 
-Sin embargo como este trabajo busca presentar una caracteristica nueva a lo que es la reproducción de streams, se debe desarrollar un componente que se asemeje al estandar MPMoviePlayerViewController (fig. \ref{IMG-mpmpvc-example}) incluyendo la caracteristica de control de contenido y compartir información a través de Twitter.
+Sin embargo como este trabajo busca presentar una caracteristica nueva a lo que es la reproducción de streams, se debe desarrollar un componente que se asemeje al estandar MPMoviePlayerViewController (fig. \ref{IMG-mpmpvc-example}) incluyendo la caracteristica de control de contenido y compartir información a través de Twitter.\\
 
-Uno de los componentes que significó una gran ayuda en el desarrollo del cliente es \textit{AV Foundation Framework}, la cual es una estructura de más bajo nivel que \textbf{Media Player Framework} (fig. \ref{IMG-ios-tech-frameworks}) y que permite obtener mayor información de los componentes de un archivo o stream multimedia.
+Uno de los componentes que significó una gran ayuda en el desarrollo del cliente es \textit{AV Foundation Framework}, la cual es una estructura de más bajo nivel que \textbf{Media Player Framework}. 
+En la figura \ref{IMG-ios-tech-frameworks} se interpreta que los módulos de AV Foundation se encuentran bajo \textbf{UIKit}, el cual es la infraestructura para interfaces gráficas en iOS, por lo tanto al utilizar AV Foundation para reproducir contenido temporal del tipo audio o video, es necesario implementar con los componentes de UIKit la salida gráfica para el usuario.
+
+El motivo de utilizar AV Foundation además de una interfaz gráfica personalizada, es la obtención de datos que las clases por defecto no entregan, y que están relacionadas con 
+
+y que permite obtener mayor información de los componentes de un archivo o stream multimedia.
 
 % imagen
 \begin{figure}[h!]
