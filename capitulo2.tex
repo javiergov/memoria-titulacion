@@ -325,11 +325,11 @@ Apple en su documentación indica referencias a componentes en iOS que son capac
 Sin embargo como este trabajo busca presentar una caracteristica nueva a lo que es la reproducción de streams, se debe desarrollar un componente que se asemeje al estandar MPMoviePlayerViewController (fig. \ref{IMG-mpmpvc-example}) incluyendo la caracteristica de control de contenido y compartir información a través de Twitter.\\
 
 Uno de los componentes que significó una gran ayuda en el desarrollo del cliente es \textit{AV Foundation Framework}, la cual es una estructura de más bajo nivel que \textbf{Media Player Framework}. 
-En la figura \ref{IMG-ios-tech-frameworks} se interpreta que los módulos de AV Foundation se encuentran bajo \textbf{UIKit}, el cual es la infraestructura para interfaces gráficas en iOS, por lo tanto al utilizar AV Foundation para reproducir contenido temporal del tipo audio o video, es necesario implementar con los componentes de UIKit la salida gráfica para el usuario.
+En la figura \ref{IMG-ios-tech-frameworks} se interpreta que los módulos de AV Foundation se encuentran bajo \textbf{UIKit}, el cual es la infraestructura para interfaces gráficas en iOS, por lo tanto al utilizar AV Foundation para reproducir contenido temporal del tipo audio o video es necesario implementar con los componentes de UIKit la salida gráfica para el usuario.
 
-El motivo de utilizar AV Foundation además de una interfaz gráfica personalizada, es la obtención de datos que las clases por defecto no entregan, y que están relacionadas con 
+El motivo de utilizar AV Foundation además de una interfaz gráfica personalizada, es la obtención de datos que las clases por defecto no entregan, datos que están relacionadas con el control personalizado de la reproducción.
 
-y que permite obtener mayor información de los componentes de un archivo o stream multimedia.
+% y que permite obtener mayor información de los componentes de un archivo o stream multimedia.
 
 % imagen
 \begin{figure}[h!]
@@ -349,16 +349,29 @@ y que permite obtener mayor información de los componentes de un archivo o stre
 
 		\subsubsection{Recopilación de datos del Stream}
 %		kvo, notificaciones, periodic observers, la fecha y que se hace con ella
-Utilizando observadores de notificaciones centralizadas (\textit{Notification Center}), observadores de cambio de valor (KVO - \textit{Key Value Observing}) y observadores periodicos (\textit{Periodic Observers}), es posible llevar un registro del contenido del stream, como tambien la mayoría de los cambios de estado del reproductor.
+Utilizando observadores de notificaciones centralizadas (\textit{Notification Center}), observadores de cambio de valor (KVO - \textit{Key Value Observing}) (\%PONER REF.\%) y observadores periodicos (\textit{Periodic Observers}), es posible llevar un registro del contenido del stream, como tambien la mayoría de los cambios de estado del reproductor.
 
+Para mantener de forma continua la información temporal del stream se han asocido a la instancia de la clase AVPlayer, dedicada a la reproducción del stream entregado por URL, los siguientes datos.\\
 % enumerar los datos obtenidos
-periodicos:
-fecha
-segundos
 
+\textbf{Revisión periódica}:
 
-notificaciones:
-buffer
+\begin{itemize}
+\item Tiempo de reproducción: este se supervisa en un intervalo de 1/10 de segundo de forma que con esta razon de cambio la interfaz gráfica se actualice, se ajusta a  este valor de tiempo (100 ms) de forma que el usuario no identifique irregularidad en el temporizador y a la vez la carga en ciclos se ejución no afecte el desempeño de la máquina.
+\item Fecha asociada al stream: Este valor es parte fundamental en el funcionamiento del stream con saltos en el tiempo, su origen se debe al tag asociado a la lista de reproducción del stream.
+\item Tasa de Bits:
+\end{itemize}  
+
+En el caso de la observación de datos periódica, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproducctor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.
+
+\textbf{Notificación en base a cambios}:
+
+\begin{itemize}
+\item Buffer:
+\item Pistas de medios:
+\
+\end{itemize}
+
 		
 	\subsection{Intercambio de información entre componentes}
 	conexión, envio de epoch, recepcion de m3u8, start y last txt	
