@@ -362,14 +362,36 @@ Para mantener de forma continua la información temporal del stream se han asoci
 \item Tasa de Bits:
 \end{itemize}  
 
-En el caso de la observación de datos periódica, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproducctor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.
+En el caso de la observación de datos periódica, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproducctor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.\\
+
 
 \textbf{Notificación en base a cambios}:
 
+La mayoría de estos valores observados sirven como guía para controlar el funcionamiento del reproductor. En caso de cualquier cambio en el estado de los atributos observados se dispara una notificación desde el objeto con el cambio con destino al observador asociado. 
+En el desarrollo de esta aplicación la clase encargada de gestionar la interfaz gráfica de los objetos (\textit{View Controller}) actua también como observador.\\
+
+Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la figura \ref{exampleCodeObserver}, donde \textit{player} es el objeto, \textit{self} es la instancia del \textit{ViewController} que recibirá los avisos de cambio, y \textit{rate} es el atributo a indagar. Además se pueden ajustar opciones adicionales para la recepción de las notificaciones y asociar un contexto a la notificación. De esta forma cuando el valor de \textit{rate} en el reproductor \textit{player} cambie, ya sea por algún evento en la transmisión o alguna interacción por parte del usuario, se notificará al \textit{ViewController} para tomar curso de acción.
+\begin{figure}[h!]
+	\centering
+	\begin{lstlisting}
+	[player addObserver:self  
+			 forKeyPath:@"rate"
+		        options:NSKeyValueObservingOptionNew
+		        context:TracksChangeContext];
+	\end{lstlisting}
+	\caption{Ejemplo de objeto Reproductor siendo asociado un observador su atributo \textit{rate}}
+	\label{exampleCodeObserver}	
+\end{figure}	
+ 
+ 
+ Teniendo claro el sistema de observación de instancias, se explican a continuación los campos de interes para este proyecto.:
 \begin{itemize}
-\item Buffer:
+\item Estado: status
+\item Razón de reproducción: rate
+\item Rango de reproducción: 
+\item Buffer: (vacio y likely to keep up)
 \item Pistas de medios:
-\
+
 \end{itemize}
 
 		
