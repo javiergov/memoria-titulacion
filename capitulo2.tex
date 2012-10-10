@@ -293,7 +293,7 @@ El contenido puede ser obtenido de distintos tipos de fuentes pero este debe cum
 		\subsubsection{Sementación del Video}
 		% el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
 
-El segmentador utilizado fue desarrollado en la empresa AltaVoz S.A. interesada en el proyecto, los motivos de este desarrollo fueron debido a que las herramientas dispuestas por Apple funcionan sólamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar al \textbf{mediastreamsegmenter}, cortando el stream de entreada en pequeños archivos de cierta duración.\\
+El segmentador utilizado fue desarrollado en la empresa AltaVoz S.A. interesada en el proyecto. Los motivos de este desarrollo se deben a que las herramientas dispuestas por Apple funcionan sólamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar al \textbf{mediastreamsegmenter}, cortando el stream de entreada en pequeños archivos de cierta duración.\\
 
  La gran diferencia recalca en el almacenamiento de los archivos resultantes, estos se guardan sin ser eliminados para mantener un gran registro de las transmisiones, el nombre de cada segmento corresponde a la fecha y hora de la recepción de la emisión en formato Unix time (POSIX time) y con extensión \textbf{.ts}. Para mantener orden en el sistema de archivos los segmentos se guardan en subdirectorios por cada hora de contenido, el nombre de estos subdirectorios también llevan Unix time para su catalogación.\\
 
@@ -404,16 +404,34 @@ Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la f
 \subsection{Intercambio de información entre componentes}
 %	conexión, envio de epoch, recepcion de m3u8, start y last txt	
 
-Se debe considerar que el intercambio de información se realiza entre el dispatcher y la aplicación cliente como se muestra en la figura \ref{diagramaGral}. Para esto se insta el reproductor de clase AVPlayer mediante su metodo de incialización \textit{initWithURL:(\textbf{NSURL} *)url} que toma como argumento un URL
+Se debe considerar que el intercambio de información se realiza entre el dispatcher y la aplicación cliente como se muestra en la figura \ref{diagramaGral}. Para esto se insta el reproductor de clase AVPlayer mediante su metodo de incialización:
 
+\textit{initWithURL:(\textbf{NSURL} *)url}, que toma como argumento un URL al dispatcher con los parámetros explicados anteriormente. Luego que el reproductor se ha inicializado, se procede a asociar los observadores a la instancia para luego llamar a la reproducción.\\
 
-una petición HTTP a la dirección 
+El método de inicialización se basa en una petición HTTP. La administración de datos de usuario en el cliente (\textit{cookies}) son establecidos por el servidor y el sistema del cliente (iOS) se encarga de devolver la información con cada petición. Esto simplifica de gran manera cada nuevo enlace que la aplicación cliente debe hacer, liberando la carga a solamente establecer las nuevas URLs.
+
+Por el lado del servidor, aparte de los campos en la cadena de consulta (query string), se establece cada conexión utilizando las siguientes cookies:
+
+\begin{itemize}
+\item \textbf{t0}: Tiempo pedido en el parametro t, de la cadena de consulta.
+\item \textbf{tp}: Tiempo actual de ejecucion del script en el servidor.
+\item \textbf{si}: Secuencia inicial de la lista de reproducción HLS.
+\item \textbf{sf}: Secuencia final de la lista de reproducción HLS.
+\item \textbf{ti}: Tiempo inicial encontrado en los archivos, corresponde a la marca de tiempo más cercana al valor de t0, ya que puede ocurrir que el tiempo pedido no calze con el nombre de archivo de los segmentos.
+\item \textbf{tl}: Tiempo del ultimo segmento de la lista de reproducción HLS.
+
+\end{itemize}
  
+En la programación del cliente no se realizó tarea alguna respecto a cookies, el sistema operativo iOS se encargó de establecer y responder los valores de estas cookies según lo pedido por el servidor. Esta simpleza se debe gracias a las restricciones puestas por Apple en sus frameworks multimedia, limitando las inicializaciones a solo URL como argumentos en vez de instancias configuradas de \textit{NSURLRequest}. 
+Los métodos que establecen conexiones incluyen un atributo \textit{NSHTTPCookieAcceptPolicy} con el valor por defecto \textit{NSHTTPCookieAcceptPolicyAlways}, es decir siempre están dispuestos a aceptar y almacenar cookies. \\
 
+Con todos estos valores el servidor calcula y contesta al cliente un stream HLS con los segmentos apropiados a la reproducción.
+	
 	
 \clearpage
 \section{Interfaz Gráfica}
-...
+
+Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia por HTTP Live Streaming, es tarea del cliente mostrar el contenido ya sea video y/o audio. La versatilidad de los dispositivos iOS permiten variadas formas de entregar la información al usuario, sin embargo Apple se mantiene sobreprotector respecto al diseño funcional de las aplicaciones con documentos guía que hacen a la vez de pauta en el proceso de evaluación de aplicaciones para ser ingresadas a la App Store.
 	\subsection{Apple Design Guidelines}
 	las guias de diseño y recomendaciones de apple
 	\subsection{Componentes de UIKit}
