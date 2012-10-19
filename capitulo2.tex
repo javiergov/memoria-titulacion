@@ -408,6 +408,7 @@ Se debe considerar que el intercambio de información se realiza entre el dispat
 
 \textit{initWithURL:(\textbf{NSURL} *)url}, que toma como argumento un URL al dispatcher con los parámetros explicados anteriormente. Luego que el reproductor se ha inicializado, se procede a asociar los observadores a la instancia para luego llamar a la reproducción.\\
 
+% cookies ref: http://es.wikipedia.org/wiki/Cookie_(informática)
 El método de inicialización se basa en una petición HTTP. La administración de datos de usuario en el cliente (\textit{cookies}) son establecidos por el servidor y el sistema del cliente (iOS) se encarga de devolver la información con cada petición. Esto simplifica de gran manera cada nuevo enlace que la aplicación cliente debe hacer, liberando la carga a solamente establecer las nuevas URLs.
 
 Por el lado del servidor, aparte de los campos en la cadena de consulta (query string), se establece cada conexión utilizando las siguientes cookies:
@@ -432,8 +433,11 @@ Con todos estos valores el servidor calcula y contesta al cliente un stream HLS 
 \section{Interfaz Gráfica}
 
 Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia por HTTP Live Streaming, es tarea del cliente mostrar el contenido ya sea video y/o audio. La versatilidad de los dispositivos iOS permiten variadas formas de entregar la información al usuario, sin embargo Apple se mantiene sobreprotector respecto al diseño funcional de las aplicaciones con documentos guía que hacen a la vez de pauta en el proceso de evaluación de aplicaciones para ser ingresadas a la App Store.
-	\subsection{Apple Design Guidelines}
-	las guias de diseño y recomendaciones de apple
+
+  \subsection{Pauta de diseño de Apple}
+% http://developer.apple.com/library/ios/#documentation/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html 
+		las guias de diseño y recomendaciones de apple
+	
 	\subsection{Componentes de UIKit}
 	...
 		\subsubsection{UIDatePicker}
@@ -470,11 +474,24 @@ Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia po
 \section{Registro en iOS}
 ...
 	\subsection{Schemes}
-	explicar que son los schemes
+%	explicar que son los schemes
+	Un Scheme es el prefijo de un url, universal resource locator, en este se define el protocolo que se utiliza para ubicar el recurso.
+Como esta aplicación cliente utiliza integracion de redes sociales. Es necesario que se pueda acceder al contenido compartido a través de la weba o incluso de otras aplicaciones del sistema.
+
+El sistema operativo iOS permite registrar schemes, con lo cual el sistema reconoce qué aplicación debe encargarse de interpretar el URL. Para esto es necesario que la aplicación indique en su archivo de información general "info.plist" los schemes de los URL que tiene interes.
+En el caso de la aplicación cliente, se registra un scheme como "socialstream", de manera que URL de la forma socialstream://www.ejemplo.com/ sean entregados a la aplicación cliente.
+
 	\subsection{Redireccionamiento via Web}
-	explicar breve como funcionará la carga del scheme sstream, en web y mobile
+%	explicar breve como funcionará la carga del scheme sstream, en web y mobile
+La forma más simple que se ideó para entregar la información según las variadas plataformas que se conectan a internet, consiste en comunicar a través de la herramienta común que poseen los móviles y computadores, el navegador web.
+El navegador web al realizar el enlace a través del protocolo HTTP a cierta página remota, entrega dentro de sus cabeceras el Agente de Usuario (user agent), con lo cual es posible identificar qué cliente se conecta y a la vez personalizar el contenido a entregarle.
+
 		\subsubsection{PHP Script}
-		explicar brevemente el script php 
+%		explicar brevemente el script php 
+Se desarrolló un script en PHP, encargado de identificar el cliente que se está conectando al servidor y según el tipo de dispositivo o navegador redirecciona a un URL con scheme personalizado, o presenta una página web con información a social stream.
+
+El acceso a este script requiere cierto campos relacionados con la transmisión que se compartió y se incluyen en el URL como query strings (cadena de consulta) 
+
 		\subsubsection{Respuestas según User Agent}
 		describir los casos según user agents
 		
