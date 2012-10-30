@@ -9,11 +9,11 @@ El siguiente capitulo consta de las bases necesarias para realizar la solución.
 % poner figura aqui
 La figura \ref{diagramaGral} presenta una idea general del sistema.\\
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
+	\label{diagramaGral}	
 	\includegraphics[scale=0.8]{imgs/diagrama_general.eps}
 	\caption{Diagrama general de la solución}
-	\label{diagramaGral}	
 \end{figure}
 
 Respecto a los elementos principales, estos se componen de distintos modulos que serán explicados con más detalle a lo largo del capítulo. Del diagrama se explican de forma general:
@@ -57,7 +57,7 @@ También existe una variante donde la lista de reproducción contiene referencia
 		
 
 \clearpage		
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{imgs/HLS_diagram_wwdc2010.eps}
 	\caption{Flujo de trabajo de HTTP Live Streaming}	
@@ -89,7 +89,7 @@ Además este valor indica al cliente cada cuanto tiempo debe realizar una petici
 \item \label{TAG-extinfint} \#EXTINF: Esta marca indica la duración del segmento que se encuentra junto a él. Su valor está indicado por un número entero que representa los segundos.\\
 \end{prop}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\begin{lstlisting}
 	#EXTM3U
@@ -162,7 +162,7 @@ Se utiliza la marca \textbf{\#EXT-X-STREAM-INF} para asociar cada una de las var
 
 El enlace a las sublistas de variantes del stream pueden ser del tipo relativo o absoluto. Como requisito cada variante del stream debe poseer el mismo valor en segundos de Target Duration \ref{TAG-targetduration}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\begin{lstlisting}
 	#EXTM3U
@@ -222,7 +222,7 @@ Como recibe de entrada un flujo de datos, permite generar listas de reproducció
 
 Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una pelicula ya comprimida en audio AAC y video h.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}. Para realizar esta transimisión se utiliza el \textit{asistente de emisión/transcodificación}.\\
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{imgs/vlc_transmission.png}
 	\caption{Ajustes de la aplicación VLC.app para transmisión de película a través de UDP.}
@@ -258,7 +258,7 @@ El resultado de esto es un stream HLS al cual se puede acceder mediante un servi
 Nótese que la fuente al video es la lista de reproducción generada por \textbf{mediastreamsegmenter}, la cual se encuentra en constante actualización mientras la transmisión se lleva a cabo.\\
 
 Ya con el servidor web funcionando, la carga de esta página web permitirá la reproducción del stream en vivo mientras el navegador web sea compatible con el protocolo HTTP Live Streaming utilizando el player HTML5. En la actualidad los únicos navegadores compatibles son Safari y Mobile Safari, desarrollados por Apple.\\
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.6]{imgs/ipad-hlsexample.png}
 	\caption{Captura de pantalla de Mobile Safari en iPad}
@@ -332,7 +332,7 @@ El motivo de utilizar AV Foundation además de una interfaz gráfica personaliza
 % y que permite obtener mayor información de los componentes de un archivo o stream multimedia.
 
 % imagen
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{imgs/ios-tech-frameworks.png}
 	\caption{Infraestructuras tecnologicas para el manejo de multimedia en iOS}
@@ -340,7 +340,7 @@ El motivo de utilizar AV Foundation además de una interfaz gráfica personaliza
 \end{figure}
 
 % imagen
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.3]{imgs/mpmpvc-example.png}
 	\caption{Aplicación reproduciendo stream HLS con MPMoviePlayerViewController}
@@ -371,7 +371,7 @@ La mayoría de estos valores observados sirven como guía para controlar el func
 En el desarrollo de esta aplicación la clase encargada de gestionar la interfaz gráfica de los objetos (\textit{View Controller}) actua también como observador.\\
 
 Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la figura \ref{exampleCodeObserver}, donde \textit{player} es el objeto, \textit{self} es la instancia del \textit{ViewController} que recibirá los avisos de cambio, y \textit{rate} es el atributo a indagar. Además se pueden ajustar opciones adicionales para la recepción de las notificaciones y asociar un contexto a la notificación. De esta forma cuando el valor de \textit{rate} en el reproductor \textit{player} cambie, ya sea por algún evento en la transmisión o alguna interacción por parte del usuario, se notificará al \textit{ViewController} para tomar curso de acción.
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\begin{lstlisting}
 	[player addObserver:self  
@@ -434,17 +434,25 @@ Con todos estos valores el servidor calcula y contesta al cliente un stream HLS 
 
 Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia por HTTP Live Streaming, es tarea del cliente mostrar el contenido ya sea video y/o audio. La versatilidad de los dispositivos iOS permiten variadas formas de entregar la información al usuario, sin embargo Apple se mantiene sobreprotector respecto al diseño funcional de las aplicaciones con documentos guía que hacen a la vez de pauta en el proceso de evaluación de aplicaciones para ser ingresadas a la App Store.
 
-  \subsection{Pauta de diseño de Apple}
+  \subsection{Directrices de diseño de Apple}
 % http://developer.apple.com/library/ios/#documentation/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html 
-		las guias de diseño y recomendaciones de apple
+%		las guias de diseño y recomendaciones de apple
+
+Las Directrices de interfaz humana de iOS (\textit{iOS Human Interface Guidelines}) describen los principios que ayudan a diseñar una interfaz y experiencia de usuario para las aplicaciones iOS.\\
+
+Estas guias no describen los diseños en código, abarcan convenciones como carácteristicas de la plataforma, casos de transición entre pantallas, gestos que el usuario espera y tecnologias de comunicación entre componentes.
+Para desarrollar la aplicación se revisaron puntos de estas guia con tal de obtener un producto acorde a lo esperado por los usuarios de iOS. No se quiso innovar en materia de controles y gestos, por lo tanto se utilizaron componentes estándar del framework UIKit.
 	
 	\subsection{Componentes de UIKit}
-	...
+	Para el desarrollo de la aplicación cliente se utilizaron recursos dispuestos en el framework UIKit con tal de mantener la percepción del usuario con la interfaz gráfica respecto al resto de las aplicaciones que ejecuta en su sistema. El mayor cambio respecto al los componentes comunes de la interfaz fue en el selector de segundos debido a que la selección de fecha no abarca totalmente lo requerido por el sistema diseñado.
+	
 		\subsubsection{UIDatePicker}
 % 	foto, como se usa, el hack para horizontal
-Para el trato de valores de fechas, el framework de interfaz gráfica UIKit pone a disposición la clase UIDatePicker, que presenta en pantalla una rueda con distintas secciones asociadas cierta fecha con la que se ajuste, además permite llamar métodos al seleccionar por parte del usuario una fecha en particular. Sin embargo este control no permite seleccionar una fecha especificandola desde el año hasta los segundos, permite especificar hasta los minutos. Para solucionar esto se ideó un control personalizado que presenta una rueda extra con valores de 0 a 59 que se adicionan a los minutos seleccionados con el UIDatePicker. Esta rueda especial es una modificación de la clase UIPicker de propósito más general, se transformó su dibujo rotando en 90º gracias a la API Core Graphics Framework. 
+Para el trato de valores de fechas, el framework de interfaz gráfica UIKit pone a disposición la clase UIDatePicker, que presenta en pantalla una rueda con distintas secciones asociadas cierta fecha con la que se ajuste. Además permite llamar métodos al seleccionar fecha en particular. Sin embargo este control no permite seleccionar una fecha especificandola desde el año hasta los segundos, permite especificar hasta los minutos. \\
 
-\begin{figure}[h!]
+Para solucionar esto se ideó un control personalizado que presenta una rueda extra con valores de 0 a 59 que se adicionan a los minutos seleccionados con el UIDatePicker. Esta rueda especial es una modificación de la clase UIPicker de propósito más general, se transformó su dibujo rotando en 90º gracias a la API Core Graphics Framework. 
+
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{imgs/datepicker-mod.png}
 	\caption{Control del tiempo de la transmisión, UIDatePicker y UIPicker modificado}
@@ -463,10 +471,10 @@ Para el trato de valores de fechas, el framework de interfaz gráfica UIKit pone
 %		volumen, slider de view controller tipo facebook, etc
 Para representar el cliente de twitter se utilizó una instancia de la clase UITableView, clase que tiene como fin presentar y editar listas jerárquicas de información. La infomación se obtiene del resultado de una llamada a twitter utilizando su API de búsqueda. El resultado consiste en un archivo JSON (\textit{JavaScript Object Notation}) que contiene los tweets de los últimos 6 a 9 días respecto a la consulta realizada. Para el caso de esta aplicación, se utiliza el hashtag \textbf{\#SocialStream} como se puede ver en la figura \ref{sshot-twitterclientvc}.\\
 
-Para poder presentar la tabla sin perder parte de la tranmisión se presenta el cliente bajo la vista del reproductor. Utilizando la clase ZUUIRevealController fue posible apilar en pantalla dos controladores de vista: TwitterClientVC y StreamPlayerVC. Para lograr presentar el controlador de vista inferior, fue necesario asociar a la vista del reproductor un botón que permita arrastrar con el dedo o desplazar con un toque la vista que lo posee. Esto se realizó asociando la acción de tocar dentro del botón y el gesto \textit{navigationBarPanGestureRecognizer} a la barra que lo contiene. El metodo asociado \textit{revealToggle:} de la instancia de ZUUIRevealController permite mostrar, ocultar o arrastrar las vistas superpuestas. %En la figura \ref{sshot-twitterclientvc} se 
+Para poder presentar la tabla sin perder parte de la tranmisión se presenta el cliente bajo la vista del reproductor. Utilizando la clase ZUUIRevealController fue posible apilar en pantalla dos controladores de vista: TwitterClientVC y StreamPlayerVC. Para lograr presentar el controlador de vista inferior, fue necesario asociar a la vista del reproductor un botón que permita arrastrar con el dedo o desplazar con un toque la vista que lo posee. Esto se realizó asociando la acción de tocar dentro del botón y el gesto \textit{navigationBarPanGestureRecognizer} a la barra que lo contiene. El metodo asociado \textit{revealToggle:} de la instancia de ZUUIRevealController permite mostrar, ocultar o arrastrar las vistas superpuestas. En la figura \ref{sshot-twitterclientvc} se muestra el instante donde el usuario arrastra la vista del reproductor a través del botón \textbf{Twitter}.
 
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{imgs/sshot-twitterclientvc.png}
 	\caption{Revelación del cliente de Twitter en base a UITableView}
@@ -476,11 +484,19 @@ Para poder presentar la tabla sin perder parte de la tranmisión se presenta el 
  
 %\clearpage
 \section{Integración Redes Sociales}
-	diagrama de como funciona el posteo y recepcion de twitts
+	%diagrama de como funciona el posteo y recepcion de twitts
+	Para incluir carácteristicas sociales a la aplicación, se incorporó un sistema de compartimiento en base a la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
+	
+	De forma resumida, el usuario al pulsar el botón \textbf{\textquotedblleft t\textquotedblright} genera un URL en base a la fecha de la transmisión que está viendo, este URL se comprime a través del servicio bit.ly con tal de aminorar la cantidad de caracteres en el mensaje y luego se entrega al usuario en un campo de texto donde se le permite describir lo que comparte. Una vez en la red Twitter, usuarios que observen este mensaje a través de la misma aplicación pueden llegar a reproducir el instante compartido por el autor del mensaje.
+	
+	
 	\subsection{Twitter}
-	...
+	%http://www.alexa.com/siteinfo/twitter.com
+	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en internet, es uno los sitios más populares de la web\cite{alexa-twitter}, permitiendo que personas no suscritas puedan ver los mensajes.
+	La limitante de cada mensaje se reduce a 140 caracteres, más que suficientes para difundir enlaces desde la aplicación desarrollada y permitiendo además una pequeña descripción por parte del usuario.
 		\subsubsection{API Twitter}
 		las llamadas de twitter que se utilizarán
+		se utiliza search api, la más simple, hay otras opciones
 		\subsubsection{Sharekit vs. Twitter Framework}
 		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
 		\subsubsection{Post en Twitter}
