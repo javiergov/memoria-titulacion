@@ -11,9 +11,9 @@ La figura \ref{diagramaGral} presenta una idea general del sistema.\\
 
 \begin{figure}[H]
 	\centering
-	\label{diagramaGral}	
 	\includegraphics[scale=0.8]{imgs/diagrama_general.eps}
 	\caption{Diagrama general de la solución}
+	\label{diagramaGral}
 \end{figure}
 
 Respecto a los elementos principales, estos se componen de distintos modulos que serán explicados con más detalle a lo largo del capítulo. Del diagrama se explican de forma general:
@@ -356,11 +356,12 @@ Para mantener de forma continua la información temporal del stream se han asoci
 
 \textbf{Revisión periódica}:
 
-\begin{itemize}
-\item Tiempo de reproducción: este se supervisa en un intervalo de 1/10 de segundo de forma que con esta razon de cambio la interfaz gráfica se actualice, se ajusta a  este valor de tiempo (100 ms) de forma que el usuario no identifique irregularidad en el temporizador y a la vez la carga en ciclos se ejución no afecte el desempeño de la máquina.
-\item Fecha asociada al stream: Este valor es parte fundamental en el funcionamiento del stream con saltos en el tiempo, su origen se debe al tag asociado a la lista de reproducción del stream.
-\item Tasa de Bits:
-\end{itemize}  
+\begin{enumerate}
+\item \textbf{Tiempo de reproducción}: Este se supervisa en un intervalo de 1/10 de segundo de forma que con esta razon de cambio la interfaz gráfica se actualice, se ajusta a  este valor de tiempo (100 ms) de forma que el usuario no identifique irregularidad en el temporizador y a la vez la carga en ciclos se ejución no afecte el desempeño de la máquina.
+\item \textbf{Fecha asociada al stream}: Este valor es parte fundamental en el funcionamiento del stream con saltos en el tiempo, su origen se debe al tag asociado a la lista de reproducción del stream.
+\label{observer-date}
+%\item Tasa de Bits:
+\end{enumerate}
 
 En el caso de la observación de datos periódica, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproducctor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.\\
 
@@ -477,8 +478,8 @@ Para poder presentar la tabla sin perder parte de la tranmisión se presenta el 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{imgs/sshot-twitterclientvc.png}
-	\caption{Revelación del cliente de Twitter en base a UITableView}
-	\label{sshot-twitterclientvc}	
+	\caption{Revelación del cliente de Twitter en base a UITableView}	
+	\label{sshot-twitterclientvc}
 \end{figure}
  
  
@@ -487,20 +488,38 @@ Para poder presentar la tabla sin perder parte de la tranmisión se presenta el 
 	%diagrama de como funciona el posteo y recepcion de twitts
 	Para incluir carácteristicas sociales a la aplicación, se incorporó un sistema de compartimiento en base a la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
 	
-	De forma resumida, el usuario al pulsar el botón \textbf{\textquotedblleft t\textquotedblright} genera un URL en base a la fecha de la transmisión que está viendo, este URL se comprime a través del servicio bit.ly con tal de aminorar la cantidad de caracteres en el mensaje y luego se entrega al usuario en un campo de texto donde se le permite describir lo que comparte. Una vez en la red Twitter, usuarios que observen este mensaje a través de la misma aplicación pueden llegar a reproducir el instante compartido por el autor del mensaje.
+	En resumen, el usuario al pulsar el botón \textbf{\textquotedblleft t\textquotedblright} visible en la imagen \ref{sshot-twitterclientvc} genera un URL en base a la fecha de la transmisión que está viendo, este URL se comprime a través del servicio bit.ly con tal de aminorar la cantidad de caracteres en el mensaje y luego se entrega al usuario en un campo de texto donde se le permite describir lo que comparte. Una vez en la red Twitter, usuarios que observen este mensaje a través de la misma aplicación pueden llegar a reproducir el instante compartido por el autor del mensaje.
 	
 	
 	\subsection{Twitter}
 	%http://www.alexa.com/siteinfo/twitter.com
-	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en internet, es uno los sitios más populares de la web\cite{alexa-twitter}, permitiendo que personas no suscritas puedan ver los mensajes.
+	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en internet, es uno los sitios más populares de la web\cite{alexa-twitter} permitiendo que personas no suscritas puedan ver los mensajes.
 	La limitante de cada mensaje se reduce a 140 caracteres, más que suficientes para difundir enlaces desde la aplicación desarrollada y permitiendo además una pequeña descripción por parte del usuario.
 		\subsubsection{API Twitter}
-		las llamadas de twitter que se utilizarán
-		se utiliza search api, la más simple, hay otras opciones
+		Para la muestra de los mensajes compartidos, se utilizó \textit{Twitter Search API}, la cual es una interfaz dedicada a busquedas en el indice de mensajes (\textit{tweets}) en tiempo real. Esta se caracteriza por lo siguiente:
+		
+		\begin{itemize}
+		\item Su historial dura no más de una semana, el indice de mensajes abarca entre 6 a 9 días.
+		\item La busqueda no requiere de autenticación, se realiza anonimamente.
+		\item El resultado de la busqueda se basa en relevancia del tema en vez de la totalidad de sus mensajes. Esto debido a las políticas del servicio de Twitter donde se privilegia el alcance de los mensajes según la reputación de los usuarios \cite{twitter-relevance}.
+		\end{itemize}
+
+Tomando en cuenta estos puntos Search API satisface la obtención de mensajes compartidos desde la aplicación cliente, si bien existen alternativas dispuestas por twitter para la obtención de mensajes, no significan una mejora respecto al fin de la aplicación cliente. Se prefiere por su simpleza.
+		
+%		las llamadas de twitter que se utilizarán
 		\subsubsection{Sharekit vs. Twitter Framework}
-		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
+%		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
+Durante el desarrollo de la aplicación cliente Apple Inc. lanzó al público el sistema operativo iOS 5, el cual permite entre muchas caracteristicas, la integración del sistema con la red social Twitter mediante \textbf{Twitter.framework} . Por simpleza y compatibilidad con versiones anteriores de iOS se descartó utilizar esta nueva herramienta para utilizar la biblioteca de código libre Sharekit, destinada a integrar todo tipo de redes sociales incluyendo twitter. Otro motivo de esto es la posibilidad de expandir a otras redes el contenido que se comparte a través de la aplicación cliente. \\
+
+En caso que se desee, es posible utilizando Sharekit es posible modificar el mensaje a compartir de forma que el usuario no elimine el URL relacionado al contenido compartido.
+
 		\subsubsection{Post en Twitter}
-		como postear en twitter desde la app, action sheet
+%		como postear en twitter desde la app, action sheet
+		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, para esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase NSDate, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{timeIntervalSince1970} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir ese valor en NSString de forma  en una cadena de caracteres
+		
+		
+		En caso de no tener el valor para la fecha en reproducción la aplicación no permite compartir.
+
 		\subsubsection{Seguimiento de Hashtag}
 		las llamadas de url para el cliente de twitter
 		\subsubsection{Extracción de información de un Tweet}
