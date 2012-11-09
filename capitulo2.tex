@@ -509,7 +509,7 @@ Tomando en cuenta estos puntos Search API satisface la obtención de mensajes co
 %		las llamadas de twitter que se utilizarán
 		\subsubsection{Sharekit vs. Twitter Framework}
 %		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
-Durante el desarrollo de la aplicación cliente Apple Inc. lanzó al público el sistema operativo iOS 5, el cual permite entre muchas caracteristicas, la integración del sistema con la red social Twitter mediante \textbf{Twitter.framework} . Por simpleza y compatibilidad con versiones anteriores de iOS se descartó utilizar esta nueva herramienta para utilizar la biblioteca de código libre Sharekit, destinada a integrar todo tipo de redes sociales incluyendo twitter. Otro motivo de esto es la posibilidad de expandir a otras redes el contenido que se comparte a través de la aplicación cliente. \\
+Durante el desarrollo de la aplicación cliente Apple Inc. lanzó al público el sistema operativo iOS 5, el cual permite entre muchas caracteristicas, la integración del sistema con la red social Twitter mediante \textbf{Twitter.framework} . Por simpleza y compatibilidad con versiones anteriores de iOS se descartó utilizar esta nueva herramienta para utilizar la biblioteca de código libre \textbf{Sharekit}\cite{library-sharekit}, destinada a integrar todo tipo de redes sociales incluyendo twitter. Otro motivo de esto es la posibilidad de expandir a otras redes el contenido que se comparte a través de la aplicación cliente. \\
 
 En caso que se desee, es posible utilizando Sharekit es posible modificar el mensaje a compartir de forma que el usuario no elimine el URL relacionado al contenido compartido.
 
@@ -586,14 +586,25 @@ if (error)
 \end{figure}	
 
 Una instancia de NSDictionary posee una cadena de claves y valores asociados, la generada del objeto JSON entrega valores de las claves encontradas en la figura \ref{tweet-json}.
-Para presentar el contenido en la tabla de la interfaz gráfica se utilizaron los valores de las claves: 
-
-
+Para presentar el contenido en la tabla de la interfaz gráfica se utilizaron los valores de las claves:
+\begin{itemize}
+\item \textbf{\textquotedblleft from\_user\_name"}: (línea 16) El nombre completo del usuario.
+\item \textbf{\textquotedblleft text"}: (línea 25) El cuerpo del mensaje.
+\item \textbf{\textquotedblleft profile\_image\_url"}: (línea 22) La dirección a la imagen que el usuario utiliza como avatar.
+\item \textbf{\textquotedblleft created\_at"}: (línea 1) La fecha en que se realizó el tweet, tomar en cuenta que no corresponde a la fecha de la transmisión que el usuario comparte. 
+\end{itemize}
+Al pulsar en algún mensaje representado en la tabla \ref{sshot-twitterclientvc}, se utiliza el valor de la clave \textit{\textbf{\textquotedblleft expanded\_url"}} (\ref{tweet-json}, línea 8) para analizar si su contenido es utilizable por la aplicación.
 
 	\subsection{Bit.ly}
-		desmenuzar el enlace de bitly
+%		desmenuzar el enlace de bitly
+Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream, que además incluye marca de tiempo, no utilice demasiados caracteres. El motivo es la limitante de twitter de 140 caracteres por mensaje, los cuales la aplicación debe utilizar lo mínimo para compartir.\\
+
+La compresión se debe realizar al compartir en twitter un enlace al stream, y descompresión cuando el usuario pulsa en un tweet de la tabla \ref{sshot-twitterclientvc}.
 		\subsubsection{API Bit.ly}
-		las llamadas de la api que se utilizaron
+%		las llamadas de la api que se utilizaron
+		
+		\subsubsection{Compresión de URL}
+		bla
 		\subsubsection{Expansión de atajo bit.ly}
 		como se expande un url de bitly y se usa en la app
 		\subsubsection{Seguimiento de un Hipervínculo}		
@@ -604,7 +615,7 @@ Para presentar el contenido en la tabla de la interfaz gráfica se utilizaron lo
 ...
 	\subsection{Schemes}
 %	explicar que son los schemes
-	Un Scheme es el prefijo de un URL, universal resource locator, en este se define el protocolo que se utiliza para ubicar el recurso.
+	Un \textbf{\textit{Scheme}} es el prefijo de un \textit{Universal Resource Locator} (\textbf{URL}), con el cual se define el protocolo a utilizar para ubicar un recurso.
 Como esta aplicación cliente utiliza integración de redes sociales. Es necesario que se pueda acceder al contenido compartido a través de la Web o incluso de otras aplicaciones del sistema.
 
 El sistema operativo iOS permite registrar schemes, con lo cual el sistema reconoce qué aplicación debe encargarse de interpretar el URL. Para esto es necesario que la aplicación indique en su archivo de información general \textquotedblleft info.plist\textquotedblright  \ los schemes de los URL que tiene interes.
