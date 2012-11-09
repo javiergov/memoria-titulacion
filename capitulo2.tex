@@ -521,9 +521,75 @@ En caso que se desee, es posible utilizando Sharekit es posible modificar el men
 		En caso de no tener el valor para la fecha en reproducción la aplicación no permite compartir.
 
 		\subsubsection{Seguimiento de Hashtag}
-		las llamadas de url para el cliente de twitter
+		%las llamadas de url para el cliente de twitter
+		Para realizar el seguimiento de los mensajes se utiló Search API como se explicó anteriormente. Para realizar la llamada se realiza una conexión con el URL: 
+\url{http://search.twitter.com/search.json?include_entities=true&q=%23SocialStream} \\
+		
+		Nótese que el último componente del URL corresponde al hashtag, o marca de seguimiento que se se utiliza en los mensajes. La respuesta por parte de Twitter es un objeto del tipo JSON que contiene un arreglo con los mensajes resultantes.
+
+\begin{figure}[H]
+	\centering
+	\begin{lstlisting}
+"created_at": "Thu, 08 Nov 2012 21:21:59 +0000",
+"entities": {
+    "hashtags": [
+    		{ "indices": [ 0, 13 ], 
+    		  "text": "SocialStream" }],
+    "urls": [
+        { "display_url": "bit.ly/SPCO4a",
+            "expanded_url": "http://bit.ly/SPCO4a",
+            "indices": [ 30, 50 ],
+            "url": "http://t.co/uKm7VRMb" } ],
+    "user_mentions": [] 
+    },
+"from_user": "javiergov",
+"from_user_id": 76853723,
+"from_user_id_str": "76853723",
+"from_user_name": "Javier Gonzalez O.",
+"geo": null,
+"id": 266651804614418430,
+"id_str": "266651804614418432",
+"iso_language_code": "en",
+"metadata": { "result_type": "recent" },
+"profile_image_url": "http://url.del.avatar/foto.jpg",
+"source": "&lt;a href=&quot;http://sitio.dela.app&quot;
+					&gt;SocialStream for iOS&lt;/a&gt;",
+"text": 
+"#SocialStream http://t.co/uKm7VRMb texto del tweet",
+"to_user_id": 0,
+"to_user_id_str": "0",
+        	\end{lstlisting}
+	\caption{Componentes de un Tweet, respuesta de Twitter Search API}
+	\label{tweet-json}	
+\end{figure}			
+
+		
 		\subsubsection{Extracción de información de un Tweet}
-		como se parseó el json con los twitts y saber si eran sstream
+%		como se parseó el json con los twitts y saber si eran sstream
+Para presentar los mensajes de forma simple para el usuario fue necesario serializar el objeto JSON obtenido de Seach API. Gracias al componente \textbf{NSJSONSerialization} del entorno de desarrollo de iOS, como se muestra en \ref{json-serialization}, es posible generar un objeto del tipo NSDictionary para se entregar a la clase encargada de generar la tabla con los mensajes.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+NSError *error = nil;
+NSDictionary *dict =
+[NSJSONSerialization 
+		JSONObjectWithData:responseData 
+				   options:NSJSONReadingMutableLeaves
+                   	 error:&error];
+if (error) 
+ MLogString(@"serialization error: %@",
+ 					[error description]);
+\end{lstlisting}
+	\caption{Obtención de los datos desde JSON mediante NSJSONSerialization}
+	\label{json-serialization}
+\end{figure}	
+
+Una instancia de NSDictionary posee una cadena de claves y valores asociados, la generada del objeto JSON entrega valores de las claves encontradas en la figura \ref{tweet-json}.
+Para presentar el contenido en la tabla de la interfaz gráfica se utilizaron los valores de las claves: 
+
+
+
 	\subsection{Bit.ly}
 		desmenuzar el enlace de bitly
 		\subsubsection{API Bit.ly}
