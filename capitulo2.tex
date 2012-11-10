@@ -599,14 +599,84 @@ Al pulsar en algún mensaje representado en la tabla \ref{sshot-twitterclientvc}
 %		desmenuzar el enlace de bitly
 Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream, que además incluye marca de tiempo, no utilice demasiados caracteres. El motivo es la limitante de twitter de 140 caracteres por mensaje, los cuales la aplicación debe utilizar lo mínimo para compartir.\\
 
+Otra caracteristica util para la supervisión de la aplicación y el servicio \textit{SocialStream} en su totalidad, es la posibilidad de utilizar las llamadas a la API de Bit.ly junto credenciales de una cuenta previamente hecha para llevar un registro del uso de los enlaces. \\
+
 La compresión se debe realizar al compartir en twitter un enlace al stream, y descompresión cuando el usuario pulsa en un tweet de la tabla \ref{sshot-twitterclientvc}.
+
 		\subsubsection{API Bit.ly}
 %		las llamadas de la api que se utilizaron
+%		http://dev.bitly.com/api.html
+
+Para utilizar y mantener el registro de los enlaces compartiros, se configuran credenciales obtenidas del sitio web \cite{bitly-settings} (nombre de usuario y Legacy API Key) en un archivo de cabecera de la biblioteca Sharekit.
+
+
 		
 		\subsubsection{Compresión de URL}
-		bla
+Para comprimir un URL se realiza una petición al servidor con el comando \textit{\textbf{shorten}} utilizando el URL que se muestra en la figura \ref{bitly-shorten} y con argumentos en la cadena de consulta para los campos: login, apikey, longUrl y format.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+http://api.bit.ly/v3/shorten?
+					login=usuario
+					&apikey=R_1234567890
+					&longUrl=http%3A%2F%2Fgoogle.com%2F
+					&format=txt
+\end{lstlisting}
+	\caption{Ejemplo de URL para compresión con Bit.ly API}
+	\label{bitly-shorten}
+\end{figure}	
+
+La respuesta entregada depende del campo format especificado en la cadena de consulta. En la figura \ref{bitly-shorten} se espera en formato de texto plano, en caso de no definir formato la respuesta se entrega como objeto JSON.
+
+Para una respuesta exitosa se recibe una cadena de caracteres con el URL comprimido de tipo 
+\textbf{http://bit.ly/\textless hash comprimido\textgreater}
+
+En caso de cualquier falla, el texto entregado es la causal misma del error, por lo tanto cual sea la respuesta debe ser analizada su integridad como URL antes de ser entregada al resto de las instancias de las clases que componen la aplicación. Esta comprobación se realiza comparando el \textit{scheme} del \textbf{NSURL} creado a partir del texto resultante, en caso de ser \textbf{http} o \textbf{https} se considera conforme por parte de la aplicación.\\ 
+
+
+Algunas respuestas erroneas pueden ser:
+\begin{itemize}
+\item INVALID\_APIKEY: Clave para acceder a la API es inválida o no concuerda con el usuario. 
+\item INVALID\_LOGIN: El nombre de usuario no corresponde a la clave de API o no existe.
+\item INVALID\_ARG\_FORMAT: El formato requerido no corresponde a los dispuestos a entregar por Bit.ly, los cuales son txt, json o xml.
+\item INVALID\_URI: El recurso a comprimir no se entrega codificado en código porciento\cite{percent-encoding}.
+\end{itemize}
+
 		\subsubsection{Expansión de atajo bit.ly}
-		como se expande un url de bitly y se usa en la app
+%		como se expande un url de bitly y se usa en la app
+Para expandir un URL comprimido por Bit.ly se utiliza la llamada a la API de forma similar al método de compresión, se diferencia con el comando \textit{\textbf{expand}} en vez de \textit{shorten} y entregando el hash comprimido del enlace corto obtenido del valor de la clave \textit{\textbf{\textquotedblleft expanded\_url"}} includo en un tweet (\ref{tweet-json}, línea 8). El hash comprimido corresponde a la ruta del URL.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+http://api.bit.ly/v3/expand?
+						login=usuario
+						&apikey=R_1234567890
+						&hash=WQfFTO
+\end{lstlisting}
+	\caption{Ejemplo de URL para expandir hash comprimido perteneciente a un URL Bit.ly}
+	\label{bitly-expand}
+\end{figure}	
+Nótese que se en URL de la figura \ref{bitly-expand} no especifica formato de respuesta, por lo tanto se recibe por defecto un objeto JSON. El motivo de este cambio es sólo de investigación, ya que así se puede obtener mayor información que una respuesta de sólo texto.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+{   "data": {
+        "expand": [
+            { 	"global_hash": "900913",
+                "hash": "WQfFTO",
+                "long_url": "http://google.com/",
+                "user_hash": "WQfFTO" }]},
+    "status_code": 200,
+    "status_txt": "OK" }
+\end{lstlisting}
+	\caption{Respuesta exitosa de tipo JSON al expandir URL Bit.ly}
+	\label{bitly-json-response}
+\end{figure}	
+El resultado de la llamada resulta
+%NOT_FOUND
 		\subsubsection{Seguimiento de un Hipervínculo}		
 		como se monitorean los twitts por bitly y se puede usar pa marketing, saber que es lo popular etc		
 
