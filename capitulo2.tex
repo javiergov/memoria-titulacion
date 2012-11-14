@@ -675,7 +675,9 @@ Nótese que se en URL de la figura \ref{bitly-expand} no especifica formato de r
 	\caption{Respuesta exitosa de tipo JSON al expandir URL Bit.ly}
 	\label{bitly-json-response}
 \end{figure}	
-El resultado de la llamada resulta
+Los datos del resultado de la llamada se entregan a una instancia de NSJSONSerialization con el mismo método utilizado para desmenuzar la información de los tweets (fig. \ref{json-serialization}). De esta forma se obtiene un objeto del tipo NSDictionary y para luego facilmente obtener el valor asociado a la clave \textbf{\textquotedblleft long\_url"}.
+En caso de obtener como respuesta un error los datos serán de igual forma del tipo JSON, sólo que la información de la clave \textbf{\textquotedblleft status\_txt"} correspondrá a la causa del error en vez del OK que se obtiene al realizar una operación exitosa (fig. \ref{bitly-json-response}).
+
 %NOT_FOUND
 		\subsubsection{Seguimiento de un Hipervínculo}		
 		como se monitorean los twitts por bitly y se puede usar pa marketing, saber que es lo popular etc		
