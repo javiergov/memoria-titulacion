@@ -115,9 +115,16 @@ Cabe destacar que la marca \ref{TAG-mediasequence} debe mantener consistencia co
 
 Para efectos de la solución de este trabajo de memoria el modo de flujo de datos a utilizar con HLS es del tipo ``en vivo''.
 \subsubsection{Segmentos}
-Los segmentos consisten en video codificado con h.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio permitiendo así transmitir un mejor sonido a menor ancho de banda. en el anexo XXXX se especifican los codificadores compatibles para la reproducción en iOS, aun así se recomienda utilizar los nombrados anteriormente para mantener compatibilidad para clientes que estén adoptando el protocolo.\\
+Los segmentos consisten en video codificado con h.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio y permitiendo así transmitir un mejor sonido a menor ancho de banda. En el sitio web \cite{apple-hlsencoding} se indican los perfiles recomendados para codificar el contenido a trasmitir con HTTP Live Streaming, para mantener compatibilidad con clientes que estén adoptando el protocolo se utilizó  
+\begin{itemize}
+\item Video: H.264 Baseline Profile Level 3.0, resolución 480x320 y tasa de fotogramas 29.97
 
-// TO DO
+\item Audio: AAC-LC, 48 kHz, stereo.
+
+\end{itemize}
+
+La duración de los segmentos se limitó a 10 segundos por recomendación del mismo documento técnico (TN224 \cite{apple-hlsencoding}), donde indica explícitamente: \textit{\textquotedblleft Use 10 second Target Durations"}, utilice 10 segundos de duración de objetivos.
+
 % El contenedor de los medios es MPEG2-TS según la especificación del protocolo HLS. Las indicaciones de Apple sugieren tener cuidado con el overhead.
 		% mostrar figura de playlist, explicacion rapida de como funciona hls
 \subsubsection{Borrador IETF}
@@ -126,7 +133,7 @@ Debido a la popularidad de los dispositivos móviles con iOS, empresas important
 
 Para el desarrollo de esta memoria se han implementado aplicaciones y scripts que utilizan las herramientas e instrucciones detalladas en el documento borrador. A lo largo de la investigación los ingenieros desarrolladores incorporaron caracteristicas nuevas que fueron aprovechadas para lograr el cometido de esta memoria.\\
 
-En el anexo YYYY se puede revisar detalladamente el documento completo. En esta sección se describen las marcas utilizadas aparte de las ya descritas en \ref{TAG-SECTION}.
+En sitio web \cite{apple-draftpantos} se puede revisar detalladamente el documento completo. En esta sección se describen las marcas utilizadas aparte de las ya descritas en \ref{TAG-SECTION}.
 
 \begin{itemize}
 \item \#EXT-X-VERSION: Corresponde a la versión de la lista de reproducción, se utiliza para diferenciar distintos streams con protocolo HLS según las caracteristicas que se van incorporando. Para el trabajo de esta memoria se utiliza la versión 3 del protocolo.
@@ -154,9 +161,9 @@ Se utiliza la marca \textbf{\#EXT-X-STREAM-INF} para asociar cada una de las var
 
 \begin{itemize}
 
-\item PROGRAM-ID: Corresponde a un valor numérico entero, tiene como fin identificar una presentación en particular dentro de la ventana de transmisión de la lista de reproducción. Una lista de variantes puede contener multiples sublistas con distintos programas de forma que este atributo asocia las distintas variantes para una transmisión en particular, entiendase por show o evento a transmitir. Este atributo puede ser opcional.
+\item \textbf{PROGRAM-ID}: Corresponde a un valor numérico entero, tiene como fin identificar una presentación en particular dentro de la ventana de transmisión de la lista de reproducción. Una lista de variantes puede contener multiples sublistas con distintos programas de forma que este atributo asocia las distintas variantes para una transmisión en particular, entiendase por show o evento a transmitir. Este atributo puede ser opcional.
 
-\item BANDWIDTH: Este atributo obligatorio representa el valor entero de los bits por segundo, como requisito principal el valor debe ser la cota mayor de la tasa de bits promedio de los segmentos (incluyendo el overhead del contenedor) que aparecen o aparecerán en la lista de reproducción. 
+\item \textbf{BANDWIDTH}: Este atributo obligatorio representa el valor entero de los bits por segundo, como requisito principal el valor debe ser la cota mayor de la tasa de bits promedio de los segmentos (incluyendo el overhead del contenedor) que aparecen o aparecerán en la lista de reproducción. 
 
 \end{itemize}
 
@@ -360,7 +367,9 @@ Para mantener de forma continua la información temporal del stream se han asoci
 \item \textbf{Tiempo de reproducción}: Este se supervisa en un intervalo de 1/10 de segundo de forma que con esta razon de cambio la interfaz gráfica se actualice, se ajusta a  este valor de tiempo (100 ms) de forma que el usuario no identifique irregularidad en el temporizador y a la vez la carga en ciclos se ejución no afecte el desempeño de la máquina.
 \item \textbf{Fecha asociada al stream}: Este valor es parte fundamental en el funcionamiento del stream con saltos en el tiempo, su origen se debe al tag asociado a la lista de reproducción del stream.
 \label{observer-date}
-%\item Tasa de Bits:
+% esto no está en la memoria, se hizo después para Janus.
+%\item \textbf{Tasa de Bits}: Se obtiene el valor de la tasa de bits promedio del flujo de datos multimedia, para obtenerlo se deben separan los activos (AVAssets) del item (AVPlayerItem) en reproducción. 
+
 \end{enumerate}
 
 En el caso de la observación de datos periódica, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproducctor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.\\
@@ -515,7 +524,7 @@ En caso que se desee, es posible utilizando Sharekit es posible modificar el men
 
 		\subsubsection{Post en Twitter}
 %		como postear en twitter desde la app, action sheet
-		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, para esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase NSDate, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{timeIntervalSince1970} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir ese valor en NSString de forma  en una cadena de caracteres
+		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, para esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase \textbf{NSDate}, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{\textbf{timeIntervalSince1970}} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir ese valor en NSString de forma  en una cadena de caracteres
 		
 		
 		En caso de no tener el valor para la fecha en reproducción la aplicación no permite compartir.
@@ -710,7 +719,7 @@ Se desarrolló un script en PHP, encargado de identificar el cliente que se est�
 
 El acceso a este script requiere, para su buen funcionamiento, ciertos campos como mínimo relacionados con la transmisión que se compartió y se incluyen en el URL como query strings (cadena de consulta), estos son el tipo de canal y la marca de tiempo, similares a los entregados al dispatcher por parte del cliente se hace una petición de lista de reproducción.
 El script se encarga de analizar las marcas de tiempo y tipo de señal para entregar un URL especial según el agente de usuario del cliente que hace la petición.
-El agente de usuario se identifica llamando la función PHP \textit{\$\_SERVER['HTTP\_USER\_AGENT']} y a través de expresiones regulares fue posible diferenciar cada tipo de cliente.
+El agente de usuario se identifica llamando la función PHP \textbf{\$\_SERVER['HTTP\_USER\_AGENT']} y a través de expresiones regulares fue posible diferenciar cada tipo de cliente.
 
 		\subsubsection{Respuestas según User Agent}
 %		describir los casos según user agents

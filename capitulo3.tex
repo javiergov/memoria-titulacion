@@ -1,24 +1,60 @@
 
 \chapter{Pruebas de funcionamiento}
 
-Para revisar el buen funcionamiento de la aplicación desarrollada, se utilizaron las herramientas dispuestas por Apple Inc.  en su entorno de desarrollo. Para obtener estas aplicaciones, es necesario poseer una cuenta de desarrollador para iOS o Mac OS X, las cuales se pueden obtener en el sitio web \url{https://developer.apple.com/programs/} luego de pagar la matrícula impuesta.
-La cuenta de desarrollador permite acceso al repositorio de herramientas y también acceso a versiones de los sistemas operativos antes de lanzamiento.
-El estatus de desarrollador inscrito en Apple permite poner a disposicion de millones de usuarios de sistemas iOS en todo el mundo mediante iTunes Store.
+Para revisar el buen funcionamiento de la aplicación desarrollada, se utilizaró el software dispuesto por Apple Inc,  el entorno de desarrollo Xcode y herramientas asociadas. Para obtener estas aplicaciones, es necesario poseer una cuenta de desarrollador para \textbf{iOS} o \textbf{Mac OS X}, las cuales se pueden obtener en el sitio web \url{https://developer.apple.com/programs/} luego de pagar la matrícula impuesta.\\
+
+La cuenta de desarrollador permite acceso al repositorio de herramientas \cite{apple-repositorio} y también acceso a versiones de los sistemas operativos antes de lanzamiento.
+Además permite poner a la venta las aplicaciones desarrolladas en la \textit{\textbf{App Store}}\cite{apple-appstore}.
+
 % datos en el camino, seguimiento de un tweet, pantallazos de debug
 \section{Cambio de tiempo y/o canal}
+
+Las primeras prubeas relacionadas con el cambio de tiempo a través de peticiones al dispatcher con argumentos en la cadena de consulta se realizaron con la aplicación de OS X: \textbf{Quicktime X}, la cual permite reproducir streams que cumplen con las espeficicaciones de HTTP Live Streaming. Otra alternativa que además se encuentra disponible en otros sistemas operativos es \textbf{VideoLan VLC}. Las pruebas consistieron en modificar el argumento t de URLs del tipo:
+\url{http://tsh.altavoz.net/videots/playlist.m3u8?s=grpz13&t=}
+
+
+
+%escribir en consola el URL, probarlo en quicktime, vlc, navegador, app, wireshark para ver cookies
+
 \section{Proceso corriendo en fondo} % background
+
+escribir en consola los seekable time ranges, poner pausa background y al retomar reproducir, se notó que avanzaba la lista de iguañl forma. se arregó guardando la fecha al momento de poner pausa. que se llamaba al irse a background.
+
 \section{Cambio de ancho de banda}
+
+se especifica requerimiento a la empresa, se modifica el dispatcher con lista de variantes, se revisa en wireshark.
+luego se utiliza la herramienta network link conditioner para modificar el BW en plena transmisión, revisar wireshark cuando cambia y ver en la misma app.
+Luego se prueba con iPhone cambiando entre wifi y 3g
+
   \subsection{WiFi}
+  se agrega campo en el URL para priorizar distintas variantes, con wifi video, 3g audio.
   \subsection{3G}
+  con 3g 
 \section{Cambio de transmisión mediante Twitter}
+- se revisa usando safari desktop con script que incluye player
+
+
   \subsection{Dentro de la aplicación}
+	- debug viendo el cambio de tranmisión, URL generado y definiendo el mismo canal. manejo en caso de tweet sin enlace
   \subsection{Scheme registrado en iOS}
+	- clientes de twitter en iPhone, twitter y Tweetbot, debug en el método e imprimir en consola la app que lo lanzó.  
+	- debug con app en background
+	- debug con app cerrada y a la espera que parta por otra aplicación
+  
 \section{Enlaces Twitter en otros dispositivos}
+	pantallazos de páginas de error, el por qué y cómo se entregan según el script
   \subsection{PC Escritorio}
     \subsubsection{Chrome}
+    foto
     \subsubsection{Safari}
+    foto del player
     \subsubsection{Firefox}
+    foto
     \subsubsection{Opera}
+    foto
     \subsubsection{Internet Explorer}
+    foto
   \subsection{Android y otros móviles incompatibles}
+  pantallazo del cell de la esperanza
 \section{Comparación con SocialStream Flash}
+mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
