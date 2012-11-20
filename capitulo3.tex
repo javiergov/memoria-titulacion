@@ -9,10 +9,48 @@ Además permite poner a la venta las aplicaciones desarrolladas en la \textit{\t
 % datos en el camino, seguimiento de un tweet, pantallazos de debug
 \section{Cambio de tiempo y/o canal}
 
-Las primeras prubeas relacionadas con el cambio de tiempo a través de peticiones al dispatcher con argumentos en la cadena de consulta se realizaron con la aplicación de OS X: \textbf{Quicktime X}, la cual permite reproducir streams que cumplen con las espeficicaciones de HTTP Live Streaming. Otra alternativa que además se encuentra disponible en otros sistemas operativos es \textbf{VideoLan VLC}. Las pruebas consistieron en modificar el argumento t de URLs del tipo:
-\url{http://tsh.altavoz.net/videots/playlist.m3u8?s=grpz13&t=}
+Las primeras pruebas estuvieron relacionadas con el cambio de tiempo a través de peticiones al dispatcher con argumentos en la cadena de consulta, estas se realizaron con la aplicación de OS X: \textbf{Quicktime X}, la cual permite reproducir streams que cumplen con las espeficicaciones de HTTP Live Streaming. Otra alternativa que además se encuentra disponible en otros sistemas operativos es \textbf{VideoLan VLC}. Las pruebas consistieron en modificar los argumentos \textbf{t}, \textbf{s} y \textbf{c} de URLs del tipo:
+\url{http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=tvn&t=1353186024&c=0}, donde el parámetro \textbf{t} corresponde al tiempo Unix del 17 de noviembre de 2012 18:00:24 GMT-3.\\
+
+El escificar el tiempo en el parámetro \textbf{t} resulta siempre en una lista de reproducción con segmentos asociados al tiempo correspondiente. Además se monitoreó la respuesta a través de la aplicación rastreadora de paquetes Wireshark. Para esto se necesitó aplicar un filtro especial de forma que los paquetes relacionados con HTTP Live Streaming fueran entregados. El filtro corresponde a mostrar paquetes recibidos desde el servidor donde el cliente, en este caso Quicktime, se contacta para obtener una lista de reproducción, y además pedir la entrega de paquetes que tengan en su contenido la palabra \textbf{apple}.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+		ip.addr==200.91.44.49 && http contains apple
+\end{lstlisting}
+\caption{Filtro en Wireshark que muestra sólo paquetes relacionados con el HLS}
+\end{figure}
 
 
+Los resultados obtenidos son los esperados y corresponden a la reproducción del video en el momento indicado y en el canal indicado según los parámetros.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{imgs/qt-tvn.png}
+	\caption{Captura de Quicktime reproduciendo lista de reproducción a través de un URL.}
+	\label{qt-tvn}	
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{imgs/qt-mega.png}
+	\caption{}
+	\label{qt-mega}	
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[scale=0.3]{imgs/qt-mega.png} & 
+	\includegraphics[scale=0.3]{imgs/qt-tvn.png} \\
+	\end{tabular}
+	\caption{Captura de Quicktime reproduciendo lista de reproducción a través de un URL.}
+	\label{qt-tvn-mega}
+\end{figure}
+
+%http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=tvn&t=1353186024&c=0
+%http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=video1&t=1353186024&c=0
 
 %escribir en consola el URL, probarlo en quicktime, vlc, navegador, app, wireshark para ver cookies
 
