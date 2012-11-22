@@ -66,33 +66,43 @@ Luego se prueba con iPhone cambiando entre wifi y 3g
 
   \subsection{WiFi}
   se agrega campo en el URL para priorizar distintas variantes, con wifi video, 3g audio.
+  explicar que parte con el video, mostrar 2 imagenes emparejadas.
   \subsection{3G}
-  con 3g 
+  con 3g, imagen de que muestra el audio primero.
 \section{Cambio de transmisión mediante Twitter}
 - se revisa usando safari desktop con script que incluye player
 
-
   \subsection{Dentro de la aplicación}
 	- debug viendo el cambio de tranmisión, URL generado y definiendo el mismo canal. manejo en caso de tweet sin enlace
+	se genera notificación interna con los componentes. ver que cambia el stream.
   \subsection{Scheme registrado en iOS}
 	- clientes de twitter en iPhone, twitter y Tweetbot, debug en el método e imprimir en consola la app que lo lanzó.  
 	- debug con app en background
 	- debug con app cerrada y a la espera que parta por otra aplicación
+	explicar que se detuvo la carga del stream cuando está cerrada y que se espera una notificacion de la carga de la UI antes de cargar el stream.
   
 \section{Enlaces Twitter en otros dispositivos}
-	pantallazos de páginas de error, el por qué y cómo se entregan según el script
+	pantallazos de páginas de error, el por qué y cómo se entregan según el script, no se revisa internet explorer porque se utilizaron navegadores compatibles con OS X.
+	
   \subsection{PC Escritorio}
     \subsubsection{Chrome}
+    chrome no es compatible con hls
     foto
     \subsubsection{Safari}
+    safari muestra un player html5
     foto del player
     \subsubsection{Firefox}
+    firefox no es compatible
     foto
     \subsubsection{Opera}
-    foto
-    \subsubsection{Internet Explorer}
+    opera tampoco
     foto
   \subsection{Android y otros móviles incompatibles}
   pantallazo del cell de la esperanza
+  explicar que tampoco es compatible con HLS, por lo menos 2.3, 4.0 ICS en adelante es compatible, pero para reproducir el stream se debe desarrollar una aplicación cliente similar a la hecha en iOS
 \section{Comparación con SocialStream Flash}
 mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
+
+la linea de tiempo difiere con una representación gráfica, se utilizó el control de fecha para simplificar el punto a elegir, además la linea de tiempo precisa de mouse over para mostrar datos y en el caso táctil difiere mucho.
+
+
