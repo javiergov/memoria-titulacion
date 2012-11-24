@@ -27,20 +27,6 @@ Los resultados obtenidos son los esperados y corresponden a la reproducción del
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.5]{imgs/qt-tvn.png}
-	\caption{Captura de Quicktime reproduciendo lista de reproducción a través de un URL.}
-	\label{qt-tvn}	
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{imgs/qt-mega.png}
-	\caption{}
-	\label{qt-mega}	
-\end{figure}
-
-\begin{figure}[H]
-	\centering
 	\begin{tabular}{cc}
 	\includegraphics[scale=0.3]{imgs/qt-mega.png} & 
 	\includegraphics[scale=0.3]{imgs/qt-tvn.png} \\
@@ -49,6 +35,86 @@ Los resultados obtenidos son los esperados y corresponden a la reproducción del
 	\label{qt-tvn-mega}
 \end{figure}
 
+Utilizando \textbf{Wireshark} se observaron los datos entregados al cliente desde el servidor como \textit{\textbf{cookies}} indicadas en \ref{subsec:cookies}.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+HTTP/1.1 200 OK
+Server: nginx/1.2.0
+Date: Sat, 24 Nov 2012 18:06:10 GMT
+Content-Type: application/vnd.apple.mpegurl
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+X-Powered-By: PHP/5.3.15-1~dotdeb.0
+Set-Cookie: stream=tvn
+Set-Cookie: t0=1353186024
+Set-Cookie: tp=1353780370
+Set-Cookie: ti=1353186033
+Set-Cookie: tl=1353186085
+Set-Cookie: si=1
+Set-Cookie: sf=6
+
+#EXTM3U
+#EXT-X-TARGETDURATION:10
+#EXT-X-PROGRAM-DATE-TIME:2012-11-17T18:00:33-03:00
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:1
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/tvn_1353186033.ts
+#EXTINF:10,
+http://ssdemo.altavoz.net/streams/tvn/tvn_1353186043.ts
+#EXTINF:9,
+http://ssdemo.altavoz.net/streams/tvn/tvn_1353186052.ts
+#EXTINF:12,
+http://ssdemo.altavoz.net/streams/tvn/tvn_1353186063.ts
+#EXTINF:7,
+http://ssdemo.altavoz.net/streams/tvn/tvn_1353186070.ts
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/tvn_1353186085.ts
+\end{lstlisting}
+\caption{Información HTTP entregada por servidor Web}
+\label{lst:setcookies}
+\end{figure}
+
+De la figura \ref{lst:setcookies} se puede observar que el servidor web Ngnix\ref{bib:ngnix-homepage} entrega en la cabecera HTTP las intrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. \\
+
+En la siguiente conexión con el servidor, se ajustaran los valores de las \textit{cookies} acorde al contenido de la lista de reproducción entregada. Como se describió anteriormente las \textit{cookies} no son manejados por la aplicación cliente, ya que el sistema operativo iOS se encarga de manejar los valores de estas.\\
+
+En la figura \ref{lst:sequence2} se puede observar que los nuevos valores de cookies son ajustados por el servidor para la lista de reproducción acorde a la segunda secuencia del stream.
+
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+HTTP/1.1 200 OK
+Server: nginx/1.2.0
+Date: Sat, 24 Nov 2012 18:06:25 GMT
+Content-Type: application/vnd.apple.mpegurl
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+X-Powered-By: PHP/5.3.15-1~dotdeb.0
+Set-Cookie: stream=tvn
+Set-Cookie: tp=1353780385
+Set-Cookie: ti=1353186043
+Set-Cookie: tl=1353186093
+Set-Cookie: si=2
+Set-Cookie: sf=7
+
+#EXTM3U
+#EXT-X-TARGETDURATION:10
+#EXT-X-PROGRAM-DATE-TIME:2012-11-17T18:00:43-03:00
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:2
+(...)
+\end{lstlisting}
+\caption{Información HTTP entregada por servidor Web con la lista actualizada para secuencia 2}
+\label{lst:sequence2}
+\end{figure}
+
+
+
 %http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=tvn&t=1353186024&c=0
 %http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=video1&t=1353186024&c=0
 
@@ -56,9 +122,26 @@ Los resultados obtenidos son los esperados y corresponden a la reproducción del
 
 \section{Proceso corriendo en fondo} % background
 
-escribir en consola los seekable time ranges, poner pausa background y al retomar reproducir, se notó que avanzaba la lista de iguañl forma. se arregó guardando la fecha al momento de poner pausa. que se llamaba al irse a background.
+Debido a que se utiliza el protocolo HTTP Live Streaming de forma que entregue información en vivo, la instancia de AVPlayer se mantiene realizando peticiones por nuevas listas de reproducción a medida que pase el tiempo, sin importar que la reproducción se encuentre \textbf{pausada} o que la aplicación esté corriendo en el \textbf{fondo} (\textit{background}).\\
+
+Se encontró un problema al interrumpir la reproducción. Sea cual sea el motivo, por ejemplo recibir una llamada telefónica, el sistema iOS envía la aplicación cliente a background pausando la reproducción. Al volver despues de la interrupción la aplicación retoma la reproducción, sin embargo el tiempo que ha pasado implica en  listas de reproducción distintas a la que se estaba viendo.\\
+
+La solución fue establecer una marca de tiempo de 30 segundos, acordes a la ventana de transmisión de la lista, asociada a la instrucción de pausa y reproducción del reproductor, que además es llamada por el botón \textit{Play/Pause} en la interfaz gráfica.\\
+
+Al enviar la aplicación a background se guarda la \textbf{fecha del contenido} del stream y el momento en el cual se ha pausado.
+Al volver a \textit{foreground} se activa el método para reanudar la reproducción donde se compara el momento de pausa guardado y el actual. Si esta diferencia es mayor a 30 segundos, se realiza una nueva llamada al servidor mediante URL. Sin embargo cuando la diferencia es menor, se reanuda la reproducción debido a que la fecha del contenido del stream aun se encuentra dentro del rango en la lista que posee la instancia de AVPlayer.\\
+
+El valor de 30 segundos se debe una lista de reproducción con mínimo 3 segmentos de 10 segundos.\\
+
+El problema encontrado se obtuvo gracias a la depuración de la aplicación ejecutandose en un dispositivo iOS (iPhone). Se revisó el valor del \textbf{rango de reproducción} a través de notificaciones por cambios (página \pageref{item:seekableTimeRanges}). A pesar que la reproducción se pausaba o la aplicación se mandaba a background el rango se mantenia en aumento.
+
+%escribir en consola los seekable time ranges, poner pausa background y al retomar reproducir, se notó que avanzaba la lista de iguañl forma. se arregó guardando la fecha al momento de poner pausa. que se llamaba al irse a background.
 
 \section{Cambio de ancho de banda}
+
+El cambio de ancho de banda se revisó gracias a Wireshark y modificando el valor de la cadena de consulta \textbf{c} entre 0 (WiFi) y 1 (red celular).
+
+
 
 se especifica requerimiento a la empresa, se modifica el dispatcher con lista de variantes, se revisa en wireshark.
 luego se utiliza la herramienta network link conditioner para modificar el BW en plena transmisión, revisar wireshark cuando cambia y ver en la misma app.

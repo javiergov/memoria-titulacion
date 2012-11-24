@@ -1,0 +1,176 @@
+ <E@:C[,1PYb6[
+QmHTTP/1.1 200 OK
+Server: nginx/1.2.0
+Date: Sat, 24 Nov 2012 18:06:10 GMT
+Content-Type: application/vnd.apple.mpegurl
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+X-Powered-By: PHP/5.3.15-1~dotdeb.0
+
+a9
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=320000
+stream.m3u8?s=tvn&t=1353186024
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=65000
+stream.m3u8?s=tvn&a=1&t=1353186024
+
+0
+//====================================================================================
+
+HTTP response HLS
+
+HTTP/1.1 200 OK
+Server: nginx/1.2.0
+Date: Sat, 24 Nov 2012 18:06:10 GMT
+Content-Type: application/vnd.apple.mpegurl
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+X-Powered-By: PHP/5.3.15-1~dotdeb.0
+Set-Cookie: stream=tvn
+Set-Cookie: t0=1353186024
+Set-Cookie: tp=1353780370
+Set-Cookie: ti=1353186033
+Set-Cookie: tl=1353186085
+Set-Cookie: si=1
+Set-Cookie: sf=6
+
+255
+#EXTM3U
+#EXT-X-TARGETDURATION:10
+#EXT-X-PROGRAM-DATE-TIME:2012-11-17T18:00:33-03:00
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:1
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186033.ts
+#EXTINF:10,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186043.ts
+#EXTINF:9,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186052.ts
+#EXTINF:12,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186063.ts
+#EXTINF:7,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186070.ts
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186085.ts
+
+0
+
+//====================================================================================
+
+HTTP/1.1 200 OK
+Server: nginx/1.2.0
+Date: Sat, 24 Nov 2012 18:06:20 GMT
+Content-Type: application/vnd.apple.mpegurl
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+X-Powered-By: PHP/5.3.15-1~dotdeb.0
+Set-Cookie: stream=tvn
+Set-Cookie: ti=1353186033
+Set-Cookie: tl=1353186085
+Set-Cookie: si=1
+Set-Cookie: sf=6
+
+255
+#EXTM3U
+#EXT-X-TARGETDURATION:10
+#EXT-X-PROGRAM-DATE-TIME:2012-11-17T18:00:33-03:00
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:1
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186033.ts
+#EXTINF:10,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186043.ts
+#EXTINF:9,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186052.ts
+#EXTINF:12,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186063.ts
+#EXTINF:7,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186070.ts
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186085.ts
+
+0
+
+//====================================================================================
+
+ <Ei@:[,1P\aq#h
+^VHTTP/1.1 200 OK
+Server: nginx/1.2.0
+Date: Sat, 24 Nov 2012 18:06:25 GMT
+Content-Type: application/vnd.apple.mpegurl
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+X-Powered-By: PHP/5.3.15-1~dotdeb.0
+Set-Cookie: stream=tvn
+Set-Cookie: tp=1353780385
+Set-Cookie: ti=1353186043
+Set-Cookie: tl=1353186093
+Set-Cookie: si=2
+Set-Cookie: sf=7
+
+254
+#EXTM3U
+#EXT-X-TARGETDURATION:10
+#EXT-X-PROGRAM-DATE-TIME:2012-11-17T18:00:43-03:00
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:2
+#EXTINF:10,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186043.ts
+#EXTINF:9,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186052.ts
+#EXTINF:12,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186063.ts
+#EXTINF:7,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186070.ts
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186085.ts
+#EXTINF:9,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186093.ts
+
+0
+
+//====================================================================================
+
+ <EO@:X[,1P\fy
+0nHTTP/1.1 200 OK
+Server: nginx/1.2.0
+Date: Sat, 24 Nov 2012 18:06:35 GMT
+Content-Type: application/vnd.apple.mpegurl
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+X-Powered-By: PHP/5.3.15-1~dotdeb.0
+Set-Cookie: stream=tvn
+Set-Cookie: tp=1353780395
+Set-Cookie: ti=1353186052
+Set-Cookie: tl=1353186101
+Set-Cookie: si=3
+Set-Cookie: sf=8
+
+253
+#EXTM3U
+#EXT-X-TARGETDURATION:10
+#EXT-X-PROGRAM-DATE-TIME:2012-11-17T18:00:52-03:00
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:3
+#EXTINF:9,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186052.ts
+#EXTINF:12,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186063.ts
+#EXTINF:7,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186070.ts
+#EXTINF:13,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186085.ts
+#EXTINF:9,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186093.ts
+#EXTINF:7,
+http://ssdemo.altavoz.net/streams/tvn/1353186000/tvn_1353186101.ts
+
+0
+
+//====================================================================================
+

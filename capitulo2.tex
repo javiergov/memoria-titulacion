@@ -400,18 +400,24 @@ Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la f
 
 \item \textbf{Razón de reproducción}: Consiste en un valor flotante en el rango entre 0.0 y 1.0. El atributo rate indica si el audio y/o video se reproduce a velocidad normal (1.0) o se encuentra detenido (0.0). Valores intermedios se asocian a una menor velocidad de reproducción, en el caso de este proyecto no se busca entregar control de velocidad reproducción al usuario fuera de la normal. También se debe tener en cuenta que este atributo se puede ajustar por intrucciones externas.
 
-\item \textbf{Búfer de Datos}: El reproductor AVPlayer posee un atributo que es una instancia de AVPlayerItem, esta clase es una abstracción del flujo de datos \textit{currentItem}. Tomando en cuenta esto se deben observar tres propiedades de este \textit{currentItem}: \textit{playbackBufferEmpty}, \textit{playbackLikelyToKeepUp} y \textit{playbackBufferFull}, los cuales  gatillan notificaciones al cambiar su valor BOOL a verdadero para informar a las otras clases y tomar curso de acción. Por ejemplo al recibir una notificación de de buffer vacío, es necesario avisar al usuario con una representación gráfica del reproductor cargando.
+\item \textbf{Búfer de Datos}: El reproductor AVPlayer posee un atributo que es una instancia de AVPlayerItem, esta clase es una abstracción del flujo de datos \textit{currentItem}. Tomando en cuenta esto se deben observar tres propiedades de este \textit{currentItem}: 
+\begin{itemize}
+\item \textit{playbackBufferEmpty}
+\item \textit{playbackLikelyToKeepUp}
+\item \textit{playbackBufferFull}
+\end{itemize}
+Los cuales  gatillan notificaciones al cambiar su valor BOOL a verdadero para informar a las otras clases y tomar curso de acción. Por ejemplo al recibir una notificación de de buffer vacío, es necesario avisar al usuario con una representación gráfica del reproductor cargando.
 
 \item \textbf{Pistas de medios}: Debido a que el flujo de datos puede solamente audio, o video y audio. Es necesario supervisar el tipo de medio que se está presentando. Para esto se utiliza el atributo \textit{tracks} del flujo de datos (\textit{currentItem}). Este atributo consiste en un arreglo (NSArray) de instancias de AVPlayerItemTrack, clase que representa cada pista multimedia del flujo de datos, cada pista puede ser texto (AVMediaCharacteristicLegible), audio (AVMediaCharacteristicAudible) o video (AVMediaCharacteristicVisual). Observando el cambio de componentes en el flujo es posible adecuar el reproductor según el tipo de medio que se presenta al usuario.
 
 \item \textbf{Rango de reproducción}: \textit{seekableTimeRanges} se refiere al atributo asociado a la disponibilidad temporal del item en reproducción, el rango donde es posible realizar busqueda de cuadros de reproducción. Este valor cambia constantemente debido a que el contenido recibido por HTTP Live Streaming se encuentra actualización persistente guardando tiempo adicional para reproducción. Este atributo se observa con el fin de rastrear si se están obteniendo segmentos del contenido.
-
 % StreamPlayerVC.m: 748 start: 630.415833, duration: -15.000000
-
 \end{itemize}
+\label{item:seekableTimeRanges}
 
 		
 \subsection{Intercambio de información entre componentes}
+\label{subsec:cookies}
 %	conexión, envio de epoch, recepcion de m3u8, start y last txt	
 
 Se debe considerar que el intercambio de información se realiza entre el dispatcher y la aplicación cliente como se muestra en la figura \ref{diagramaGral}. Para esto se insta el reproductor de clase AVPlayer mediante su metodo de incialización:
@@ -636,13 +642,12 @@ http://api.bit.ly/v3/shorten?
 	\label{bitly-shorten}
 \end{figure}	
 
-La respuesta entregada depende del campo format especificado en la cadena de consulta. En la figura \ref{bitly-shorten} se espera en formato de texto plano, en caso de no definir formato la respuesta se entrega como objeto JSON.
+La respuesta entregada depende del campo format especificado en la cadena de consulta. En la figura \ref{bitly-shorten} se espera en formato de texto plano, en caso de no definir formato la respuesta se entrega como objeto JSON.\\
 
 Para una respuesta exitosa se recibe una cadena de caracteres con el URL comprimido de tipo 
-\textbf{http://bit.ly/\textless hash comprimido\textgreater}
+\textbf{http://bit.ly/\textless hash comprimido\textgreater} \\
 
 En caso de cualquier falla, el texto entregado es la causal misma del error, por lo tanto cual sea la respuesta debe ser analizada su integridad como URL antes de ser entregada al resto de las instancias de las clases que componen la aplicación. Esta comprobación se realiza comparando el \textit{scheme} del \textbf{NSURL} creado a partir del texto resultante, en caso de ser \textbf{http} o \textbf{https} se considera conforme por parte de la aplicación.\\ 
-
 
 Algunas respuestas erroneas pueden ser:
 \begin{itemize}
