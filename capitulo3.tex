@@ -139,13 +139,42 @@ El problema encontrado se obtuvo gracias a la depuración de la aplicación ejec
 
 \section{Cambio de ancho de banda}
 
-El cambio de ancho de banda se revisó gracias a Wireshark y modificando el valor de la cadena de consulta \textbf{c} entre 0 (WiFi) y 1 (red celular).
+El cambio de ancho de banda se revisó mediante Wireshark y modificando el valor de la cadena de consulta \textbf{c} entre 0 (WiFi) y 1 (red celular) en el URL.\\ 
 
+Por ejemplo: \url{http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=tvn&t=1353186024&c=0}
+La respuesta fue rastreada obteniendo una lista de reproducción:
 
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=320000
+stream.m3u8?s=tvn&t=1353186024
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=65000
+stream.m3u8?s=tvn&a=1&t=1353186024
+\end{lstlisting}
+\caption{Lista de reproducción resultante de una petición al servidor con parámetro \textbf{c = 0}}
+\label{lst:playlistc0}
+\end{figure}
 
-se especifica requerimiento a la empresa, se modifica el dispatcher con lista de variantes, se revisa en wireshark.
-luego se utiliza la herramienta network link conditioner para modificar el BW en plena transmisión, revisar wireshark cuando cambia y ver en la misma app.
-Luego se prueba con iPhone cambiando entre wifi y 3g
+\begin{figure}[H]
+	\centering
+\begin{lstlisting}
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=65000
+stream.m3u8?s=tvn&a=1&t=1353186024
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=320000
+stream.m3u8?s=tvn&t=1353186024
+\end{lstlisting}
+\caption{Lista de reproducción resultante de una petición al servidor con parámetro \textbf{c = 1}}
+\label{lst:playlistc1}
+\end{figure}
+
+En el caso de ajustar el valor a 1, la lista de reproducción invierte la prioridad de las variantes del stream, priorizando el enlace que posee sólo audio para un ancho de banda de \textbf{65kbps}. \ref{lst:playlistc1}
+
+%se especifica requerimiento a la empresa, se modifica el dispatcher con lista de variantes, se revisa en wireshark.
+%luego se utiliza la herramienta network link conditioner para modificar el BW en plena transmisión, revisar wireshark cuando cambia y ver en la misma app.
+%Luego se prueba con iPhone cambiando entre wifi y 3g
 
   \subsection{WiFi}
   se agrega campo en el URL para priorizar distintas variantes, con wifi video, 3g audio.
