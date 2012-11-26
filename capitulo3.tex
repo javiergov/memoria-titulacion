@@ -78,11 +78,11 @@ http://ssdemo.altavoz.net/streams/tvn/tvn_1353186085.ts
 \label{lst:setcookies}
 \end{figure}
 
-De la figura \ref{lst:setcookies} se puede observar que el servidor web Ngnix\ref{bib:ngnix-homepage} entrega en la cabecera HTTP las intrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. \\
+De la figura \ref{lst:setcookies} se puede observar que el servidor web Ngnix\cite{bib:ngnix-homepage} entrega en la cabecera HTTP las intrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. \\
 
 En la siguiente conexión con el servidor, se ajustaran los valores de las \textit{cookies} acorde al contenido de la lista de reproducción entregada. Como se describió anteriormente las \textit{cookies} no son manejados por la aplicación cliente, ya que el sistema operativo iOS se encarga de manejar los valores de estas.\\
 
-En la figura \ref{lst:sequence2} se puede observar que los nuevos valores de cookies son ajustados por el servidor para la lista de reproducción acorde a la segunda secuencia del stream.
+En la figura \ref{lst:sequence2} se puede observar que los nuevos valores de cookies son establecidos por el servidor para la lista de reproducción acorde a la segunda secuencia del stream.
 
 \begin{figure}[H]
 	\centering
@@ -124,7 +124,7 @@ Set-Cookie: sf=7
 
 Debido a que se utiliza el protocolo HTTP Live Streaming de forma que entregue información en vivo, la instancia de AVPlayer se mantiene realizando peticiones por nuevas listas de reproducción a medida que pase el tiempo, sin importar que la reproducción se encuentre \textbf{pausada} o que la aplicación esté corriendo en el \textbf{fondo} (\textit{background}).\\
 
-Se encontró un problema al interrumpir la reproducción. Sea cual sea el motivo, por ejemplo recibir una llamada telefónica, el sistema iOS envía la aplicación cliente a background pausando la reproducción. Al volver despues de la interrupción la aplicación retoma la reproducción, sin embargo el tiempo que ha pasado implica en  listas de reproducción distintas a la que se estaba viendo.\\
+Se encontró un problema al interrumpir la reproducción. Sea cual sea el motivo, por ejemplo recibir una llamada telefónica, el sistema iOS envía la aplicación cliente a \textit{background} pausando la reproducción. Al volver despues de la interrupción la aplicación retoma la reproducción, sin embargo el tiempo que ha pasado resulta en listas de reproducción distintas a la que se estaba viendo.\\
 
 La solución fue establecer una marca de tiempo de 30 segundos, acordes a la ventana de transmisión de la lista, asociada a la instrucción de pausa y reproducción del reproductor, que además es llamada por el botón \textit{Play/Pause} en la interfaz gráfica.\\
 
@@ -176,13 +176,39 @@ En el caso de ajustar el valor a 1, la lista de reproducción invierte la priori
 %luego se utiliza la herramienta network link conditioner para modificar el BW en plena transmisión, revisar wireshark cuando cambia y ver en la misma app.
 %Luego se prueba con iPhone cambiando entre wifi y 3g
 
-  \subsection{WiFi}
-  se agrega campo en el URL para priorizar distintas variantes, con wifi video, 3g audio.
-  explicar que parte con el video, mostrar 2 imagenes emparejadas.
-  \subsection{3G}
-  con 3g, imagen de que muestra el audio primero.
+  \subsection{WiFi: Wireless LAN}
+  El comportamiento monitoreado a través del rastreo de paquetes se observa con el dispositivo real (iPhone) para comprobar la práctica de la teoría.
+  En el caso de iniciar el stream en un iPhone con conexión a internet mediante WiFi se presenta en pantalla el video inmediatamente si es que el ancho de banda da abasto. En caso que no sea suficiente cambiará a la variante de sólo audio.
+  
+  
+  
+%  se agrega campo en el URL para priorizar distintas variantes, con wifi video, 3g audio.
+%  explicar que parte con el video, mostrar 2 imagenes emparejadas.
+
+  \subsection{Red Celular: 3G o Edge}
+%  con 3g, imagen de que muestra el audio primero.
+En el caso de conexión a través de red celular el parámetro \textbf{c = 1} causa que el stream comience con la pista de audio inmediatamente, para luego evaluar si el ancho de banda es suficiente como para mostrar la variante con video.
+
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[scale=0.2]{imgs/cell-link-1.png} & 
+	\includegraphics[scale=0.2]{imgs/cell-link-2.png} \\
+	\includegraphics[scale=0.2]{imgs/cell-link-3.png} & 
+	\includegraphics[scale=0.2]{imgs/cell-link-4.png} \\
+	\end{tabular}
+	\caption{iPhone reproduciendo stream de una fecha en particular a través de la red celular con enlace 3G.}
+	\label{fig:cell-link}
+\end{figure}
+
+En la figura \ref{fig:cell-link} anterior se observa la secuencia de cambio de variante del stream. En la esquina inferior derecha del reproductor es posible observar el estado de las variantes, de izquierda a derecha pasa por los estados: Audio Stream, Cargando Video Stream, Video Stream. las imagenes 2 y 3 de la figura \ref{fig:cell-link} muestran el mismo estado a pesar que presentan distintas variantes, esto se debe a que para observar el estado de las variantes se  incorporó a la instancia de AVPlayer un observador del atributo \textit{tracks}, (página \pageref{item:kvo-tracks}, \textbf{Pistas de medios}) para comparar constantemente si alguna de las pistas son del tipo \textit{AVMediaTypeVideo}. 
+En caso de observar cambios entre pistas que incluyen video a sólo pistas de audio y viceversa, se identifica el cambio de variante del stream.
+
+
 \section{Cambio de transmisión mediante Twitter}
-- se revisa usando safari desktop con script que incluye player
+%- se revisa usando safari desktop con script que incluye player
+Gracias al modo desarrollador disponible en el navegador web para OS X Safari, es posible identificarse con el servidor utilizando un agente de usuario de Mobile Safari, el navegador web de iOS.
+En el caso de 
 
   \subsection{Dentro de la aplicación}
 	- debug viendo el cambio de tranmisión, URL generado y definiendo el mismo canal. manejo en caso de tweet sin enlace
