@@ -207,12 +207,40 @@ En caso de observar cambios entre pistas que incluyen video a sólo pistas de au
 
 \section{Cambio de transmisión mediante Twitter}
 %- se revisa usando safari desktop con script que incluye player
-Gracias al modo desarrollador disponible en el navegador web para OS X Safari, es posible identificarse con el servidor utilizando un agente de usuario de Mobile Safari, el navegador web de iOS.
-En el caso de 
+%Gracias al modo desarrollador disponible en el navegador web para OS X Safari, es posible identificarse con el servidor utilizando un agente de usuario de Mobile Safari (iOS).
 
+Para probar el cambio de stream a través de enlaces distribuidos por twitter se alojó el script \textbf{PHP} (\ref{subsec:php-redir}) en un servidor dispuesto por AltaVoz S.A. la ubicación de este corresponde a \url{http://tsh.altavoz.net/twitter/index.php}.
+El script utiliza los argumentos en la cadena de consulta \textbf{s} y \textbf{t} para generar un URL compatible si corresponde o mostrar un mensaje de incompatibilidad.
   \subsection{Dentro de la aplicación}
-	- debug viendo el cambio de tranmisión, URL generado y definiendo el mismo canal. manejo en caso de tweet sin enlace
-	se genera notificación interna con los componentes. ver que cambia el stream.
+%	- debug viendo el cambio de tranmisión, URL generado y definiendo el mismo canal. manejo en caso de tweet sin enlace
+%	se genera notificación interna con los componentes. ver que cambia el stream.
+
+{
+    "display_url" = "bit.ly/Soxy8c";
+    "expanded_url" = "http://bit.ly/Soxy8c";
+    indices =     (
+        46,
+        66
+    );
+    url = "http://t.co/jkNULXnM";
+}
+
+http://api.bit.ly/v3/expand?login=altavozchile&apikey=R_5947943f0ea1fe5b21df8269df2b4234&hash=Soxy8c
+
+    data =     {
+        expand =         (
+                        {
+                "global_hash" = Soxy8d;
+                hash = Soxy8c;
+                "long_url" = "http://tsh.altavoz.net/twitter/index.php?s=tvn&t=1353946877";
+                "user_hash" = Soxy8c;
+            }
+        );
+    };
+    "status_code" = 200;
+    "status_txt" = OK;
+}
+
   \subsection{Scheme registrado en iOS}
 	- clientes de twitter en iPhone, twitter y Tweetbot, debug en el método e imprimir en consola la app que lo lanzó.  
 	- debug con app en background
