@@ -212,6 +212,7 @@ En caso de observar cambios entre pistas que incluyen video a sólo pistas de au
 Para probar el cambio de stream a través de enlaces distribuidos por twitter se alojó el script \textbf{PHP} (\ref{subsec:php-redir}) en un servidor dispuesto por AltaVoz S.A. la ubicación de este corresponde a \url{http://tsh.altavoz.net/twitter/index.php}.
 El script utiliza los argumentos en la cadena de consulta \textbf{s} y \textbf{t} para generar un URL compatible si corresponde, o en caso contrario mostrar un mensaje de incompatibilidad.
   \subsection{Dentro de la aplicación}
+  \label{subsec:ts-inside}
 Se utiliza la llamada al método \textit{didSelectRowAtIndexPath:(NSIndexPath *)indexPath} gatillado al pulsar en un celda de la vista de tablas (fig. \ref{sshot-twitterclientvc}) utilizada para representar los Tweets asociados al \textit{hashtag} \textbf{\#SocialStream}. \\
 
 \begin{figure}[H]
@@ -288,12 +289,45 @@ En caso contrario se presenta al usuario un aviso con la clase \textbf{UIAlertVi
 
   \subsection{Scheme registrado en iOS}
   
+  Para revisar el comportamiento de la aplicación al ser lanzada por el sistema debido a la apertura de un URL que presenta el \textit{scheme} registrado, es necesario configurar el \textbf{Depurador} (\textit{debugger}) del entorno de desarrollo Xcode de forma que se encuentre a la espera de la apertura de la aplicación (fig. \ref{fig:xcode-waitforapp}), esto es diferente al comportamiento usual donde cada vez que se ejecuta en el compilador se lanzarla automáticamente en el dispositivo.\\
   
-	- clientes de twitter en iPhone, twitter y Tweetbot, debug en el método e imprimir en consola la app que lo lanzó.  
-	- debug con app en background
-	- debug con app cerrada y a la espera que parta por otra aplicación
-	explicar que se detuvo la carga del stream cuando está cerrada y que se espera una notificacion de la carga de la UI antes de cargar el stream.
+Este ajuste se logra editando el esquema (\textit{scheme}) de la compilación, no confundir con el esquema (\textit{scheme}) del URL. El entorno de desarrollo Xcode permite administrar distintos esquemas de compilación, siendo \textit{Build}, \textit{Run}, \textit{Analyze} y \textit{Archive} los más utilizados. Para mantener Xcode atento al lanzamiento de la compilación se debe editar el esquema \textbf{\textit{Run}} (ejecutar) como se muestra en la figura \ref{fig:xcode-debug-wait}.
   
+%	- clientes de twitter en iPhone, twitter y Tweetbot, debug en el método e imprimir en consola la app que lo lanzó.  
+%	- debug con app en background
+%	- debug con app cerrada y a la espera que parta por otra aplicación
+%	explicar que se detuvo la carga del stream cuando está cerrada y que se espera una notificacion de la carga de la UI antes de cargar el stream.
+    
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[scale=0.7]{imgs/xcode-debug-wait.png}
+	\end{tabular}
+	\caption{Configuración de Xcode para pruebas de lanzamiento de la aplicación por scheme.}
+	\label{fig:xcode-debug-wait}
+\end{figure}
+
+Con esta configuración de depuración, ya es posible revisar el comportamiento con enlaces abiertos desde otra aplicación de iOS, como por ejemplo desde la aplicación de terceros Tweetbot. En la figura \ref{fig:tweetbot-sstream} al pulsar en el URL del tweet el script desarrollado para la redirección (\ref{subsec:php-redir}) identifica el \textbf{Agente de Usuario} de la clase UIWebView presuntamente utilizada por Tweetbot para redirigir a un URL con el \textit{scheme} asociado por la aplicación cliente. El resultado se muestra en la segunda imagen donde el procedimiento es similar a lo descrito en \ref{subsec:ts-inside} \ref{subsec:php-redir}.
+
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[scale=0.7]{imgs/xcode-waitforapp.png}
+	\end{tabular}
+	\caption{Entorno de desarrollo Xcode en modo de espera de apertura de la Aplicación.}
+	\label{fig:xcode-waitforapp}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[scale=0.3]{imgs/tweetbot-sstream.png} &
+	\includegraphics[scale=0.3]{imgs/tweetbot-appopened.png} \\
+	\end{tabular}
+	\caption{Solicitud de Tweetbot para abrir una aplicación externa y su posterior resultado.}
+	\label{fig:tweetbot-sstream}
+\end{figure}
+
 \section{Enlaces Twitter en otros dispositivos}
 	pantallazos de páginas de error, el por qué y cómo se entregan según el script, no se revisa internet explorer porque se utilizaron navegadores compatibles con OS X.
 	
