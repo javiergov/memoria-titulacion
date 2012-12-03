@@ -297,6 +297,15 @@ Este ajuste se logra editando el esquema (\textit{scheme}) de la compilación, n
 %	- debug con app en background
 %	- debug con app cerrada y a la espera que parta por otra aplicación
 %	explicar que se detuvo la carga del stream cuando está cerrada y que se espera una notificacion de la carga de la UI antes de cargar el stream.
+
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[scale=0.7]{imgs/xcode-waitforapp.png}
+	\end{tabular}
+	\caption{Entorno de desarrollo Xcode en modo de espera de apertura de la Aplicación.}
+	\label{fig:xcode-waitforapp}
+\end{figure}
     
 \begin{figure}[H]
 	\centering
@@ -307,16 +316,17 @@ Este ajuste se logra editando el esquema (\textit{scheme}) de la compilación, n
 	\label{fig:xcode-debug-wait}
 \end{figure}
 
-Con esta configuración de depuración, ya es posible revisar el comportamiento con enlaces abiertos desde otra aplicación de iOS, como por ejemplo desde la aplicación de terceros Tweetbot. En la figura \ref{fig:tweetbot-sstream} al pulsar en el URL del tweet el script desarrollado para la redirección (\ref{subsec:php-redir}) identifica el \textbf{Agente de Usuario} de la clase UIWebView presuntamente utilizada por Tweetbot para redirigir a un URL con el \textit{scheme} asociado por la aplicación cliente. El resultado se muestra en la segunda imagen donde el procedimiento es similar a lo descrito en \ref{subsec:ts-inside} \ref{subsec:php-redir}.
+Con esta configuración de depuración, ya es posible revisar el comportamiento con enlaces abiertos desde otra aplicación de iOS, como por ejemplo desde la aplicación de terceros Tweetbot. En la figura \ref{fig:tweetbot-sstream} al pulsar en el URL del tweet, el script desarrollado para la redirección (\ref{subsec:php-redir}) identifica el \textbf{Agente de Usuario} de la clase UIWebView presuntamente utilizada por Tweetbot para redirigir a un URL con el \textit{scheme} asociado por la aplicación cliente. El resultado se muestra en la segunda imagen donde el procedimiento consiste en generar una notificación a la clase que contiene la instancia de \textbf{AVPlayer} de forma que genere el URL necesario para reproducir el stream.\\
 
-\begin{figure}[H]
-	\centering
-	\begin{tabular}{cc}
-	\includegraphics[scale=0.7]{imgs/xcode-waitforapp.png}
-	\end{tabular}
-	\caption{Entorno de desarrollo Xcode en modo de espera de apertura de la Aplicación.}
-	\label{fig:xcode-waitforapp}
-\end{figure}
+Al ser iniciada por esta vía, la aplicación gatilla el método de la clase delegada como instancia principal de la aplicación (\textit{AppDelegate}):\\
+
+\textit{- (BOOL)application:(UIApplication*)application handleOpenURL:(NSURL*)url}\\
+
+Dentro de esta llamada se generan las notificaciones encargadas de entregar un URL correspondiente al stream del instante compartido. Realizando pruebas se descubrió que la entrega de los datos a la aplicación no significaban el comportamiento esperado, es decir la visualización del stream en el preciso instante, esto debido a que el método encargado de manejar el URL se ejecutaba con anterioridad a los métodos de iniciación del reproductor, por lo tanto para asegurar la entrega de la información se programó un observador por notificación \cite{bib:ios-nsnotificationcenter} atento al aviso de carga del controlador de vistas que contiene la instancia del \textbf{AVPlayer} encargado de reproducir. \\
+
+El aviso se realiza desde el método \textit{- (void)viewDidAppear:(BOOL)animated} del controlador de vistas, así es posible saber que las vistas, incluyendo la del reproductor, se han cargado en pantalla y proceder a entregar el URL del contenido.
+
+
 
 \begin{figure}[H]
 	\centering
@@ -329,13 +339,18 @@ Con esta configuración de depuración, ya es posible revisar el comportamiento 
 \end{figure}
 
 \section{Enlaces Twitter en otros dispositivos}
-	pantallazos de páginas de error, el por qué y cómo se entregan según el script, no se revisa internet explorer porque se utilizaron navegadores compatibles con OS X.
+A continuación se presentan los resultados de la apertura de URL compartidos a través de la aplicación cliente a través de distintas plataformas.
+%	pantallazos de páginas de error, el por qué y cómo se entregan según el script, no se revisa internet explorer porque se utilizaron navegadores compatibles con OS X.
 	
   \subsection{PC Escritorio}
+  Se presentan capturas de pantalla de la reacción del script desarrollado con distintos navegadores web compatibles con Mac OS X. Ese es el motivo por cual Internet Explorer no aparece en estos resultados, ya que desde su versión 5.2.3 lanzada el 16 de junio de 2003 \cite{bib:mac-iexplorer} no existe soporte para sistema operativo nombrado.
+
     \subsubsection{Safari}
-El navegador web Safari al ser producto de las tecnologias desarrolladas por Apple es compatible para la reproducción de streams HLS. Para mostrar el contenido se utilizó 
-      safari muestra un player html5
-    foto del player
+El navegador web Safari al ser producto de las tecnologias desarrolladas por Apple es compatible para la reproducción de streams HLS. Para mostrar el contenido se utilizó la marca de HTML5  \textless VIDEO\textgreater \ con la lista de reproducción generada por el script php como fuente de video. El resultado es el reproductor visto en la figura \ref{fig:uagent-safari}.\\
+
+Además para pruebas se utilizó el widget dispuesto por Twitter \cite{bib:twitter-widget} para embeber tweets relacionados a cierto hashtag, en este caso \#SocialStream. El uso de este widget solo fue por motivos de prueba.
+%      safari muestra un player html5
+%    foto del player
 
   \begin{figure}[H]
 	\centering
@@ -378,8 +393,9 @@ El navegador web Safari al ser producto de las tecnologias desarrolladas por App
 %  explicar que tampoco es compatible con HLS, por lo menos 2.3, 4.0 ICS en adelante es compatible, pero para reproducir el stream se debe desarrollar una aplicación cliente similar a la hecha en iOS
 
 \section{Comparación con SocialStream Flash}
-mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
+...
+%mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
 
-la linea de tiempo difiere con una representación gráfica, se utilizó el control de fecha para simplificar el punto a elegir, además la linea de tiempo precisa de mouse over para mostrar datos y en el caso táctil difiere mucho.
+%la linea de tiempo difiere con una representación gráfica, se utilizó el control de fecha para simplificar el punto a elegir, además la linea de tiempo precisa de mouse over para mostrar datos y en el caso táctil difiere mucho.
 
 
