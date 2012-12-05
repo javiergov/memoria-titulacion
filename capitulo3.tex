@@ -381,19 +381,42 @@ Además para pruebas se utilizó el widget dispuesto por Twitter \cite{bib:twitt
 	\label{fig:uagent-opera}
 \end{figure}  
   \subsection{Android y otros móviles incompatibles}
-  En el caso del celulares con el sistema operativo Android se presenta el mensaje de la figura \ref{fig:uagent-android}. Si bien desde la versión 4.0 de Android OS el sistema es compatible con HTTP Live Streaming, es necesario desarrollar una aplicación similar a la hecha para iOS.
-    \begin{figure}[H]
+  En el caso del celulares con el sistema operativo Android se presenta el mensaje de la figura \ref{fig:uagent-android}. Si bien desde la versión 4.0, Android OS es compatible con HTTP Live Streaming, es necesario desarrollar una aplicación similar a la hecha para iOS.
+ \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.7]{imgs/uagent-android.png} 
 	\caption{Apertura de enlace compartido desde la aplicación cliente en Safari.}
 	\label{fig:uagent-android}
-\end{figure}  
+ \end{figure}  
 
 %  pantallazo del cell de la esperanza
 %  explicar que tampoco es compatible con HLS, por lo menos 2.3, 4.0 ICS en adelante es compatible, pero para reproducir el stream se debe desarrollar una aplicación cliente similar a la hecha en iOS
 
 \section{Comparación con SocialStream Flash}
-...
+
+En las figuras \ref{sshot_iOS_sstream} y \ref{fig:eag-player} se puede observar el reproductor del stream de video distribuido a través del protocolo RTMP. El reproductor fue desarrollado por un alumno de la Universidad Técnica Federico Santa María para demostrar la capacidad de cambiar el tiempo del contenido en un reproductor de video desarrollado con las tecnologias de Adobe Flash.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{imgs/eag-player.png} 
+	\caption{Reproductor Flash para Timeshift en Navegador web Safari.}
+	\label{fig:eag-player}
+\end{figure}  
+
+En las figuras \ref{fig:twclient-results} y \ref{fig:cell-link} se presenta el reproductor desarrollado por el autor de este documento como resultado del proyecto del tema de memoria.\\
+
+En esta sección se destacan las diferencias de usabilidad de los reproductores para el usuario final, más alla de la gran diferencia que el reproductor de la figura \ref{fig:eag-player} y el desarrollado en iOS se utilizan en plataformas distintas. 
+
+\begin{itemize}
+\item Protocolo: El reproductor Flash utiliza protocolo RTMP mientras que el reproductor para iOS recibe el contenido a través de HTTP Live Streaming.
+\item Salto de Tiempo: la forma de saltar en el tiempo en el reproductor flash precisa de clicks con mouse, ya sea para cambiar la escala de su linea de tiempo como para moverse el punto central de reproducción, lo cual dificulta en gran medida el consumo del contenido mientras se busca otro instante.\\
+
+En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, el cual permite elegir un tiempo en especifico pudiendo también cancelar la selección de fecha pulsando fuera del area del selector sin intervenir el contenido en reproducción.
+
+\item Entrega de contenido: El contenido en el reproductor Flash presenta una mayor exactitud al elegir un tiempo en especifico, esto debido a que la segmentación del video es cada 5 segundos. En el caso de HTTP Live Streaming es recomendado por los ingenieros de Apple, desarrolladores del protocolo, utilizar 10 segundos como mínimo para cada segmento de video o audio. El motivo de esta recomendación es el overhead que 
+\item Redes Sociales:
+
+\end{itemize}
 %mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
 
 %la linea de tiempo difiere con una representación gráfica, se utilizó el control de fecha para simplificar el punto a elegir, además la linea de tiempo precisa de mouse over para mostrar datos y en el caso táctil difiere mucho.
