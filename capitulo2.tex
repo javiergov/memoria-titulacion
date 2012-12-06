@@ -46,7 +46,7 @@ El protocolo HTTP Live Streaming o HLS (abreviado), es un protocolo desarrollado
 
 Su carácteristica principal es la utilización del protocolo para transferencias de hipertexto, HTTP (hypertext transfer protocol) por sus siglas en inglés. Si bien HTTP se diseño originalmente para la World Wide Web como vía de entrega del texto en formato HTML, este se puede utilzar para distribuir datos de otros formatos codificados para habilitar su distribución.\\
 
-HLS funciona entregando el contenido de forma segmentada al cliente, el cual tiene la responsabilidad de manejar la lógica de cambio de segmentos. Para distribuir el contenido se codifica la fuente de audio y/o video en varios archivos de corta duración, recomendandose entre 5 y 10 segundos, y que pueden o no tener el mismo bitrate. Estos pequeños archivos se ordenan en una lista de reproducción de formato .M3U8 que se entrega al reproductor del cliente. \\
+HLS funciona entregando el contenido de forma segmentada al cliente, el cual tiene la responsabilidad de manejar la lógica de cambio de segmentos. Para distribuir el contenido se codifica la fuente de audio y/o video en varios archivos de corta duración, recomendandose 10 segundos \cite{bib:tensec-targetduration}, y que pueden o no tener el mismo bitrate. Estos pequeños archivos se ordenan en una lista de reproducción de formato .M3U8 que se entrega al reproductor del cliente. \\
 También existe una variante donde la lista de reproducción contiene referencias a otras listas de reproducción con otras variantes de flujos de datos. \\
 
 % http://www.streamingmedia.com/Articles/Editorial/What-Is-.../What-is-HLS-(HTTP-Live-Streaming)-78221.aspx

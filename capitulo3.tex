@@ -408,13 +408,14 @@ En las figuras \ref{fig:twclient-results} y \ref{fig:cell-link} se presenta el r
 En esta sección se destacan las diferencias de usabilidad de los reproductores para el usuario final, más alla de la gran diferencia que el reproductor de la figura \ref{fig:eag-player} y el desarrollado en iOS se utilizan en plataformas distintas. 
 
 \begin{itemize}
-\item Protocolo: El reproductor Flash utiliza protocolo RTMP mientras que el reproductor para iOS recibe el contenido a través de HTTP Live Streaming.
-\item Salto de Tiempo: la forma de saltar en el tiempo en el reproductor flash precisa de clicks con mouse, ya sea para cambiar la escala de su linea de tiempo como para moverse el punto central de reproducción, lo cual dificulta en gran medida el consumo del contenido mientras se busca otro instante.\\
+\item \textbf{Protocolo:} El reproductor Flash utiliza protocolo RTMP mientras que el reproductor para iOS recibe el contenido a través de HTTP Live Streaming.
+\item \textbf{Salto de Tiempo:} la forma de saltar en el tiempo en el reproductor flash precisa de clicks con mouse, ya sea para cambiar la escala de su linea de tiempo como para moverse el punto central de reproducción, lo cual dificulta en gran medida el consumo del contenido mientras se busca otro instante.\\
 
 En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, el cual permite elegir un tiempo en especifico pudiendo también cancelar la selección de fecha pulsando fuera del area del selector sin intervenir el contenido en reproducción.
 
-\item Entrega de contenido: El contenido en el reproductor Flash presenta una mayor exactitud al elegir un tiempo en especifico, esto debido a que la segmentación del video es cada 5 segundos. En el caso de HTTP Live Streaming es recomendado por los ingenieros de Apple, desarrolladores del protocolo, utilizar 10 segundos como mínimo para cada segmento de video o audio. El motivo de esta recomendación es el overhead que 
-\item Redes Sociales:
+\item \textbf{Entrega de contenido:} El contenido en el reproductor Flash presenta una mayor exactitud al elegir un tiempo en especifico, esto debido a que la segmentación del video es cada 5 segundos. En el caso de HTTP Live Streaming es recomendado por los ingenieros de Apple desarrolladores del protocolo, utilizar 10 segundos como mínimo para cada segmento de video o audio. El motivo de esta recomendación es para evitar paralizaciones (\textit{stalls}) de la transmision a través de redes celulares \cite{bib:tensec-targetduration}.\\
+
+\item \textbf{Redes Sociales:} Esta fue una caracteristica adicional a la solución de permitir transmisión con saltos en el tiempo en iOS. Durante el desarrollo de la aplicación cliente se descubrió el potencial de realizar cambios de lista de reproducción del protocolo HTTP Live Streaming a través de cadenas de consulta de los URLs y compartir el contenido a través de redes. En el caso del reproductor Flash el cambio temporal se realiza a través de la comunicación bidireccional del protocolo RTMP a través del enlace entre el cliente y el servidor.
 
 \end{itemize}
 %mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
