@@ -1,38 +1,67 @@
 
 \chapter{Conclusiones y trabajo futuro}
-% pagina y media no mas de 2
-explicar que apenas se terminó, el proyecto se usó como base para janus cooperativa, pero solo radio.
-es posible generar productos en base al reproductor, se puede mejorar la interfaz gráfica con preparativos en base a diseño de interfaces junto a especialistas como diseñadores gráficos.
-además el trabajo sienta base para la compartición de contenido en vivo a través de plataformas móviles, muy similar a la tendencia actual de las llamadas smart tv que tambien incorporan redes sociales.
+%# pagina y media no mas de 2
+
+%explicar que apenas se terminó, el proyecto se usó como base para janus cooperativa, pero solo radio.
+%es posible generar productos en base al reproductor, se puede mejorar la interfaz gráfica con preparativos en base a diseño de interfaces junto a especialistas como diseñadores gráficos.
+%además el trabajo sienta base para la compartición de contenido en vivo a través de plataformas móviles, muy similar a la tendencia actual de las llamadas smart tv que tambien incorporan redes sociales.
+
+%# contenido
+\section{Conclusiones}
+
+El trabajo de memoria significó en grán medida la investigación de las tecnologias de Apple Inc. En un principio se tuvo como fin lograr compatibilizar el contenido distribuido con tecnologías de Adobe Inc. (RTMP) en iOS. 
+Sin embargo se descubrió las grandes trabas que Apple pone para su entorno aplicaciones, instando y casi obligando a utilizar sus tecnologias. 
+Por lo tanto se tuvo que presentar estos motivos y convencer a la empresa interesada en este proyecto de adoptar un nuevo sistema de distribución para los dispositivos iOS con HTTP Live Streaming. Teniendo claro este punto se tuvo que idear la forma de igualar la caracteristica de saltar el tiempo en la tranmisión. \\ 
+
+Llegando a utilizar la cadena de consultas en el URL que el cliente utiliza para pedir los contenidos al servidor se dio paso al desarrollo de una aplicación cliente que permite al usuario manejar el punto de reproducción. Esto significó la investigación del lenguaje de programación \textbf{Objective-C} y el Kit de desarrollo de iOS. En materia de diseño se siguieron los patrones sugeridos por Apple para sus aplicaciones, buscando simpleza para el usuario en seleccionar un punto en especifico.\\
+
+Además se debe tomar en cuenta que las sugerencias para el protocolo HTTP Live Streaming se indican con el fin de entregar la mejor experiencia en lo que respecta el consumo de la tranmisión. Materia que tuvo que se conversada con la empresa interesada debido a reluctancias por parte de esta en seguir al pie de la letra ciertas sugerencias, como por ejemplo la duración de cada segmento, sólo por el hecho de haber utilizado otro valor con el sistema desarrollado para RTMP.\\
+
+El desarrollo para el alumno significó adoptar nuevos lenguajes de programación que no fueron una dificultad gracias a la formación en la universidad con lenguajes de programación similares. El desarrollo con PHP y Objective-C fueron fundamentales para incorporar las caracteristicas claves de este proyecto.\\
+
+Si bien pudo haber existido otros caminos para el fin conseguido de este proyecto, se diseñó una solución con una arquitectura tal que permitiera integrarla a otras plataformas que compatibilizen con el protocolo HTTP Live Streaming, como ya ha sido adoptado por el sistema operativo Android (desde 4.0). \\
 
 
+%Existen muchas alternativas y caminos para crear una solucion a un problema de administracion como el que se planteo en este trabajo, pero el gran desafio, fuera de completar el desarrollo de esta, era encontrar una manera de que la arquitectura de la solucion permitiera una modularidad tal, que fuera fácil la integración de nuevas herramientas y tecnologías.\\
 
-	\section{futuro}
-	mostrar timeline nueva, desarrollo en la empresa.
-	preview en popup
-	redes sociales facebook
-	destacados del editor
-	inclusión de favoritos
-	boton rtune
-	
-	
-	%EXTENSIONES PARA hacerle, que no las haré pero mejorarian el producto en si, facebook, otras redes, etc
-	% todo list
-	\section{conclusiones}
-	el trabajo precisó de investigación a fondo de las tecnologias de Apple Inc. adentrarse en el sistema iOS y su riguroso cuidado para las apps, estudiar las tecnologias en desarrollo por parte de ellos, leer los drafts en desarrollo de http live streaming, lo necesario para especificar el dispatcher que es algo fuera de lo normal para el protocolo.
-	el estudio del SDK, las clases de stanford, guidelines.
+%	el trabajo precisó de investigación a fondo de las tecnologias de Apple Inc. adentrarse en el sistema iOS y su riguroso cuidado para las apps, estudiar las tecnologias en desarrollo por parte de ellos, leer los drafts en desarrollo de http live streaming, lo necesario para especificar el dispatcher que es algo fuera de lo normal para el protocolo.
+%	el estudio del SDK, las clases de stanford, guidelines.
 
-% claves	
-	usar http live streaming.
-	por qué tuve que insistir en apegarse a las recomendaciones de apple siendo que se preferian otras en altavoz.
-	compatibilidad desde ios 5.0 en adelante	solo por pto flotante en lista de segmentos.
-% malas
-	mala decision fue investigar portar rtmp, para darse cuenta que no sería permitido por apple, utilizar segmentos de 5 segundos, ventanas de tranmisión muy angostas y también muy amplias. el no 
+%# claves	
+%	usar http live streaming.
+%	por qué tuve que insistir en apegarse a las recomendaciones de apple siendo que se preferian otras en altavoz.
+%	compatibilidad desde ios 5.0 en adelante	solo por pto flotante en lista de segmentos.
+
+%# malas
+%	mala decision fue investigar portar rtmp, para darse cuenta que no sería permitido por apple, utilizar segmentos de 5 segundos, ventanas de tranmisión muy angostas y también muy amplias. el no 
 	
 		
 	% lo mas importante del trabajo 
 	% las decisiones claves y el por que de estas
 	% decisiones malas tambien
 	
-	
 %60 paginas MAX HASTA CONCLUSIONES
+
+	\section{Trabajo Futuro}
+%	mostrar timeline nueva, desarrollo en la empresa.
+%	preview en popup
+%	redes sociales facebook
+%	destacados del editor
+%	inclusión de favoritos
+%	boton rtune
+La version del cliente desarrollado para este trabajo de memoria cumple con los requisitos iniciales de permitir saltos en el tiempo en la transmisión que provee el servidor encargado del dispatcher. Sin embargo el gran potencial de las aplicaciones en iOS permiten expandir la experiencia de usuario aun más. En un trabajo futuro se puede mejorar el cliente con:
+\begin{itemize}
+\item Diseñar e implementar un modelo de datos que entregue momentos destacados de la transmisión desde el servidor, controlado por el gestor de los contenidos para generar más audiencia en momentos precisos.
+
+\item Implementar sistema de Analisis de comportamiento de usuario del tipo Google Analytics, el cual está disponible para iOS. Análogo a un \textit{people-meter} de la televisión actual.
+
+\item Integrar más redes sociales aparte de Twitter, como \textbf{Facebook} o \textbf{Sina Weibo} que han sido integradas al Social Framework de \textbf{iOS 6} debido a su gran popularidad.
+
+\item Permitir al usuario guardar momentos como favoritos de forma privada y localmente en su dispositivo sin necesidad de compartir el punto de reproducción. Para esto es necesario desarrollar un modelo de datos locales para la aplicación.
+
+\item Integrar comportamientos originales. Por ejemplo saltar entre momentos de la transmisión con solo un botón, similar a la función \textbf{Re-Tune} de los televisores que permiten saltar entre dos canales. Una nueva variante temporal expandiría aun más la experiencia del usuario.
+\end{itemize}
+
+	
+	%EXTENSIONES PARA hacerle, que no las haré pero mejorarian el producto en si, facebook, otras redes, etc
+	% todo list
