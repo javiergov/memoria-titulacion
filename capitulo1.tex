@@ -27,30 +27,38 @@ Estos dispositivos alternativos tienen el peso de llevar la recepción de medios
 
 Considerando que el objetivo de este trabajo tiene relación con la distribución y recepción de contenidos audiovisuales. Se presentan distintos medios funcionando actualmente.\\
 
-Video-on-demand: es un servicio de distribución que permite a los usuarios seleccionar y ver o escuchar el contenido de video o audio de manera personalizada, ofreciendo la opción de solicitar el contenido en el momento exacto que lo desee.  La plataforma para poder reproducir el contenido se puede encontrar implementada como aplicación en un computador o a través de un dispositivo con conexión directa a al televisor y al proveedor del servicio. En Chile este servicio es provisto por la compañía VTR a través de su dispositivo D-Box, este dispositivo cumple además la función de DVR.\\
+
+
+\subsubsection{Video-on-demand}
+Es un servicio de distribución que permite a los usuarios seleccionar y ver o escuchar el contenido de video o audio de manera personalizada, ofreciendo la opción de solicitar el contenido en el momento exacto que lo desee.  La plataforma para poder reproducir el contenido se puede encontrar implementada como aplicación en un computador o a través de un dispositivo con conexión directa a al televisor y al proveedor del servicio. En Chile este servicio es provisto por la compañía VTR a través de su dispositivo D-Box, este dispositivo cumple además la función de DVR.\\
 
 La compañía Netflix también provee este servicio, sin embargo el medio de transmisión es Internet, ofreciendo a sus clientes suscripciones que permiten el acceso al catalogo de películas.\\
 
 En Chile se ha posicionado a partir de Septiembre de 2011, y considerando simplificar registro de nuevos usuarios, su potencial acogida nuevo usuarios se magnifica al poner a disposición de sus clientes el acceso a los contenidos a través de variadas plataformas de reproducción, como consolas de videojuegos de sobremesa, Nintendo Wii, y PlayStation 3, consolas portátiles como Nintendo 3DS, acceso vía web y aplicaciones para televisores con InternetTV. \\
 
-Podcast: es una serie de archivos de medios digitales (audio o video) lanzados en forma periódica por episodios, este sistema permite al usuario descargar el contenido de su interés para poder verlo o escucharlo más tarde.\\
+\subsubsection{Podcast}
+Es una serie de archivos de medios digitales (audio o video) lanzados en forma periódica por episodios, este sistema permite al usuario descargar el contenido de su interés para poder verlo o escucharlo más tarde.\\
 
 El modo de distribución se diferencia de otras formas de transferencia de internet como lo son la descarga directa al estar todos los archivos catalogados en un servidor central, este además provee a los usuarios una vía de distribución a través de RSS Feeds, que son archivos de información en XML (extended markup language) diseñados para compartir actualizaciones de sitios web, popularizados por los blogs.\\ 
 El uso de RSS Feed para los podcast permite informar a las personas suscritas de nuevos contenidos, aunque no es necesario que la persona esté suscrita para obtener alguna información en especifico. 
 Su uso se ha popularizado por la plataforma iTunes desarrollada por Apple, que en su versión 4.9 de 2005, abrió a una gran base de usuarios este nuevo medio de comunicación. No solo se utiliza para entregar programas de radio, sino que también documentos y programas de televisión, de manera gratuita.\\
 
-Streaming media: este método provee constantemente datos multimedia al usuario final, que reproduce mientras tanto el servidor se encuentra entregando la información.
-El nombre se refiere a que el método de entrega es continuo, sin interrupción, debido a que los datos recibidos se almacenan en un buffer de memoria que se va liberando mientas se reproduce. Es decir los datos de audio o video, no son descargados,  es un acceso directo al contenido intangible.
-Un uso más reciente que se le ha dado al método streaming es lo que se llama LiveStreaming, donde el contenido a distribuir es capturado en el momento, una tranmision en vivo que es posible de ser recibida por el usuario casi al momento que ocurre gracias al flujo o stream de datos.
+\subsubsection{Streaming media}
+Este método provee constantemente datos multimedia al usuario final, que reproduce mientras tanto el servidor se encuentra entregando la información.
+El nombre se refiere a que el método de entrega es continuo, sin interrupción, debido a que los datos recibidos se almacenan en un buffer de memoria que se va liberando mientas se reproduce. Es decir los datos de audio o video, no son descargados,  es un acceso directo al contenido intangible.\\
+
+Un uso más reciente que se le ha dado al método streaming es lo que se llama \textbf{\textit{LiveStreaming}}, donde el contenido a distribuir es capturado en el momento, una tranmision en vivo que es posible de ser recibida por el usuario casi al momento que ocurre gracias al flujo o stream de datos.\\
+
 La base fundamental de este método de distribución, es la utilización de protocolos ligeros de la capa de transporte, como lo es UDP (User Datagram Protocol) que a diferencia del protocolo TCP (Transmission Control Protocol), no asegura la entrega en caso de fallo, permitiendo obviar los paquetes, priorizando la continuidad del flujo en el tiempo sobre la fiabilidad de los contenidos.  En la capa de aplicación se ha desarrollado un protocolo con este objetivo, toma como base la conexión mediante UDP para realizar el enlace, es llamado Real-time Transport Protocol (RTP \cite{sota:rtp-draft}).\\
 
-Aun así existe un protocolo de la capa de aplicación que utiliza TCP para realizar el enlace. Este fue desarrollado originalmente por Macromedia, siendo ahora propietario Adobe Systems, el Real Time Messaging Protocol (RTMP \cite{bib:rtmp-specs}) fue desarrollado para realizar streaming multimedia a través de TCP con baja latencia, esto lo logra gracias al envío de la mayor cantidad de información por enlace. \\
+Aun así existe un protocolo de la capa de aplicación que utiliza TCP para realizar el enlace. Este fue desarrollado originalmente por Macromedia, siendo ahora propietario \textbf{Adobe Systems}, el Real Time Messaging Protocol (RTMP \cite{bib:rtmp-specs}) fue desarrollado para realizar streaming multimedia a través de TCP con baja latencia, esto lo logra gracias al envío de la mayor cantidad de información por enlace. \\
 	
-	De esta metodología Apple Inc. ha desarrollado un nuevo método llamado HTTP Live Streaming, que se diferencia al utilizar pedazos de audio o video  ordenados en una lista de reproducción de extensión m3u que es actualizada a medida que nuevos contenidos son creados. A diferencia del streaming nombrado anteriormente, este flujo de datos se trasmite a través del protocolo HTTP (Hypertext Transfer Protocol \cite{sota:rfc-http}), el cual es de una capa superior (de aplicación) posibilitando la transferencia de los datos multimedia con un servidor web ordinario como por ejemplo Apache. Además posibilita la transmisión en redes donde firewalls o proxies bloqueen contenido ya que se enmascara como trafico de hipertexto.
+	De esta metodología \textbf{Apple Inc.} ha desarrollado un nuevo método llamado HTTP Live Streaming, que se diferencia al utilizar pedazos de audio o video  ordenados en una lista de reproducción de extensión \textbf{m3u} (\cite{sota:m3u-specs}) que es actualizada a medida que nuevos contenidos son creados. A diferencia del streaming nombrado anteriormente, este flujo de datos se trasmite a través del protocolo HTTP (Hypertext Transfer Protocol \cite{sota:rfc-http}), el cual es de una capa superior (de aplicación) posibilitando la transferencia de los datos multimedia con un servidor web ordinario como por ejemplo Apache. Además posibilita la transmisión en redes donde firewalls o proxies bloqueen contenido ya que se enmascara como trafico de hipertexto.
+
 
 \subsection{Almacenamiento del Contenido}
 
-Otra tecnología que está relacionada con este tema, tiene que ver con la toma de registro de los medios recibidos. Existen en la actualidad los llamados DVR (digital video recorders), dispositivos interactivos que cumplen con la grabación de la señal de televisión o video, siendo almacenada en formato digital.\\
+Otra tecnología que está relacionada con este tema, tiene que ver con la toma de registro de los medios recibidos. Existen en la actualidad los llamados \textbf{DVR} (\textbf{digital video recorders}), dispositivos interactivos que cumplen con la grabación de la señal de televisión o video, siendo almacenada en formato digital.\\
 
  Esta información queda guardada en el disco duro o memoria del sistema, para poder ser vista después. A diferencia de una antigua videograbadora, el medio de almacenamiento y el formato es digital, permitiendo tomar registro y así manipularlo mediante software.\\
  
@@ -62,8 +70,8 @@ Se puede implementar este concepto de DVR en software de computadores de escrito
 
 	Servicios de streaming bien populares como Justin.TV, UStream o Twittcam permiten transmitir video a través de sus plataformas web, y permiten la revisión del contenido tiempo después que este ha finalizado. En cierta parte este comportamiento se asemeja al DVR, pero no posibilita moverse en el tiempo mientras se transmite.\\
 
-En Chile, se ha desarrollado una aplicación más sofisticada por parte de la empresa AltaVoz S.A. con su producto SocialStream, el cual permite retroceder y revisar el contenido mientras la transmisión se encuentra en curso. Este registro es encargado al servidor quien administra los pedazos de información multimedia, una aplicación cliente entabla conexión para realizar pedidos de la información en el tiempo que desea el usuario.
-Esta característica lleva como nombre comercial TimeShift.
+En Chile, se ha desarrollado una aplicación más sofisticada por parte de la empresa AltaVoz S.A. con su producto \textquotedblleft SocialStream, Video TimeShift\textquotedblright (\cite{sota:altavoz-socialstream}), el cual permite retroceder y revisar el contenido mientras la transmisión se encuentra en curso. Este registro es encargado al servidor quien administra los pedazos de información multimedia, una aplicación cliente entabla conexión para realizar pedidos de la información en el tiempo que desea el usuario.
+Esta característica lleva como nombre comercial \textbf{TimeShift}.
 
 \section{Propuesta de Proyecto}
 \subsection{El Smartphone}
