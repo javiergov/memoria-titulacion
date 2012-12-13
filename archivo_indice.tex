@@ -22,15 +22,13 @@ Sistema operativo para dispositivos móviles, originalmente fue desarrollado par
 
 iOS deriva de Mac OSX en su arquitectura de diseño, utilizando también el mismo micronucleo Mach basado en FreeBSD: Darwin.\\
 
-El desarrollo de sus aplicaciones se realiza con \textbf{Cocoa Touch} API (fig. \ref{fig:ios-cocoatouch}).
+El desarrollo de sus aplicaciones se realiza con \textbf{Cocoa Touch} API (fig. \ref{fig:ios-cocoatouch}), la capa de abstracción de iOS.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.35]{imgs/ios-cocoatouch.png} 
-	\caption{Caracteristicas de la API Cocoa Touch.}
+	\caption{Caracteristicas del dispositivo disponibles a través de Cocoa Touch.}
 	\label{fig:ios-cocoatouch}
 \end{figure}  
-
-
 
 %		se empezó con ios 4, pasamos a 5, luego 6		
 %		facilidad de actualizacion
@@ -38,7 +36,28 @@ El desarrollo de sus aplicaciones se realiza con \textbf{Cocoa Touch} API (fig. 
 	\section{Hardware}
 		Se presentan los implementos necesarios para desarrollar el proyecto de memoria.
 		\subsection{Macintosh}
-	%http://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface
+		Fue necesario utilizar una computadora Macintosh, debido a la obligación de desarrollar en Xcode y por ende, una computadora que ejecutara el sistema operativo OSX.\\
+		
+		Los Macintosh, tambien conocidos simplemente como Mac, son la línea de computadores de escritorio diseñados y manufacturados por Apple Inc. Están enfocados al mercado de computadoras para el hogar, educación y mercado profesional donde además existe la línea \textit{Pro}. Su principal caracteristica es la posibilidad de ejecutar OSX ya que la licencia del sistema operativo sólo permite instalarlo en computadores construidos por Apple Inc \cite{web:license-osx}. Además los Mac que poseen una CPU Intel permiten instalar otros sistemas operativos como Windows y Linux, gracias a la aplicación de OSX \textbf{Bootcamp}.\\
+		
+		 Una gran diferencia de los Macintosh respecto a un computador de escritorio es en su encendido, ya que partir los Macs utilizan \textbf{EFI} (\textit{Extensible Firmware Interface}) , a diferencia de una computador normal con Windows o Linux que utiliza por defecto la tradicional y retrocompatible \textbf{BIOS} (\textit{Basic Input/Output System}). Esta caracteristica dificulta la instalación de OSX en computadores que no han sido manufacturados por Apple, debido a que parte de sus drivers residen en la partición del disco duro utilizada por la EFI.\\
+		 
+		 Sin embargo existe el proyecto de \textit{hacking} \textbf{OSx86} \cite{web:osx86} que busca la posibilidad de instalar OSX  en computadores no licenciados. A pesar de existir esta posibilidad, para este proyecto de memoria se utilizó un computador Macbook 7,1 (fig. \ref{img:macbook71}) para evitar cualquier incompatibilidad de software o hardware.
+		 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.35]{imgs/macbook71.png} 
+	\caption{Macbook 7,1. Lanzado al mercado circa 2010.}
+	\label{img:macbook71}
+\end{figure} 	 
+		 
+		
+		
+		
+		
+%		The Macintosh marketed as Mac, is a line of personal computers (PCs) designed, developed, and marketed by Apple Inc. It is targeted mainly at the home, education, and creative professional markets, and includes the descendants of the original iMac, the entry-level Mac mini desktop model, the Mac Pro tower graphics workstation, and the MacBook Air and MacBook Pro laptops. Its Xserve server was discontinued on January 31, 2011.[2]
+
+%http://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface
 	
 %The use of EFI as opposed to the traditional BIOS. The BIOS found in most PCs is designed for backwards-compatibility to allow the use of older software and operating systems. As Mac OS X has nothing that tied it to the BIOS, it was free to use an alternative firmware that eliminates some of the shortcomings of the BIOS. EFI is not exclusive to Macs, however; motherboards can be purchased off-the-shelf that support EFI, and some computer retailers use it as well now.
 %Non-standard motherboard form factors. The motherboards in all current Macintosh models do not correspond to a form factor found in other retailer's computers, such as ATX or ITX.
