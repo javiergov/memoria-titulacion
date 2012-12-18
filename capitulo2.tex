@@ -1,5 +1,6 @@
 % capitulo de implementación
 \chapter{Diseño e Implementación}
+En el siguiente capítulo se describen las etapas recorridas para llegar a la solución que propone este proyecto.
 \section{Arquitectura de la solución}
 El siguiente capitulo consta de las bases necesarias para realizar la solución. Esta se compone de 2 elementos principales. 
 \begin{itemize}
@@ -55,8 +56,6 @@ También existe una variante donde la lista de reproducción contiene referencia
 		El protocolo HLS consiste en ordenar la entrega de archivos discretos a través de HTTP.
 		El procedimiento general consiste en segmentar el contenido multimedia (audio y/o video) en pequeños archivos de manera que a través de un servidor web regular el cliente pueda descargar y unir los segmentos para verlos de manera continua. Esta forma de entregar el contenido puede ser utilizada para contenido pre-grabado o en vivo, difiriendo levemente en el componente encargado de ordenar los segmentos.\\
 		
-
-\clearpage		
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{imgs/HLS_diagram_wwdc2010.eps}
