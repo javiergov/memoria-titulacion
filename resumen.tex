@@ -18,21 +18,21 @@
 %Siguiendo el esquema de AHidalgo.pdf
 
 %Primer parrafo, descripción breve de los objetivos
-Nuevos avances se han realizado en el manejo de transmisiones en vivo de medios como audio y/o video, que permiten emular la característica principal de dispositivos de sobremesa del tipo "Programmable (Digital) Video Recorders" (PVR ó DVR), la cual es la posibilidad de pausar, retroceder o avanzar,cuando es posible, la linea de tiempo de reproducción. Esto se logra gracias a aplicaciones que interactuan con servidores de flujo de datos de audio y video para lograr un registro de la reproducción. Donde el cliente se comunica para recibir los datos y retornar comandos.\\ 
+Nuevos avances se han realizado en el manejo de transmisiones en vivo de medios como audio y/o video, que permiten emular la característica principal de dispositivos de sobremesa del tipo \textquotedblleft Programmable (Digital) Video Recorders\textquotedblright \ (PVR ó DVR), los cuales permite pausar, retroceder o avanzar, cuando es posible, la linea de tiempo de reproducción. Esto se logra gracias a aplicaciones que interactuan con servidores de flujo de datos de audio y video para lograr un registro de la reproducción, entregando al cliente comunicación eficaz para recibir datos y retornar comandos.\\ 
 
 %Segundo párrafo, contextualizaciòn del problema
-Se busca suplir la necesidad de un reproductor de audio y/o video que permita la interacción con un servidor de streaming (flujo) de datos, con habilidad de Time-Shift. Esto es la habilidad de retroceder o avanzar (si es posible) en la linea de tiempo de la reproducción del audio o del video al que el usuario atiende.\\
+Se busca suplir la necesidad de un reproductor de audio y/o video que permita la interacción con un servidor de \textit{streaming} (flujo) de datos, con habilidad de \textit{Time-Shift} (cambio temporal). Esto es la habilidad de retroceder o avanzar (si es posible) en la linea de tiempo de la reproducción del audio o del video al que el usuario atiende.\\
 
-Esto ya se logra en computadores de escritorio gracias a un reproductor de streaming basado en la tecnolog\'ia Flash de Adobe. Los reproductores embebidos en p\'aginas web reproducen el stream en base al protocolo Real Time Messaging Protocol (RTMP), el cual permite llamadas de control entre cliente y servidor para manejar la linea de tiempo. Sin embargo se busca llegar a una mayor audiencia portando la capacidad de reproducci\'on en dispositivos que utilizan el sistema operativo iOS de Apple.\\
+Esto ya se logra en computadores de escritorio gracias a un reproductor de streaming basado en la tecnolog\'ia Flash de Adobe. Los reproductores embebidos en p\'aginas web reproducen el stream en base al protocolo Real Time Messaging Protocol (RTMP), el cual permite llamadas de control entre cliente y servidor para manejar la linea de tiempo. Sin embargo se busca llegar a un mayor público portando la capacidad de reproducci\'on en dispositivos que utilizan el sistema operativo iOS de Apple.\\
 
-El objetivo de este trabajo se debe a que Apple por políticas internas, no apoya la distribuci\'on de Adobe Flash. Por lo tanto se busca implementar una soluci\'on que permita la reproducci\'on de la transmisi\'on con Time-Shift y que adem\'as concuerde con las pol\'iticas de distribuci\'on para las aplicaciones iOS en la AppStore.
+El objetivo de este trabajo se debe a que Apple por políticas internas, no apoya la distribuci\'on de Adobe Flash. Por lo tanto se busca implementar una soluci\'on que permita la reproducci\'on de la transmisi\'on con \textit{Time-Shift} y que adem\'as concuerde con las pol\'iticas de distribuci\'on para las aplicaciones iOS en la AppStore.
  
 \large
 %\textbf{Trabajo a Desarrollar:}\\
 \subsection*{Trabajo a Desarrollar}
 \normalsize
 %Tercer y cuarto párrafo, que y como se realizó
-El trabajo comenzar\'a con la investigaci\'on de los protocolos propuestos por Apple para la distribuci\'on de medios (audio y/o video). En base a estos protocolos buscar similitudes con el sistema de streaming para computadores de escritorio. Adem\'as se debe implementar un m\'etodo de marcaci\'on de tiempo en el stream de datos destinado a dispositivos m\'oviles, de forma que el servidor los env\'ie para que el cliente los interprete. Este cliente debe ser una aplicaci\'on que reciba y env\'ie comandos compatibles con el servidor Wowza para controlar la informaci\'on del medio a reproducir. Finalmente se debe dise\~nar una interfaz gr\'afica que represente la linea de tiempo y permita controlar la reproducción.\\
+El trabajo toma como punto de partida la investigaci\'on de los protocolos propuestos por Apple para la distribuci\'on de medios (audio y/o video). En base a estos protocolos buscar similitudes con el sistema de streaming para computadores de escritorio. Adem\'as se busca implementar un m\'etodo de marcaci\'on de tiempo en el stream de datos destinado a dispositivos m\'oviles, de forma que el servidor los env\'ie para que el cliente los interprete. Este cliente debe consistir en una aplicación que reciba y env\'ie comandos compatibles con el servidor Wowza para controlar la informaci\'on del medio a reproducir. Finalmente se busca diseñar una interfaz gr\'afica que represente la disponibilidad de tiempo y permita controlar la reproducción.\\
 
 %\textbf{Evaluaciones a Realizar:}
 \subsubsection*{Evaluaciones a Realizar}
@@ -46,7 +46,7 @@ El trabajo comenzar\'a con la investigaci\'on de los protocolos propuestos por A
 %\textbf{Resultados esperados:}\\
 \subsubsection*{Resultados esperados}
 \normalsize
-Se espera que la reproducción en dispositivos móviles de las transmisiones en vivo se asemejen a la experiencia de reproducción en computadores de escritorio.\\
+Se pretende que la reproducción en dispositivos móviles de las transmisiones en vivo se asemejen a la experiencia de reproducción en computadores de escritorio.\\
 
 %Palabras clave.
 %	\textbf{Palabras Claves:} streaming, iOS, video, audio, apple, iPhone.
