@@ -2,7 +2,7 @@
 \chapter{Diseño e Implementación}
 En el siguiente capítulo se describen las etapas recorridas para llegar a la solución que propone este proyecto.
 \section{Arquitectura de la solución}
-El siguiente capitulo consta de las bases necesarias para realizar la solución. Esta se compone de 2 elementos principales. 
+El siguiente capitulo consta de las bases necesarias para realizar la solución, la que se compone de dos elementos principales. 
 \begin{itemize}
 \item Servidor: Encargado de recodificar (si es necesario) la fuente de audio o video y segmentarla para su distribución.
 \item Cliente: Aplicación ejecutada en iOS, encargada de comunicarse al servidor para pedir el flujo de video y entregar información en twitter.
@@ -19,16 +19,16 @@ La figura \ref{diagramaGral} presenta una idea general del sistema.\\
 
 Respecto a los elementos principales, estos se componen de distintos modulos que serán explicados con más detalle a lo largo del capítulo. Del diagrama se explican de forma general:
 \begin{itemize}
-\item Segmenter: es una aplicacion que recibe como entrada un flujo de audio y/o video encapsulado en MPEG2-Transport Stream, para luego segmentar el contenido en archivos segmentados de menor duración, estos se guardan en el sistema de archivos del servidor.
+\item Segmenter: es una aplicacion que recibe como entrada un flujo de audio y/o video encapsulado en MPEG2-Transport Stream, para luego segmentar el contenido en archivos de menor duración, estos se guardan en el sistema de archivos del servidor.
 \item Dispatcher: Este es un programa dedicado a recibir peticiones de los clientes, para entregar un flujo de video mediante el protocolo HTTP Live Streaming.
 \item iPhone y Macintosh: Son los dispositivos clientes controlados por el usuario, en estos se realiza el intercambio de ordenes para recibir el flujo de video que se quiere ver.
 \end{itemize}
 
 \subsection{Requerimiento Obligatorio}
 % https://developer.apple.com/news/index.php?id=02162010a
-	El protocolo utilizado para entregar el contenido audiovisual es HTTP Live Streaming (HLS). Los motivos de esta elección se deben a requerimientos obligatorios designados por Apple para la distribución de contenidos multimedia para su sistema operativo iOS.\\
+	El protocolo utilizado para entregar el contenido audiovisual es \textit{HTTP Live Streaming} (HLS), el que se eligió debido a requerimientos obligatorios designados por Apple para la distribución de contenidos multimedia para su sistema operativo iOS.\\
 	
-	En un anuncio realizado por Apple en su sitio web destinado a desarrolladores, indica como obligación que la entrega de contenido del tipo audio y/o video con una una duración mayor a 10 minutos debe utilizar el protocolo HTTP Live Streaming ya sea el enlace mediante WiFi o red celular. Además las aplicaciones deben incluir un flujo de datos (stream) de baja calidad con una cadencia de datos no superior a 64 Kilobits/segundo, de manera que estas aplicaciones mantengan fluidez de contenido a pesar de encontrarse en condiciones desfavorables en la red.
+	En un anuncio realizado por Apple en su sitio web destinado a desarrolladores, indica como obligación que la entrega de contenido del tipo audio y/o video con una una duración mayor a 10 minutos debe utilizar necesariamente el protocolo \textit{HTTP Live Streaming} ya sea el enlace mediante WiFi o red celular. Además las aplicaciones deben incluir un flujo de datos (\textit{stream}) de baja calidad con una cadencia de datos no superior a 64 Kilobits/segundo, de manera que estas aplicaciones mantengan fluidez de contenido a pesar de encontrarse en condiciones desfavorables en la red.
 	
 	En caso de no seguir esta indicación, el desarrollador arriesga que su aplicación no sea admitida en la plataforma principal para la distribución de aplicaciones: iTunes Store.
 
@@ -43,11 +43,12 @@ Respecto a los elementos principales, estos se componen de distintos modulos que
 % http://en.wikipedia.org/wiki/Progressive_download
 % http://en.wikipedia.org/wiki/HyperText_Transfer_Protocol
 
-El protocolo HTTP Live Streaming o HLS (abreviado), es un protocolo desarrollado por Apple Inc. para la distribución de multimedia a través de redes de computadores, de manera que el usuario consume el producto a medida que se descarga, es decir de forma continua.\\
+El protocolo \textit{HTTP Live Streaming} o HLS (abreviado), es un protocolo desarrollado por Apple Inc. para la distribución de multimedia a través de redes de computadores, de manera que el usuario consume el producto a medida que se descarga, es decir de forma continua.\\
 
-Su carácteristica principal es la utilización del protocolo para transferencias de hipertexto, HTTP (hypertext transfer protocol) por sus siglas en inglés. Si bien HTTP se diseño originalmente para la World Wide Web como vía de entrega del texto en formato HTML, este se puede utilzar para distribuir datos de otros formatos codificados para habilitar su distribución.\\
+Su carácteristica principal es la utilización del protocolo para transferencias de hipertexto, HTTP (\textit{hypertext transfer protocol}) por sus siglas en inglés. Si bien HTTP se diseño originalmente para la \textit{\textbf{World Wide Web}} como vía de entrega del texto en formato HTML, este se puede utilizar para distribuir datos de otros formatos codificados para habilitar su distribución.\\
 
 HLS funciona entregando el contenido de forma segmentada al cliente, el cual tiene la responsabilidad de manejar la lógica de cambio de segmentos. Para distribuir el contenido se codifica la fuente de audio y/o video en varios archivos de corta duración, recomendandose 10 segundos \cite{bib:tensec-targetduration}, y que pueden o no tener el mismo bitrate. Estos pequeños archivos se ordenan en una lista de reproducción de formato .M3U8 que se entrega al reproductor del cliente. \\
+
 También existe una variante donde la lista de reproducción contiene referencias a otras listas de reproducción con otras variantes de flujos de datos. \\
 
 % http://www.streamingmedia.com/Articles/Editorial/What-Is-.../What-is-HLS-(HTTP-Live-Streaming)-78221.aspx
@@ -65,13 +66,14 @@ También existe una variante donde la lista de reproducción contiene referencia
 		La figura \ref{diagramaHLSwwdc2010} presenta un ejemplo de distribucion de multimedia a través de HTTP Live Streaming.\\
 		
 En primera instancia se debe obtener contenido multimedia ya sea en un archivo fijo o flujo de datos, este contenido debe ser codificado para que sea compatible con los dispositivos que corren iOS, generalmente por recomendación de Apple se deben utilizar los codec de video h.264 y de audio AAC (advanced audio coding). El empaquetado de este contenido ya codificado debe ser entregado a una aplicación encargada de segmentarlo en pequeños archivos. \\
+
 	El flujo de transporte a utilizar es MPEG2-TS (MPEG2 Transport Stream), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, este pueda proveer una lista de reproducción en formato M3U8 que mantiene el orden de reproducción de los archivos.\\
 	
-Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor web pueda proveerlos. En el caso que el contenido es un gran archivo, la codificación y segmentación se realiza una sola vez.
+Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor web pueda proveerlos. En el caso de que el contenido sea un gran archivo, la codificación y segmentación se realiza una sola vez.
 
 \subsubsection{Lista de reproducción}
 \label{TAG-SECTION}
-La lista de reproducción en formato M3U8 es lo entregado al cliente, este puede ser una aplición iOS o el navegador web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra conocida del protocolo se le denomina entonces como marca (tag).
+La lista de reproducción en formato M3U8 es lo que se entrega al cliente, el cual puede ser una aplición iOS o el navegador web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra conocida del protocolo se le denomina entonces como marca (tag).
 Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 
 \begin{prop}
@@ -82,7 +84,7 @@ Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 Además este valor indica al cliente cada cuanto tiempo debe realizar una petición al servidor web por la lista.
 \label{TAG-targetduration}
 
-\item \label{TAG-mediasequence} \#EXT-X-MEDIASEQUENCE: Corresponde a la secuencia o versión de la lista de reproducción segun los segmentos que se incluyen dentro. Este valor se representa por un número entero y debe ser consecuente a los cambios en el contenido, es decir, si se agregan nuevos segmentos el valor de la secuencia debe aumentar, de esta forma el cliente puede saber que el flujo de contenido se está actualizando.
+\item \label{TAG-mediasequence} \#EXT-X-MEDIASEQUENCE: Corresponde a la secuencia o versión de la lista de reproducción segun los segmentos que se incluyen dentro de ella. Este valor se representa por un número entero y debe ser consecuente a los cambios en el contenido, es decir, si se agregan nuevos segmentos el valor de la secuencia debe aumentar, de esta forma el cliente puede saber que el flujo de contenido se está actualizando.
 
 
 \item \label{TAG-extinfint} \#EXTINF: Esta marca indica la duración del segmento que se encuentra junto a él. Su valor está indicado por un número entero que representa los segundos.\\
@@ -127,19 +129,19 @@ La duración de los segmentos se limitó a 10 segundos por recomendación del mi
 % El contenedor de los medios es MPEG2-TS según la especificación del protocolo HLS. Las indicaciones de Apple sugieren tener cuidado con el overhead.
 		% mostrar figura de playlist, explicacion rapida de como funciona hls
 \subsubsection{Borrador IETF}
-Apple Inc. es la compañía desarrolladora de este protocolo. Para masificar su uso en dispositivos móviles ha dispuesto un borrador como propuesta para la estandarización del protocolo según la IETF (Internet Engineering Task Force).
-Debido a la popularidad de los dispositivos móviles con iOS, empresas importantes en el desarrollo de tecnologias para difusión de medios han adoptado el protocolo HLS como salida de productos dedicados a la codificación y/o transmisión de multimedia. Ejemplos como Adobe Systems con su producto Adobe Flash Media Server, Wowza Media Systems con Wowza Media Server y VideoLan con VLC Media Player demuestran que la documentación realizada por los ingenieros de Apple Inc. Roger Pantos y William May, Jr, deben sentar base para cualquier desarrollo asociado con el protocolo.\\
+Apple Inc. es la compañía desarrolladora de este protocolo. Para masificar su uso en dispositivos móviles ha dispuesto un borrador como propuesta para la estandarización del protocolo según la \textbf{IETF} (\textit{Internet Engineering Task Force}).
+Debido a la popularidad de los dispositivos móviles con iOS, empresas importantes en el desarrollo de tecnologias para difusión de medios han adoptado el protocolo HLS como salida de productos dedicados a la codificación y/o transmisión de multimedia. Ejemplos como Adobe Systems con su producto Adobe Flash Media Server, Wowza Media Systems con Wowza Media Server y VideoLan con VLC Media Player demuestran que la investigación realizada por los ingenieros de Apple Inc. Roger Pantos y William May, Jr, han sentado las bases para cualquier desarrollo asociado con el protocolo.\\
 
 Para el desarrollo de esta memoria se han implementado aplicaciones y scripts que utilizan las herramientas e instrucciones detalladas en el documento borrador. A lo largo de la investigación los ingenieros desarrolladores incorporaron caracteristicas nuevas que fueron aprovechadas para lograr el cometido de esta memoria.\\
 
-En sitio web \cite{apple-draftpantos} se puede revisar detalladamente el documento completo. En esta sección se describen las marcas utilizadas aparte de las ya descritas en \ref{TAG-SECTION}.
+En sitio web \cite{apple-draftpantos} se puede revisar detalladamente el documento completo. En esta sección se describen las marcas utilizadas aparte de las ya descritas en \ref{TAG-SECTION}:
 
 \begin{itemize}
 \item \#EXT-X-VERSION: Corresponde a la versión de la lista de reproducción, se utiliza para diferenciar distintos streams con protocolo HLS según las caracteristicas que se van incorporando. Para el trabajo de esta memoria se utiliza la versión 3 del protocolo.
 
 \item \#EXTINF: Si bien ya se ha descrito esta marca en \ref{TAG-extinfint}, a partir de la versión 3 del protocolo HLS, la marca \textbf{EXTINF} permite valores flotantes para mejorar por parte del cliente la exactitud en el seguimiento del tiempo de reproducción. 
 
-\item \#EXT-X-PROGRAM-DATE-TIME: Marca correspondiente a la fecha asociada al primer segmento de datos que aparece en la lista de reproducción. La fecha se especifica utilizando el estandar ISO 8601, opcionalmente se puede incluir zona horaria. Un ejemplo del formato sería:
+\item \#EXT-X-PROGRAM-DATE-TIME: Marca correspondiente a la fecha asociada al primer segmento de datos que aparece en la lista de reproducción. La fecha se especifica utilizando el estandar ISO 8601, y opcionalmente se puede incluir zona horaria. Un ejemplo del formato sería:
 
 \begin{lstlisting}
 #EXT-X-PROGRAM-DATE-TIME:2011-12-18T14:54:23-04:00
@@ -151,16 +153,16 @@ Correspondiente al día 18 de diciembre de 2011, a las 14:54:23 en la zona horar
 		% aqui detallar los mensajes de la playlist utilizados
 		%		http://tools.ietf.org/html/draft-pantos-http-live-streaming-08
 \subsubsection{Lista de Variantes}
-Más allá de la lista de reproducción con segmentos, el protocolo HLS provee de caracteristicas anexas para mejorar la experiencia del usuario.
+Más allá de la lista de reproducción con segmentos, el protocolo HLS posee caracteristicas anexas para mejorar la experiencia del usuario.
 Una de las caracteristicas a utilizar y que también es requisito para que las aplicaciones con multimedia remota puedan ser aprobada en la App Store es la necesidad de una variante del stream por donde se transmita solamente el audio.\\
 
-Para solucionar este requerimiento y obligación se utiliza una lista de variantes, la cual consiste en una lista de reproducción que incluye en su interior URLs hacia listas de reproducción normales ya explicadas anteriormente, la diferencia cae en que cada lista de reproducción tiene asociado un ancho de banda límite, de manera que el cliente pueda cambiar de stream dentro de la reproducción sin que el usuario note el cambio en la reproducción, exceptuando la calidad del audio o del video.\\
+Para solucionar este requerimiento y cumpliri la obligación se utiliza una lista de variantes, la cual consiste en una lista de reproducción que incluye en su interior URLs hacia listas de reproducción normales ya explicadas anteriormente, la diferencia cae en que cada lista de reproducción tiene asociado un ancho de banda límite, de manera que el cliente pueda cambiar de stream dentro de la reproducción sin que el usuario note el cambio en la reproducción, exceptuando la calidad del audio o del video.\\
 
-Se utiliza la marca \textbf{\#EXT-X-STREAM-INF} para asociar cada una de las variantes del stream a cierto ancho de banda, además cada una lleva los siguientes atributos:
+Se utiliza la marca \textbf{\#EXT-X-STREAM-INF} para asociar cada una de las variantes del stream a cierto ancho de banda, además cada una posee los siguientes atributos:
 
 \begin{itemize}
 
-\item \textbf{PROGRAM-ID}: Corresponde a un valor numérico entero, tiene como fin identificar una presentación en particular dentro de la ventana de transmisión de la lista de reproducción. Una lista de variantes puede contener multiples sublistas con distintos programas de forma que este atributo asocia las distintas variantes para una transmisión en particular, entiendase por show o evento a transmitir. Este atributo puede ser opcional.
+\item \textbf{PROGRAM-ID}: Corresponde a un valor numérico entero, tiene como fin identificar una presentación en particular dentro de la ventana de transmisión de la lista de reproducción. Una lista de variantes puede contener multiples sublistas con distintos programas de forma que este atributo asocia las distintas variantes para una transmisión en particular, entiendase por show o evento a transmitir. Esta caracteristica puede ser opcional.
 
 \item \textbf{BANDWIDTH}: Este atributo obligatorio representa el valor entero de los bits por segundo, como requisito principal el valor debe ser la cota mayor de la tasa de bits promedio de los segmentos (incluyendo el overhead del contenedor) que aparecen o aparecerán en la lista de reproducción. 
 
@@ -198,10 +200,10 @@ Por defecto la primera variante será la utilizada para comenzar la transmisión
 
 En el caso que exista por distintos motivos una caida en la calidad del enlace, la baja de velocidad de descarga debe ser alertada por el cliente de forma que pueda cambiar la variante en reproducción por otra asociada a un menor ancho de banda. Estos cambios deben ocurrir de manera automatica de modo que al usuario no se le vea afectado el flujo que está consumiendo.\\
 
-Tomando en cuenta este comportamiento, se deben tener consideraciones al armar la lista de variantes según el tipo de enlace que utilizarán sus clientes. Por ejemplo si tiene identificado que sus clientes se conectarán al servidor mediante WiFi es preferible que la lista de variantes tenga como primer elemento la variante de 550000 Kbps y en caso de que sus clientes se conecten al servidor mediante red celular, es preferible presentar como primer variante la de 110000 Kbps.
+Tomando en cuenta este comportamiento, se debe considerar al armar la lista de variantes según el tipo de enlace que utilizarán sus clientes. Por ejemplo si tiene identificado que sus clientes se conectarán al servidor mediante WiFi es preferible que la lista de variantes tenga como primer elemento la variante de 550000 Kbps y en caso de que sus clientes se conecten al servidor mediante red celular, es preferible presentar como primer variante la de 110000 Kbps.
 	De esta forma el cliente reproducirá inmediatamente un stream acorde a su enlace. \\
 	
-En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el cliente podrá reproducir el contenido rápidamente con velocidades EDGE, y si el enlace lo permite podrá cambiar a una mejor variante. En caso que el cliente se conecte mediante WiFi, cargará el enlace de menor ancho de banda para realizar pruebas e inmediatamente descartarlo por uno de mejor calidad.
+En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el cliente podrá reproducir el contenido rápidamente con velocidades EDGE, y si el enlace lo permite podrá cambiar a una mejor variante. En caso de que el cliente se conecte mediante WiFi, cargará el enlace de menor ancho de banda para realizar pruebas e inmediatamente descartarlo por uno de mejor calidad que satisfaga sus requerimientos.
 
 % recomendaciones de apple, bitrates y bw
 
@@ -214,7 +216,7 @@ En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el c
 Esta aplicación tiene como funcion multiplexar el contenido multimedia del archivo en un flujo de transporte MPEG2 (MPEG2-TS) y dividirlo en una serie de pequeños archivos de aproximadamente la misma duración. La aplicación también crea una lista de reproducción con referencias a los archivos del tipo Video en demanda (VOD).
 
 		\subsubsection{MediaStream Segmenter}
-Al igual que MediaFile Segmenter, esta herramienta segmenta el contenido multimedia en varios archivos, sin embargo toma como entrada un flujo de transporte MPEG2 a través de un enlace UDP [dirección:puerto] o también a través de la entrada estandar (stdin). De igual forma que mediafilesegmenter esta aplicación genera una lista de reproducción en formato \textbf{m3u8}.\\
+Al igual que MediaFile Segmenter, esta herramienta segmenta el contenido multimedia en varios archivos, sin embargo toma como entrada un flujo de transporte MPEG2 a través de un enlace UDP [dirección:puerto] o también puede hacerlo a través de la entrada estandar (stdin). De igual forma que \textit{mediafilesegmenter} esta aplicación genera una lista de reproducción en formato \textbf{m3u8}.\\
 
 Como recibe de entrada un flujo de datos, permite generar listas de reproducción en vivo, generando segmentos mientras se reciben y actualizando la lista de reproducción con las referencias. Este tipo de flujo de medios es recomendable para difusión contínua, permitiendo además eliminar los segmentos que ya expiraron en la ventana de transmisión.
 
@@ -287,9 +289,9 @@ En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del st
 \section{Reproducción y Control de Stream de Video}
 
 %	explicar resumido la estructura como se conecta el server y el cliente, con un  diagrama
-	Esta memoria busca entregar control al usuario de la linea temporal de un flujo de contenidos en vivo. Para realizar esto se ideó un sistema que intercambia marcas de tiempo entre el cliente y el servidor, de manera que el cliente pueda definir desde qué punto el servidor debe crear una lista de reproducción en vivo. \\
+	Este trabajo de memoria buscó entregar al usuario control de la linea temporal de un flujo de contenidos en vivo. Para realizar esto se ideó un sistema que intercambia marcas de tiempo entre el cliente y el servidor, de manera que aquel pueda definir desde qué punto el servidor debe crear una lista de reproducción en vivo. \\
 	
-	Para entregar esta información se utilizó como métodos de entrada parámetros en la url que el cliente utiliza para conectarse. Además se puede mejorar la experiencia del usuario indicando al servidor el tipo de enlace que el cliente posee, es decir WiFi o red celular, y expandiendo aun más con un parámetro para definir el canal que se quiere ver, todo desde la misma aplicación.
+	Para entregar esta información se utilizó como método de entrada parámetros en la url, que el cliente utiliza para conectarse. Además se puede mejorar la experiencia del usuario indicando al servidor el tipo de enlace que el cliente posee, es decir WiFi o red celular, y expandiendo aun más con un parámetro para definir el canal que se quiere ver, todo desde la misma aplicación.
 	
 	\subsection{Servidor HTTP}
 	El servidor consiste en dos módulos: segmenter y dispatcher, este último depende de los archivos guardados por el segmentador, a su vez el segmentador recibe los datos a través de una emisión UDP o por la entrada estandar \textbf{stdin}.
@@ -299,11 +301,11 @@ El contenido puede ser obtenido de distintos tipos de fuentes pero este debe cum
 		\subsubsection{Sementación del Video}
 		% el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
 
-El segmentador utilizado fue desarrollado en la empresa AltaVoz S.A. interesada en el proyecto. Los motivos de este desarrollo se deben a que las herramientas dispuestas por Apple funcionan sólamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar al \textbf{mediastreamsegmenter}, cortando el stream de entreada en pequeños archivos de cierta duración.\\
+El segmentador utilizado fue desarrollado por la empresa AltaVoz S.A. interesada en llevar a cabo el proyecto. Los motivos de este trabajo se deben a que las herramientas dispuestas por Apple funcionan sólamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar a \textbf{mediastreamsegmenter}, trozando el flujo de entrada en pequeños archivos de cierta duración.\\
 
- La gran diferencia recalca en el almacenamiento de los archivos resultantes, estos se guardan sin ser eliminados para mantener un gran registro de las transmisiones, el nombre de cada segmento corresponde a la fecha y hora de la recepción de la emisión en formato Unix time (POSIX time) y con extensión \textbf{.ts}. Para mantener orden en el sistema de archivos los segmentos se guardan en subdirectorios por cada hora de contenido, el nombre de estos subdirectorios también llevan Unix time para su catalogación.\\
+ La gran diferencia con el uso de \textbf{mediastreamsegmenter} recalca en el almacenamiento de los archivos resultantes, estos se guardan sin ser eliminados para mantener un gran registro de las transmisiones, el nombre de cada segmento corresponde a la fecha y hora de la recepción de la emisión en formato Unix time (POSIX time) y con extensión \textbf{.ts}. Para mantener orden en el sistema de archivos los segmentos se guardan en subdirectorios por cada hora de contenido, el nombre de estos subdirectorios también llevan Unix time para su catalogación.\\
 
-Una última caracteristica especial del segmentador es marcar el segmento más antiguo y el más reciente en dos archivos \textbf{\textit{start.txt}} y \textbf{\textit{last.txt}} respectivamente, de forma que el cliente pueda representar gráficamente al usuario la disponibilidad de contenido en el stream.
+Una última caracteristica especial del segmentador es marcar el segmento más antiguo y el más reciente en dos archivos \textbf{\textit{start.txt}} y \textbf{\textit{last.txt}} respectivamente, de forma que el cliente pueda representar gráficamente al usuario la disponibilidad de contenido en el \textit{stream}.
 		
 		\subsubsection{Emisor de la lista de reproducción}
 %		dispatcher que recibe epoch, el tipo (canal) y el bwPARAMETER del tipo de enlace Wifi o cellular		
