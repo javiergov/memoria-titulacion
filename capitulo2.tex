@@ -528,11 +528,11 @@ Tomando en cuenta estos puntos Search API satisface la obtención de mensajes co
 %		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
 Durante el desarrollo de la aplicación cliente Apple Inc. lanzó al público el sistema operativo iOS 5, el cual permite entre muchas caracteristicas, la integración del sistema con la red social Twitter mediante \textbf{Twitter.framework} . Por simpleza y compatibilidad con versiones anteriores de iOS se descartó utilizar esta nueva herramienta para utilizar la biblioteca de código libre \textbf{Sharekit}\cite{library-sharekit}, destinada a integrar todo tipo de redes sociales incluyendo twitter. Otro motivo de esto es la posibilidad de expandir a otras redes el contenido que se comparte a través de la aplicación cliente. \\
 
-En caso que se desee, es posible utilizando Sharekit es posible modificar el mensaje a compartir de forma que el usuario no elimine el URL relacionado al contenido compartido.
+En caso que se desee, es posible utilizando Sharekit modificar el mensaje a compartir de forma que el usuario no elimine el URL relacionado al contenido compartido.
 
 		\subsubsection{Post en Twitter}
 %		como postear en twitter desde la app, action sheet
-		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, para esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase \textbf{NSDate}, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{\textbf{timeIntervalSince1970}} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir ese valor en NSString de forma  en una cadena de caracteres
+		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase \textbf{NSDate}, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{\textbf{timeIntervalSince1970}} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir el valor a NSString, cadena de caracteres.
 		
 		
 		En caso de no tener el valor para la fecha en reproducción la aplicación no permite compartir.
@@ -583,7 +583,7 @@ En caso que se desee, es posible utilizando Sharekit es posible modificar el men
 		
 		\subsubsection{Extracción de información de un Tweet}
 %		como se parseó el json con los twitts y saber si eran sstream
-Para presentar los mensajes de forma simple para el usuario fue necesario serializar el objeto JSON obtenido de Seach API. Gracias al componente \textbf{NSJSONSerialization} del entorno de desarrollo de iOS, como se muestra en \ref{json-serialization}, es posible generar un objeto del tipo NSDictionary para se entregar a la clase encargada de generar la tabla con los mensajes.
+Para presentar los mensajes de forma simple para el usuario fue necesario serializar el objeto JSON obtenido de Seach API. Gracias al componente \textbf{NSJSONSerialization} del entorno de desarrollo de iOS, como se muestra en \ref{json-serialization}, es posible generar un objeto del tipo NSDictionary para ser entregada a la clase encargada de generar la tabla con los mensajes.
 
 \begin{figure}[H]
 	\centering
@@ -614,17 +614,17 @@ Al pulsar en algún mensaje representado en la tabla \ref{sshot-twitterclientvc}
 
 	\subsection{Bit.ly}
 %		desmenuzar el enlace de bitly
-Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream, que además incluye marca de tiempo, no utilice demasiados caracteres. El motivo es la limitante de twitter de 140 caracteres por mensaje, los cuales la aplicación debe utilizar lo mínimo para compartir.\\
+Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream (que además incluye marca de tiempo) no utilice demasiados caracteres. El motivo es la limitante de twitter de 140 caracteres por mensaje, los cuales la aplicación debe utilizar lo mínimo para compartir.\\
 
-Otra caracteristica util para la supervisión de la aplicación y el servicio \textit{SocialStream} en su totalidad, es la posibilidad de utilizar las llamadas a la API de Bit.ly junto credenciales de una cuenta previamente hecha para llevar un registro del uso de los enlaces. \\
+Otra característica útil para la supervisión de la aplicación y el servicio \textit{SocialStream} en su totalidad, es la posibilidad de utilizar las llamadas a la API de Bit.ly junto a las credenciales de una cuenta previamente hecha para llevar un registro del uso de los enlaces. \\
 
-La compresión se debe realizar al compartir en twitter un enlace al stream, y descompresión cuando el usuario pulsa en un tweet de la tabla \ref{sshot-twitterclientvc}.
+La compresión se debe realizar al compartir en twitter un enlace al stream, y descompresión cuando el usuario pulsa en un tweet de la tabla (figura \ref{sshot-twitterclientvc}).
 
 		\subsubsection{API Bit.ly}
 %		las llamadas de la api que se utilizaron
 %		http://dev.bitly.com/api.html
 
-Para utilizar y mantener el registro de los enlaces compartiros, se configuran credenciales obtenidas del sitio web \cite{bitly-settings} (nombre de usuario y Legacy API Key) en un archivo de cabecera de la biblioteca Sharekit.
+Para utilizar y mantener el registro de los enlaces compartidos, se configuran credenciales obtenidas del sitio web \cite{bitly-settings} (nombre de usuario y Legacy API Key) en un archivo de cabecera de la biblioteca Sharekit.
 
 
 		
@@ -644,7 +644,7 @@ http://api.bit.ly/v3/shorten?
 	\label{bitly-shorten}
 \end{figure}	
 
-La respuesta entregada depende del campo format especificado en la cadena de consulta. En la figura \ref{bitly-shorten} se espera en formato de texto plano, en caso de no definir formato la respuesta se entrega como objeto JSON.\\
+La respuesta entregada depende del campo \textit{format} especificado en la cadena de consulta. En el ejemplo de la figura \ref{bitly-shorten} se espera en formato de texto plano, en caso de no definir formato la respuesta se entrega como objeto JSON.\\
 
 Para una respuesta exitosa se recibe una cadena de caracteres con el URL comprimido de tipo 
 \textbf{http://bit.ly/\textless hash comprimido\textgreater} \\
@@ -674,7 +674,7 @@ http://api.bit.ly/v3/expand?
 	\caption{Ejemplo de URL para expandir hash comprimido perteneciente a un URL Bit.ly}
 	\label{bitly-expand}
 \end{figure}	
-Nótese que se en URL de la figura \ref{bitly-expand} no especifica formato de respuesta, por lo tanto se recibe por defecto un objeto JSON. El motivo de este cambio es sólo de investigación, ya que así se puede obtener mayor información que una respuesta de sólo texto.
+Nótese que en el URL de la figura \ref{bitly-expand} no especifica formato de respuesta, por lo tanto se recibe por defecto un objeto JSON. El motivo de este cambio es sólo de investigación, ya que de esta forma se puede obtener mayor información que una respuesta de sólo texto.
 
 \begin{figure}[H]
 	\centering
@@ -692,41 +692,42 @@ Nótese que se en URL de la figura \ref{bitly-expand} no especifica formato de r
 	\label{bitly-json-response}
 \end{figure}	
 Los datos del resultado de la llamada se entregan a una instancia de NSJSONSerialization con el mismo método utilizado para desmenuzar la información de los tweets (fig. \ref{json-serialization}). De esta forma se obtiene un objeto del tipo NSDictionary y para luego facilmente obtener el valor asociado a la clave \textbf{\textquotedblleft long\_url"}.
-En caso de obtener como respuesta un error los datos serán de igual forma del tipo JSON, sólo que la información de la clave \textbf{\textquotedblleft status\_txt"} correspondrá a la causa del error en vez del OK que se obtiene al realizar una operación exitosa (fig. \ref{bitly-json-response}). El valor de las causas de error son las mismas a las indicadas anteriormente.
+En caso de obtener como respuesta un error los datos serán de igual forma del tipo JSON, sólo que la información de la clave \textbf{\textquotedblleft status\_txt"} correspondrá a la causa del error en vez del OK que se obtiene al realizar una operación exitosa (fig. \ref{bitly-json-response}). El valor de las causas de error son las mismas que las indicadas anteriormente.
 
 %NOT_FOUND
 		\subsubsection{Seguimiento de un Hipervínculo}		
 %		como se monitorean los twitts por bitly y se puede usar pa marketing, saber que es lo popular etc		
 El hecho de entregar las credenciales de una cuenta al comprimir y expandir URL con Bit.ly permite monitorear los enlaces compartidos y la cantidad de aperturas que estos tienen. Esta información puede ser de gran ayuda para identificar qué programas o secciones transmitidas en la señal son más populares, de forma similar a lo que es el \textit{\textquotedblleft people meter"} o rating en la televisión abierta.
 
-Esta información se encuentra en \url{https://bitly.com/a/stats} y es necesario acceder con las credenciales configuradas en la aplicación.
+Esta información se encuentra en \textbf{\url{https://bitly.com/a/stats}} donde es necesario acceder con las mismas credenciales configuradas en la aplicación.
 
 \clearpage
 \section{Registro en iOS}
-El sistema operativo iOS permite registrar \textit{schemes}, con lo cual el sistema reconoce qué aplicación debe encargarse de interpretar cierto URL. Esta caracteristica es aprovechada por la aplicación cliente de forma que los enlaces compartidos por los usuarios en Twitter lleven a la aplicación cliente sin que esté necesariamente en ejecución.
+El sistema operativo iOS permite registrar \textit{schemes}, con lo cual el sistema reconoce qué aplicación debe encargarse de interpretar cierto URL. Esta característica es aprovechada por la aplicación cliente de forma que los enlaces compartidos por los usuarios en Twitter lleven a la aplicación cliente sin que esté necesariamente en ejecución.
 	\subsection{Schemes}
 %	explicar que son los schemes
-	Un \textbf{\textit{Scheme}} es el prefijo de un \textit{Universal Resource Locator} (\textbf{URL}), con el cual se define el protocolo a utilizar para ubicar un recurso.
+	Un \textbf{\textit{Scheme}} es el prefijo de un \textit{Universal Resource Locator} (\textbf{URL}), el cual define el protocolo a utilizar para ubicar un recurso.
 	Es necesario además que se pueda acceder al contenido compartido a través de la Web o incluso desde otras aplicaciones del sistema.
 
-Para esto es necesario que la aplicación indique en su archivo de información general \textbf{\textquotedblleft info.plist\textquotedblright}  \ los schemes de los URL que tiene interes.
-En el caso de la aplicación cliente, se registra un scheme como \textquotedblleft socialstream\textquotedblright , de manera que URLs de la forma \url{socialstream://www.ejemplo.com/} sean entregados a la aplicación cliente.
+Para esto es necesario que la aplicación indique en su archivo de información general \textbf{\textquotedblleft info.plist\textquotedblright}  \ los schemes de los URL que tiene interés.
+En el caso de la aplicación cliente, se registra un scheme como \textquotedblleft socialstream\textquotedblright , de manera que URLS de la forma \textbf{\url{socialstream://www.ejemplo.com/}} sean entregados a la aplicación cliente.
 
 % http://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/AdvancedAppTricks/AdvancedAppTricks.html#//apple_ref/doc/uid/TP40007072-CH7-SW50
 
 	\subsection{Redireccionamiento via Web}
 %	explicar breve como funcionará la carga del scheme sstream, en web y mobile
-La forma más simple que se ideó para entregar la información según las variadas plataformas que se conectan a internet consiste en comunicar a través de la herramienta común que poseen los móviles y computadores: el navegador web.\\
+La forma más simple que se ideó para entregar la información, según las variadas plataformas que se conectan a internet, consiste en comunicar a través de la herramienta común que poseen los móviles y computadores: el navegador web.\\
 
-El navegador web al iniciar la conexión través del protocolo HTTP con cierta página remota, entrega dentro de sus cabeceras el Agente de Usuario \textit{(user agent)}, con lo cual es posible identificar qué cliente se conecta y a la vez personalizar el contenido a entregarle.
+El navegador web al iniciar la conexión través del protocolo HTTP con cierta página remota entrega dentro de sus cabeceras el Agente de Usuario \textit{(user agent)}, con lo cual es posible identificar qué cliente se conecta y a la vez personalizar el contenido a entregarle.
 
 		\subsubsection{PHP Script}
 		\label{subsec:php-redir}
 %		explicar brevemente el script php 
-Se desarrolló un script en PHP, encargado de identificar el cliente que se está conectando al servidor y según el tipo de dispositivo o navegador redirecciona a un URL con scheme personalizado, o presenta una página web con información a social stream.
+Se desarrolló un script en PHP, encargado de identificar el cliente que se está conectando al servidor y según el tipo de dispositivo o navegador redirecciona a un URL con scheme personalizado, o presenta una página web con información a social stream.\\
 
-El acceso a este script requiere, para su buen funcionamiento, ciertos campos como mínimo relacionados con la transmisión que se compartió y se incluyen en el URL como query strings (cadena de consulta), estos son el tipo de canal y la marca de tiempo, similares a los entregados al dispatcher por parte del cliente se hace una petición de lista de reproducción.
-El script se encarga de analizar las marcas de tiempo y tipo de señal para entregar un URL especial según el agente de usuario del cliente que hace la petición.
+El acceso al script requiere, para su buen funcionamiento, ciertos campos como mínimo relacionados con la transmisión que se compartió y se incluyen en el URL, como query strings (cadena de consulta), estos son el tipo de canal y la marca de tiempo, similares a los entregados al dispatcher por parte del cliente se hace una petición de lista de reproducción.
+El script se encarga de analizar las marcas de tiempo y tipo de señal para entregar un URL especial según el agente de usuario del cliente que hace la petición.\\
+
 El agente de usuario se identifica llamando la función PHP \textbf{\$\_SERVER['HTTP\_USER\_AGENT']} y a través de expresiones regulares fue posible diferenciar cada tipo de cliente.
 
 		\subsubsection{Respuestas según User Agent}
@@ -734,6 +735,7 @@ El agente de usuario se identifica llamando la función PHP \textbf{\$\_SERVER['
 \textbf{Apple Device}: En caso que el cliente que hace una petición al script en el servidor sea un dispositivo movil Apple, entiendase iPod, iPhone o iPad, se genera un URL especial con el scheme registrado por la aplicación en el sistema operativo iOS, en el caso de este proyecto \textquotedblleft socialstream\textquotedblright . Este URL se entrega al cliente como redirección, teniendo como metodo de respaldo en caso que el cliente no tenga instalada una aplicación que maneje este scheme, un redireccionamiento al sitio de descarga de la aplicación en iTunes Store, utilizando el scheme "itms" que es manejado por el sistema para efectos de descarga de aplicaciones. \\ 
 
 Tomando en consideración que este proyecto es un desarrollo experimental que no se ha llevado a producción, la redirección en la tienda oficial de Apple lleva a otra aplicación desarrollada y lanzada por el alumno en: \url{itms://itunes.apple.com/cl/app/df-mercados/id483602458?mt=8\&uo=6} \\
+
 Esta redirección sólo tiene motivos de prueba, para simular el método de difusión de aplicaciones al compartir contenido socialmente.
 El agente de usuario que entregan los dispositivos Apple tienen como formato: 
 	\begin {lstlisting}
