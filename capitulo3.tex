@@ -1,7 +1,7 @@
 
 \chapter{Pruebas de funcionamiento}
 
-Para revisar el buen funcionamiento de la aplicación desarrollada, se utilizaró el software dispuesto por Apple Inc,  el entorno de desarrollo Xcode y herramientas asociadas. Para obtener estas aplicaciones, es necesario poseer una cuenta de desarrollador para \textbf{iOS} o \textbf{Mac OS X}, las cuales se pueden obtener en el sitio web \url{https://developer.apple.com/programs/} luego de pagar la matrícula impuesta.\\
+Para revisar el buen funcionamiento de la aplicación desarrollada, se utilizó el software dispuesto por Apple Inc,  el entorno de desarrollo Xcode y herramientas asociadas. Para obtener estas aplicaciones, es necesario poseer una cuenta de desarrollador para \textbf{iOS} o \textbf{Mac OS X}, las cuales se pueden obtener en el sitio web \url{https://developer.apple.com/programs/} luego de pagar la matrícula impuesta.\\
 
 La cuenta de desarrollador permite acceso al repositorio de herramientas \cite{apple-repositorio} y también acceso a versiones de los sistemas operativos antes de lanzamiento.
 Además permite poner a la venta las aplicaciones desarrolladas en la \textit{\textbf{App Store}}\cite{apple-appstore}.
@@ -12,7 +12,7 @@ Además permite poner a la venta las aplicaciones desarrolladas en la \textit{\t
 Las primeras pruebas estuvieron relacionadas con el cambio de tiempo a través de peticiones al dispatcher con argumentos en la cadena de consulta, estas se realizaron con la aplicación de OS X: \textbf{Quicktime X}, la cual permite reproducir streams que cumplen con las espeficicaciones de HTTP Live Streaming. Otra alternativa que además se encuentra disponible en otros sistemas operativos es \textbf{VideoLan VLC}. Las pruebas consistieron en modificar los argumentos \textbf{t}, \textbf{s} y \textbf{c} de URLs del tipo:
 \url{http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=tvn&t=1353186024&c=0}, donde el parámetro \textbf{t} corresponde al tiempo Unix del 17 de noviembre de 2012 18:00:24 GMT-3.\\
 
-El escificar el tiempo en el parámetro \textbf{t} resulta siempre en una lista de reproducción con segmentos asociados al tiempo correspondiente. Además se monitoreó la respuesta a través de la aplicación rastreadora de paquetes Wireshark. Para esto se necesitó aplicar un filtro especial de forma que los paquetes relacionados con HTTP Live Streaming fueran entregados. El filtro corresponde a mostrar paquetes recibidos desde el servidor donde el cliente, en este caso Quicktime, se contacta para obtener una lista de reproducción, y además pedir la entrega de paquetes que tengan en su contenido la palabra \textbf{apple}.
+El especificar el tiempo en el parámetro \textbf{t} resulta siempre en una lista de reproducción con segmentos asociados al tiempo correspondiente. Además se monitoreó la respuesta a través de la aplicación rastreadora de paquetes Wireshark. Para esto se necesitó aplicar un filtro especial de forma que los paquetes relacionados con HTTP Live Streaming fueran entregados. El filtro corresponde a mostrar paquetes recibidos desde el servidor donde el cliente, en este caso Quicktime, se contacta para obtener una lista de reproducción, y además pedir la entrega de paquetes que tengan en su contenido la palabra \textbf{apple}.
 
 \begin{figure}[H]
 	\centering
@@ -80,7 +80,7 @@ http://ssdemo.altavoz.net/streams/tvn/tvn_1353186085.ts
 
 De la figura \ref{lst:setcookies} se puede observar que el servidor web Ngnix\cite{bib:ngnix-homepage} entrega en la cabecera HTTP las intrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. \\
 
-En la siguiente conexión con el servidor, se ajustaran los valores de las \textit{cookies} acorde al contenido de la lista de reproducción entregada. Como se describió anteriormente las \textit{cookies} no son manejados por la aplicación cliente, ya que el sistema operativo iOS se encarga de manejar los valores de estas.\\
+En la siguiente conexión con el servidor, se ajustaran los valores de las \textit{cookies} acorde al contenido de la lista de reproducción entregada. Como se describió anteriormente las \textit{cookies} no son manejadas por la aplicación cliente, ya que el sistema operativo iOS se encarga de manejar los valores de estas.\\
 
 En la figura \ref{lst:sequence2} se puede observar que los nuevos valores de cookies son establecidos por el servidor para la lista de reproducción acorde a la segunda secuencia del stream.
 
@@ -122,18 +122,18 @@ Set-Cookie: sf=7
 
 \section{Proceso corriendo en fondo} % background
 
-Debido a que se utiliza el protocolo HTTP Live Streaming de forma que entregue información en vivo, la instancia de AVPlayer se mantiene realizando peticiones por nuevas listas de reproducción a medida que pase el tiempo, sin importar que la reproducción se encuentre \textbf{pausada} o que la aplicación esté corriendo en el \textbf{fondo} (\textit{background}).\\
+Debido a que se utiliza el protocolo HTTP Live Streaming con el fin de entregar información en vivo, la instancia de AVPlayer se mantiene realizando peticiones por nuevas listas de reproducción a medida que pase el tiempo, sin importar que la reproducción se encuentre \textbf{pausada} o que la aplicación esté corriendo en el \textbf{fondo} (\textit{background}).\\
 
-Se encontró un problema al interrumpir la reproducción. Sea cual sea el motivo, por ejemplo recibir una llamada telefónica, el sistema iOS envía la aplicación cliente a \textit{background} pausando la reproducción. Al volver despues de la interrupción la aplicación retoma la reproducción, sin embargo el tiempo que ha pasado resulta en listas de reproducción distintas a la que se estaba viendo.\\
+Se detectó un problema al interrumpir la reproducción. Fuera cualquiera el motivo, por ejemplo recibir una llamada telefónica, el sistema iOS envía la aplicación cliente a \textit{background} pausando la reproducción. Al volver despues de la interrupción la aplicación retoma la reproducción, sin embargo el tiempo que ha pasado resulta en listas de reproducción distintas a la que se estaba viendo.\\
 
-La solución fue establecer una marca de tiempo de 30 segundos, acordes a la ventana de transmisión de la lista, asociada a la instrucción de pausa y reproducción del reproductor, que además es llamada por el botón \textit{Play/Pause} en la interfaz gráfica.\\
+Se buscó la solución y esta fue establecer una marca de tiempo de 30 segundos, acordes a la ventana de transmisión de la lista, asociada a la instrucción de pausa y reproducción del reproductor, que además es llamada por el botón \textit{Play/Pause} en la interfaz gráfica.\\
 
 Al enviar la aplicación a background se guarda la \textbf{fecha del contenido} del stream y el momento en el cual se ha pausado.
 Al volver a \textit{foreground} se activa el método para reanudar la reproducción donde se compara el momento de pausa guardado y el actual. Si esta diferencia es mayor a 30 segundos, se realiza una nueva llamada al servidor mediante URL. Sin embargo cuando la diferencia es menor, se reanuda la reproducción debido a que la fecha del contenido del stream aun se encuentra dentro del rango en la lista que posee la instancia de AVPlayer.\\
 
 El valor de 30 segundos se debe una lista de reproducción con mínimo 3 segmentos de 10 segundos.\\
 
-El problema encontrado se obtuvo gracias a la depuración de la aplicación ejecutandose en un dispositivo iOS (iPhone). Se revisó el valor del \textbf{rango de reproducción} a través de notificaciones por cambios (página \pageref{item:seekableTimeRanges}). A pesar que la reproducción se pausaba o la aplicación se mandaba a background el rango se mantenia en aumento.
+El problema encontrado se detectó por la depuración de la aplicación ejecutandose en un dispositivo iOS (iPhone). Se revisó el valor del \textbf{rango de reproducción} a través de notificaciones por cambios (página \pageref{item:seekableTimeRanges}). A pesar que la reproducción se pausaba o la aplicación se mandaba a background el rango se mantenia en aumento.
 
 %escribir en consola los seekable time ranges, poner pausa background y al retomar reproducir, se notó que avanzaba la lista de iguañl forma. se arregó guardando la fecha al momento de poner pausa. que se llamaba al irse a background.
 
@@ -209,7 +209,7 @@ En caso de observar cambios entre pistas que incluyen video a sólo pistas de au
 %- se revisa usando safari desktop con script que incluye player
 %Gracias al modo desarrollador disponible en el navegador web para OS X Safari, es posible identificarse con el servidor utilizando un agente de usuario de Mobile Safari (iOS).
 
-Para probar el cambio de stream a través de enlaces distribuidos por twitter se alojó el script \textbf{PHP} (\ref{subsec:php-redir}) en un servidor dispuesto por AltaVoz S.A. la ubicación de este corresponde a \url{http://tsh.altavoz.net/twitter/index.php}.
+Para probar el cambio de stream a través de enlaces distribuidos por twitter se alojó el script \textbf{PHP} (\ref{subsec:php-redir}) en un servidor dispuesto por AltaVoz S.A. La ubicación de éste corresponde a \url{http://tsh.altavoz.net/twitter/index.php}.
 El script utiliza los argumentos en la cadena de consulta \textbf{s} y \textbf{t} para generar un URL compatible si corresponde, o en caso contrario mostrar un mensaje de incompatibilidad.
   \subsection{Dentro de la aplicación}
   \label{subsec:ts-inside}
@@ -289,7 +289,7 @@ En caso contrario se presenta al usuario un aviso con la clase \textbf{UIAlertVi
 
   \subsection{Scheme registrado en iOS}
   
-  Para revisar el comportamiento de la aplicación al ser lanzada por el sistema debido a la apertura de un URL que presenta el \textit{scheme} registrado, es necesario configurar el \textbf{Depurador} (\textit{debugger}) del entorno de desarrollo Xcode de forma que se encuentre a la espera de la apertura de la aplicación (fig. \ref{fig:xcode-waitforapp}), esto es diferente al comportamiento usual donde cada vez que se ejecuta en el compilador se lanzarla automáticamente en el dispositivo.\\
+  Para revisar el comportamiento de la aplicación al ser lanzada por el sistema debido a la apertura de un URL que presenta el \textit{scheme} registrado, es necesario configurar el \textbf{Depurador} (\textit{debugger}) del entorno de desarrollo Xcode de forma que se encuentre a la espera de la apertura de la aplicación (fig. \ref{fig:xcode-waitforapp}), esto es diferente al comportamiento usual donde cada vez que se ejecuta en el compilador se lanza automáticamente en el dispositivo.\\
   
 Este ajuste se logra editando el esquema (\textit{scheme}) de la compilación, no confundir con el esquema (\textit{scheme}) del URL. El entorno de desarrollo Xcode permite administrar distintos esquemas de compilación, siendo \textit{Build}, \textit{Run}, \textit{Analyze} y \textit{Archive} los más utilizados. Para mantener Xcode atento al lanzamiento de la compilación se debe editar el esquema \textbf{\textit{Run}} (ejecutar) como se muestra en la figura \ref{fig:xcode-debug-wait}.
   
@@ -348,7 +348,7 @@ A continuación se presentan los resultados de la apertura de URL compartidos a 
     \subsubsection{Safari}
 El navegador web Safari al ser producto de las tecnologias desarrolladas por Apple es compatible para la reproducción de streams HLS. Para mostrar el contenido se utilizó la marca de HTML5  \textless VIDEO\textgreater \ con la lista de reproducción generada por el script php como fuente de video. El resultado es el reproductor visto en la figura \ref{fig:uagent-safari}.\\
 
-Además para pruebas se utilizó el widget dispuesto por Twitter \cite{bib:twitter-widget} para embeber tweets relacionados a cierto hashtag, en este caso \#SocialStream. El uso de este widget solo fue por motivos de prueba.
+Además también en pruebas se utilizó el widget dispuesto por Twitter \cite{bib:twitter-widget} para embeber tweets relacionados a cierto hashtag, en este caso: \#SocialStream. El uso de este widget solo fue por motivos de experimentación.
 %      safari muestra un player html5
 %    foto del player
 
@@ -411,11 +411,11 @@ En esta sección se destacan las diferencias de usabilidad de los reproductores 
 \item \textbf{Protocolo:} El reproductor Flash utiliza protocolo RTMP mientras que el reproductor para iOS recibe el contenido a través de HTTP Live Streaming.
 \item \textbf{Salto de Tiempo:} la forma de saltar en el tiempo en el reproductor flash precisa de clicks con mouse, ya sea para cambiar la escala de su linea de tiempo como para moverse el punto central de reproducción, lo cual dificulta en gran medida el consumo del contenido mientras se busca otro instante.\\
 
-En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, el cual permite elegir un tiempo en especifico pudiendo también cancelar la selección de fecha pulsando fuera del area del selector sin intervenir el contenido en reproducción.
+En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, que permite elegir un tiempo en especifico pulsando el botón \textbf{Cargar} o cancelar la selección de fecha pulsando fuera del area del selector sin intervenir el contenido en reproducción.
 
-\item \textbf{Entrega de contenido:} El contenido en el reproductor Flash presenta una mayor exactitud al elegir un tiempo en especifico, esto debido a que la segmentación del video es cada 5 segundos. En el caso de HTTP Live Streaming es recomendado por los ingenieros de Apple desarrolladores del protocolo, utilizar 10 segundos como mínimo para cada segmento de video o audio. El motivo de esta recomendación es para evitar paralizaciones (\textit{stalls}) de la transmision a través de redes celulares \cite{bib:tensec-targetduration}.\\
+\item \textbf{Entrega de contenido:} El contenido en el reproductor Flash presenta una mayor exactitud al elegir un tiempo en especifico, esto debido a que la segmentación del video es cada 5 segundos. En el caso de HTTP Live Streaming es recomendado por los ingenieros de Apple que desarrollaron el protocolo, utilizar 10 segundos como mínimo para cada segmento de video o audio. El motivo de esta recomendación es evitar paralizaciones (\textit{stalls}) en la transmisión a través de redes celulares \cite{bib:tensec-targetduration}.\\
 
-\item \textbf{Redes Sociales:} Esta fue una caracteristica adicional a la solución de permitir transmisión con saltos en el tiempo en iOS. Durante el desarrollo de la aplicación cliente se descubrió el potencial de realizar cambios de lista de reproducción del protocolo HTTP Live Streaming a través de cadenas de consulta de los URLs y compartir el contenido a través de redes. En el caso del reproductor Flash el cambio temporal se realiza a través de la comunicación bidireccional del protocolo RTMP mediante la funcion \textit{seek} enviada desde el cliente (especificación RTMP \cite{bib:rtmp-specs} sección 4.2.7 - \textit{seek}).
+\item \textbf{Redes Sociales:} Esta fue una característica adicional a la solución de permitir transmisión con saltos en el tiempo en iOS. Durante el desarrollo de la aplicación cliente se descubrió el potencial de realizar cambios de lista de reproducción del protocolo HTTP Live Streaming a través de cadenas de consulta de los URLs y compartir el contenido a través de redes. En el caso del reproductor Flash el cambio temporal se realiza a través de la comunicación bidireccional del protocolo RTMP mediante la funcion \textit{seek} enviada desde el cliente (especificación RTMP \cite{bib:rtmp-specs} sección 4.2.7 - \textit{seek}).
 \end{itemize}
 %mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
 
