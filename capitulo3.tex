@@ -9,7 +9,7 @@ Además permite poner a la venta las aplicaciones desarrolladas en la \textit{\t
 % datos en el camino, seguimiento de un tweet, pantallazos de debug
 \section{Cambio de tiempo y/o canal}
 
-Las primeras pruebas estuvieron relacionadas con el cambio de tiempo a través de peticiones al dispatcher con argumentos en la cadena de consulta, estas se realizaron con la aplicación de OS X: \textbf{Quicktime X}, la cual permite reproducir streams que cumplen con las espeficicaciones de HTTP Live Streaming. Otra alternativa que además se encuentra disponible en otros sistemas operativos es \textbf{VideoLan VLC}. Las pruebas consistieron en modificar los argumentos \textbf{t}, \textbf{s} y \textbf{c} de URLs del tipo:
+Las primeras pruebas estuvieron relacionadas con el cambio de tiempo a través de peticiones al dispatcher con argumentos en la cadena de consulta, estas se realizaron con la aplicación de OS X: \textbf{Quicktime X}, la cual permite reproducir streams que cumplen con las especificaciones de HTTP Live Streaming. Otra alternativa que además se encuentra disponible en otros sistemas operativos es \textbf{VideoLan VLC}. Las pruebas consistieron en modificar los argumentos \textbf{t}, \textbf{s} y \textbf{c} de URLs del tipo:
 \url{http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=tvn&t=1353186024&c=0}, donde el parámetro \textbf{t} corresponde al tiempo Unix del 17 de noviembre de 2012 18:00:24 GMT-3.\\
 
 El especificar el tiempo en el parámetro \textbf{t} resulta siempre en una lista de reproducción con segmentos asociados al tiempo correspondiente. Además se monitoreó la respuesta a través de la aplicación rastreadora de paquetes Wireshark. Para esto se necesitó aplicar un filtro especial de forma que los paquetes relacionados con HTTP Live Streaming fueran entregados. El filtro corresponde a mostrar paquetes recibidos desde el servidor donde el cliente, en este caso Quicktime, se contacta para obtener una lista de reproducción, y además pedir la entrega de paquetes que tengan en su contenido la palabra \textbf{apple}.
@@ -78,7 +78,7 @@ http://ssdemo.altavoz.net/streams/tvn/tvn_1353186085.ts
 \label{lst:setcookies}
 \end{figure}
 
-De la figura \ref{lst:setcookies} se puede observar que el servidor web Ngnix\cite{bib:ngnix-homepage} entrega en la cabecera HTTP las intrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. \\
+De la figura \ref{lst:setcookies} se puede observar que el servidor web Ngnix\cite{bib:ngnix-homepage} entrega en la cabecera HTTP las instrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. \\
 
 En la siguiente conexión con el servidor, se ajustaran los valores de las \textit{cookies} acorde al contenido de la lista de reproducción entregada. Como se describió anteriormente las \textit{cookies} no son manejadas por la aplicación cliente, ya que el sistema operativo iOS se encarga de manejar los valores de estas.\\
 
@@ -124,7 +124,7 @@ Set-Cookie: sf=7
 
 Debido a que se utiliza el protocolo HTTP Live Streaming con el fin de entregar información en vivo, la instancia de AVPlayer se mantiene realizando peticiones por nuevas listas de reproducción a medida que pase el tiempo, sin importar que la reproducción se encuentre \textbf{pausada} o que la aplicación esté corriendo en el \textbf{fondo} (\textit{background}).\\
 
-Se detectó un problema al interrumpir la reproducción. Fuera cualquiera el motivo, por ejemplo recibir una llamada telefónica, el sistema iOS envía la aplicación cliente a \textit{background} pausando la reproducción. Al volver despues de la interrupción la aplicación retoma la reproducción, sin embargo el tiempo que ha pasado resulta en listas de reproducción distintas a la que se estaba viendo.\\
+Se detectó un problema al interrumpir la reproducción. Fuera cualquiera el motivo, por ejemplo recibir una llamada telefónica, el sistema iOS envía la aplicación cliente a \textit{background} pausando la reproducción. Al volver después de la interrupción la aplicación retoma la reproducción, sin embargo el tiempo que ha pasado resulta en listas de reproducción distintas a la que se estaba viendo.\\
 
 Se buscó la solución y esta fue establecer una marca de tiempo de 30 segundos, acordes a la ventana de transmisión de la lista, asociada a la instrucción de pausa y reproducción del reproductor, que además es llamada por el botón \textit{Play/Pause} en la interfaz gráfica.\\
 
@@ -133,7 +133,7 @@ Al volver a \textit{foreground} se activa el método para reanudar la reproducci
 
 El valor de 30 segundos se debe una lista de reproducción con mínimo 3 segmentos de 10 segundos.\\
 
-El problema encontrado se detectó por la depuración de la aplicación ejecutandose en un dispositivo iOS (iPhone). Se revisó el valor del \textbf{rango de reproducción} a través de notificaciones por cambios (página \pageref{item:seekableTimeRanges}). A pesar que la reproducción se pausaba o la aplicación se mandaba a background el rango se mantenia en aumento.
+El problema encontrado se detectó por la depuración de la aplicación ejecutándose en un dispositivo iOS (iPhone). Se revisó el valor del \textbf{rango de reproducción} a través de notificaciones por cambios (página \pageref{item:seekableTimeRanges}). A pesar que la reproducción se pausaba o la aplicación se mandaba a background el rango se mantenía en aumento.
 
 %escribir en consola los seekable time ranges, poner pausa background y al retomar reproducir, se notó que avanzaba la lista de iguañl forma. se arregó guardando la fecha al momento de poner pausa. que se llamaba al irse a background.
 
@@ -177,7 +177,7 @@ En el caso de ajustar el valor a 1, la lista de reproducción invierte la priori
 %Luego se prueba con iPhone cambiando entre wifi y 3g
 
   \subsection{WiFi: Wireless LAN}
-  El comportamiento monitoreado a través del rastreo de paquetes se observa con el dispositivo real (iPhone) para comprobar la práctica de la teoría.
+  El comportamiento monitorizado a través del rastreo de paquetes se observa con el dispositivo real (iPhone) para comprobar la práctica de la teoría.
   En el caso de iniciar el stream en un iPhone con conexión a internet mediante WiFi se presenta en pantalla el video inmediatamente si es que el ancho de banda da abasto. En caso que no sea suficiente cambiará a la variante de sólo audio.
   
   
@@ -201,7 +201,7 @@ En el caso de conexión a través de red celular el parámetro \textbf{c = 1} ca
 	\label{fig:cell-link}
 \end{figure}
 
-En la figura \ref{fig:cell-link} anterior se observa la secuencia de cambio de variante del stream. En la esquina inferior derecha del reproductor es posible observar el estado de las variantes, de izquierda a derecha pasa por los estados: Audio Stream, Cargando Video Stream, Video Stream. las imagenes 2 y 3 de la figura \ref{fig:cell-link} muestran el mismo estado a pesar que presentan distintas variantes, esto se debe a que para observar el estado de las variantes se  incorporó a la instancia de AVPlayer un observador del atributo \textit{tracks}, (página \pageref{item:kvo-tracks}, \textbf{Pistas de medios}) para comparar constantemente si alguna de las pistas son del tipo \textit{AVMediaTypeVideo}. 
+En la figura \ref{fig:cell-link} anterior se observa la secuencia de cambio de variante del stream. En la esquina inferior derecha del reproductor es posible observar el estado de las variantes, de izquierda a derecha pasa por los estados: Audio Stream, Cargando Video Stream, Video Stream. las imágenes 2 y 3 de la figura \ref{fig:cell-link} muestran el mismo estado a pesar que presentan distintas variantes, esto se debe a que para observar el estado de las variantes se  incorporó a la instancia de AVPlayer un observador del atributo \textit{tracks}, (página \pageref{item:kvo-tracks}, \textbf{Pistas de medios}) para comparar constantemente si alguna de las pistas son del tipo \textit{AVMediaTypeVideo}. 
 En caso de observar cambios entre pistas que incluyen video a sólo pistas de audio y viceversa, se identifica el cambio de variante del stream.
 
 
@@ -346,7 +346,7 @@ A continuación se presentan los resultados de la apertura de URL compartidos a 
   Se presentan capturas de pantalla de la reacción del script desarrollado con distintos navegadores web compatibles con Mac OS X. Ese es el motivo por cual Internet Explorer no aparece en estos resultados, ya que desde su versión 5.2.3 lanzada el 16 de junio de 2003 \cite{bib:mac-iexplorer} no existe soporte para sistema operativo nombrado.
 
     \subsubsection{Safari}
-El navegador web Safari al ser producto de las tecnologias desarrolladas por Apple es compatible para la reproducción de streams HLS. Para mostrar el contenido se utilizó la marca de HTML5  \textless VIDEO\textgreater \ con la lista de reproducción generada por el script php como fuente de video. El resultado es el reproductor visto en la figura \ref{fig:uagent-safari}.\\
+El navegador web Safari al ser producto de las tecnologías desarrolladas por Apple es compatible para la reproducción de streams HLS. Para mostrar el contenido se utilizó la marca de HTML5  \textless VIDEO\textgreater \ con la lista de reproducción generada por el script php como fuente de video. El resultado es el reproductor visto en la figura \ref{fig:uagent-safari}.\\
 
 Además también en pruebas se utilizó el widget dispuesto por Twitter \cite{bib:twitter-widget} para embeber tweets relacionados a cierto hashtag, en este caso: \#SocialStream. El uso de este widget solo fue por motivos de experimentación.
 %      safari muestra un player html5
@@ -394,7 +394,7 @@ Además también en pruebas se utilizó el widget dispuesto por Twitter \cite{bi
 
 \section{Comparación con SocialStream Flash}
 
-En las figuras \ref{sshot_iOS_sstream} y \ref{fig:eag-player} se puede observar el reproductor del stream de video distribuido a través del protocolo RTMP. El reproductor fue desarrollado por un alumno de la Universidad Técnica Federico Santa María para demostrar la capacidad de cambiar el tiempo del contenido en un reproductor de video desarrollado con las tecnologias de Adobe Flash.
+En las figuras \ref{sshot_iOS_sstream} y \ref{fig:eag-player} se puede observar el reproductor del stream de video distribuido a través del protocolo RTMP. El reproductor fue desarrollado por un alumno de la Universidad Técnica Federico Santa María para demostrar la capacidad de cambiar el tiempo del contenido en un reproductor de video desarrollado con las tecnologías de Adobe Flash.
 
 \begin{figure}[H]
 	\centering
@@ -405,17 +405,17 @@ En las figuras \ref{sshot_iOS_sstream} y \ref{fig:eag-player} se puede observar 
 
 En las figuras \ref{fig:twclient-results} y \ref{fig:cell-link} se presenta el reproductor desarrollado por el autor de este documento como resultado del proyecto del tema de memoria.\\
 
-En esta sección se destacan las diferencias de usabilidad de los reproductores para el usuario final, más alla de la gran diferencia que el reproductor de la figura \ref{fig:eag-player} y el desarrollado en iOS se utilizan en plataformas distintas. 
+En esta sección se destacan las diferencias de usabilidad de los reproductores para el usuario final, más allá de la gran diferencia que el reproductor de la figura \ref{fig:eag-player} y el desarrollado en iOS se utilizan en plataformas distintas. 
 
 \begin{itemize}
 \item \textbf{Protocolo:} El reproductor Flash utiliza protocolo RTMP mientras que el reproductor para iOS recibe el contenido a través de HTTP Live Streaming.
 \item \textbf{Salto de Tiempo:} la forma de saltar en el tiempo en el reproductor flash precisa de clicks con mouse, ya sea para cambiar la escala de su linea de tiempo como para moverse el punto central de reproducción, lo cual dificulta en gran medida el consumo del contenido mientras se busca otro instante.\\
 
-En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, que permite elegir un tiempo en especifico pulsando el botón \textbf{Cargar} o cancelar la selección de fecha pulsando fuera del area del selector sin intervenir el contenido en reproducción.
+En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, que permite elegir un tiempo en especifico pulsando el botón \textbf{Cargar} o cancelar la selección de fecha pulsando fuera del área del selector sin intervenir el contenido en reproducción.
 
 \item \textbf{Entrega de contenido:} El contenido en el reproductor Flash presenta una mayor exactitud al elegir un tiempo en especifico, esto debido a que la segmentación del video es cada 5 segundos. En el caso de HTTP Live Streaming es recomendado por los ingenieros de Apple que desarrollaron el protocolo, utilizar 10 segundos como mínimo para cada segmento de video o audio. El motivo de esta recomendación es evitar paralizaciones (\textit{stalls}) en la transmisión a través de redes celulares \cite{bib:tensec-targetduration}.\\
 
-\item \textbf{Redes Sociales:} Esta fue una característica adicional a la solución de permitir transmisión con saltos en el tiempo en iOS. Durante el desarrollo de la aplicación cliente se descubrió el potencial de realizar cambios de lista de reproducción del protocolo HTTP Live Streaming a través de cadenas de consulta de los URLs y compartir el contenido a través de redes. En el caso del reproductor Flash el cambio temporal se realiza a través de la comunicación bidireccional del protocolo RTMP mediante la funcion \textit{seek} enviada desde el cliente (especificación RTMP \cite{bib:rtmp-specs} sección 4.2.7 - \textit{seek}).
+\item \textbf{Redes Sociales:} Esta fue una característica adicional a la solución de permitir transmisión con saltos en el tiempo en iOS. Durante el desarrollo de la aplicación cliente se descubrió el potencial de realizar cambios de lista de reproducción del protocolo HTTP Live Streaming a través de cadenas de consulta de los URLs y compartir el contenido a través de redes. En el caso del reproductor Flash el cambio temporal se realiza a través de la comunicación bidireccional del protocolo RTMP mediante la función \textit{seek} enviada desde el cliente (especificación RTMP \cite{bib:rtmp-specs} sección 4.2.7 - \textit{seek}).
 \end{itemize}
 %mostrar player original de eduardo, la diferencia de la linea de tiempo, el salto de tiempo, la exactitud y que no es tan exacto porque los segmentos son de 10 segundos
 
