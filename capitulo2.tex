@@ -65,9 +65,9 @@ También existe una variante donde la lista de reproducción contiene referencia
 \end{figure}		
 		La figura \ref{diagramaHLSwwdc2010} presenta un ejemplo de distribucion de multimedia a través de HTTP Live Streaming.\\
 		
-En primera instancia se debe obtener contenido multimedia ya sea en un archivo fijo o flujo de datos, este contenido debe ser codificado para que sea compatible con los dispositivos que corren iOS, generalmente por recomendación de Apple se deben utilizar los codec de video h.264 y de audio AAC (advanced audio coding). El empaquetado de este contenido ya codificado debe ser entregado a una aplicación encargada de segmentarlo en pequeños archivos. \\
+En primera instancia se debe obtener contenido multimedia ya sea en un archivo fijo o flujo de datos, este contenido debe ser codificado para que sea compatible con los dispositivos que corren iOS, generalmente por recomendación de Apple se deben utilizar los codec de video h.264 y de audio AAC (\textit{Advanced Audio Coding}). El empaquetado de este contenido ya codificado debe ser entregado a una aplicación encargada de segmentarlo en pequeños archivos. \\
 
-	El flujo de transporte a utilizar es MPEG2-TS (MPEG2 Transport Stream), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, este pueda proveer una lista de reproducción en formato M3U8 que mantiene el orden de reproducción de los archivos.\\
+	El flujo de transporte a utilizar es MPEG2-TS (\textit{MPEG2 Transport Stream}), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, este pueda proveer una lista de reproducción en formato M3U8 que mantiene el orden de reproducción de los archivos.\\
 	
 Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor web pueda proveerlos. En el caso de que el contenido sea un gran archivo, la codificación y segmentación se realiza una sola vez.
 
@@ -78,16 +78,16 @@ Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 
 \begin{prop}
 
-\item \#EXTM3U: Corresponde a la primera marca que inicia una lista de reproducción, siempre debe estar al principio.
+\item \textbf{\#EXTM3U}: Corresponde a la primera marca que inicia una lista de reproducción, siempre debe estar al principio.
 
-\item \#EXT-X-TARGETDURATION: Esta marca corresponde a la mayor duración que puede poseer cualquier segmento, es decir los segmentos enumerados en la lista no pasarán del tiempo especificado por esta marca.
+\item \textbf{\#EXT-X-TARGETDURATION}: Esta marca corresponde a la mayor duración que puede poseer cualquier segmento, es decir los segmentos enumerados en la lista no pasarán del tiempo especificado por esta marca.
 Además este valor indica al cliente cada cuanto tiempo debe realizar una petición al servidor web por la lista.
 \label{TAG-targetduration}
 
-\item \label{TAG-mediasequence} \#EXT-X-MEDIASEQUENCE: Corresponde a la secuencia o versión de la lista de reproducción segun los segmentos que se incluyen dentro de ella. Este valor se representa por un número entero y debe ser consecuente a los cambios en el contenido, es decir, si se agregan nuevos segmentos el valor de la secuencia debe aumentar, de esta forma el cliente puede saber que el flujo de contenido se está actualizando.
+\item \label{TAG-mediasequence} \textbf{\#EXT-X-MEDIASEQUENCE}: Corresponde a la secuencia o versión de la lista de reproducción segun los segmentos que se incluyen dentro de ella. Este valor se representa por un número entero y debe ser consecuente a los cambios en el contenido, es decir, si se agregan nuevos segmentos el valor de la secuencia debe aumentar, de esta forma el cliente puede saber que el flujo de contenido se está actualizando.
 
 
-\item \label{TAG-extinfint} \#EXTINF: Esta marca indica la duración del segmento que se encuentra junto a él. Su valor está indicado por un número entero que representa los segundos.\\
+\item \label{TAG-extinfint} \textbf{\#EXTINF}: Esta marca indica la duración del segmento que se encuentra junto a él. Su valor está indicado por un número entero que representa los segundos.\\
 \end{prop}
 
 \begin{figure}[H]
@@ -137,11 +137,11 @@ Para el desarrollo de esta memoria se han implementado aplicaciones y scripts qu
 En sitio web \cite{apple-draftpantos} se puede revisar detalladamente el documento completo. En esta sección se describen las marcas utilizadas aparte de las ya descritas en \ref{TAG-SECTION}:
 
 \begin{itemize}
-\item \#EXT-X-VERSION: Corresponde a la versión de la lista de reproducción, se utiliza para diferenciar distintos streams con protocolo HLS según las caracteristicas que se van incorporando. Para el trabajo de esta memoria se utiliza la versión 3 del protocolo.
+\item \textbf{\#EXT-X-VERSION}: Corresponde a la versión de la lista de reproducción, se utiliza para diferenciar distintos streams con protocolo HLS según las caracteristicas que se van incorporando. Para el trabajo de esta memoria se utiliza la versión 3 del protocolo.
 
-\item \#EXTINF: Si bien ya se ha descrito esta marca en \ref{TAG-extinfint}, a partir de la versión 3 del protocolo HLS, la marca \textbf{EXTINF} permite valores flotantes para mejorar por parte del cliente la exactitud en el seguimiento del tiempo de reproducción. 
+\item \textbf{\#EXTINF}: Si bien ya se ha descrito esta marca en \ref{TAG-extinfint}, a partir de la versión 3 del protocolo HLS ésta permite valores flotantes para mejorar por parte del cliente la exactitud en el seguimiento del tiempo de reproducción. 
 
-\item \#EXT-X-PROGRAM-DATE-TIME: Marca correspondiente a la fecha asociada al primer segmento de datos que aparece en la lista de reproducción. La fecha se especifica utilizando el estandar ISO 8601, y opcionalmente se puede incluir zona horaria. Un ejemplo del formato sería:
+\item \textbf{\#EXT-X-PROGRAM-DATE-TIME}: Marca correspondiente a la fecha asociada al primer segmento de datos que aparece en la lista de reproducción. La fecha se especifica utilizando el estandar ISO 8601, y opcionalmente se puede incluir zona horaria. Un ejemplo del formato sería:
 
 \begin{lstlisting}
 #EXT-X-PROGRAM-DATE-TIME:2011-12-18T14:54:23-04:00
@@ -317,7 +317,16 @@ El \textit{Playlist Dispatcher} consiste en un script \textbf{php} disponible en
 	\item \textbf{c}: Este último parámetro corresponde al tipo de conexión con la cual el cliente está conectado a Internet, pueden ser dos valores, 1 para red celular y 0 para WiFi. Este parámetro se utiliza para optimizar la lista de variantes que entrega el script.
 \end{itemize}
 		
-Con estos parámetros el playlist dispatcher retorna una lista de variantes con referencias a otro script que genera las listas de reproducción.
+Con estos parámetros el playlist dispatcher retorna una lista de variantes con referencias a otro script que genera las listas de reproducción (figura \ref{diagramaHLSAltaVoz}).
+
+%aqui poner figura
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.8]{imgs/diagrama-HLS-AltaVoz.eps}
+		\caption{Intercambio de información entre Cliente (iPhone) y Servidor (Dispatcher).}
+		\label{diagramaHLSAltaVoz}
+	\end{figure}		
 		
 	\subsection{Cliente iOS}
 %		descripcion general.
@@ -395,7 +404,7 @@ Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la f
 \end{figure}	
  
  
- Teniendo claro el sistema de observación de instancias, se explican a continuación los campos de interes para este proyecto.:
+ Teniendo claro el sistema de observación de instancias, se explican a continuación los campos de interes para este proyecto:
 \begin{itemize}
 \item \textbf{Estado}: El atributo \textit{status} de la clase AVPlayer es del tipo sólo-lectura e indica si la instancia de AVPlayer es capaz de reproducir el flujo multimedia. Este atributo puede tener tres valores del tipo integer: \textit{AVPlayerStatusUnknown}, \textit{AVPlayerStatusReadyToPlay} y \textit{AVPlayerStatusFailed}.
 
@@ -546,7 +555,7 @@ En caso que se desee, es posible utilizando Sharekit modificar el mensaje a comp
 
 		\subsubsection{Seguimiento de Hashtag}
 		%las llamadas de url para el cliente de twitter
-		Para realizar el seguimiento de los mensajes se utiló Search API como se explicó anteriormente. Para realizar la llamada se realiza una conexión con el URL: 
+		Para realizar el seguimiento de los mensajes se utilizó Search API como se explicó anteriormente. Para realizar la llamada se realiza una conexión con el URL: 
 \url{http://search.twitter.com/search.json?include_entities=true&q=%23SocialStream} \\
 		
 		Nótese que el último componente del URL corresponde al hashtag, o marca de seguimiento que se se utiliza en los mensajes. La respuesta por parte de Twitter es un objeto del tipo JSON que contiene un arreglo con los mensajes resultantes.
