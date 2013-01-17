@@ -1,6 +1,6 @@
 
 \chapter{Conclusiones y trabajo futuro}
-Se presentan las ideas rescatadas por el alumno a través del desarrollo de este proyecto de memoria, además de proyecciones de trabajo tomando como punto de partida el objetivo completado.
+Se presentan las ideas rescatadas por el alumno postulante a lo largo del desarrollo de este proyecto de memoria, además de proyecciones de trabajo tomando como punto de partida el objetivo en su integridad.
 %# pagina y media no mas de 2
 
 %explicar que apenas se terminó, el proyecto se usó como base para janus cooperativa, pero solo radio.
@@ -10,15 +10,15 @@ Se presentan las ideas rescatadas por el alumno a través del desarrollo de este
 %# contenido
 \section{Conclusiones}
 
-El trabajo de memoria significó en grán medida la investigación de las tecnologias de Apple Inc. En un principio se tuvo como fin lograr compatibilizar el contenido distribuido con tecnologías de Adobe Inc. (RTMP) en iOS. 
-Sin embargo se descubrió las grandes trabas que Apple pone para su entorno aplicaciones, instando y casi obligando a utilizar sus tecnologias. 
-Por lo tanto se tuvo que presentar estos motivos y convencer a la empresa interesada en este proyecto de adoptar un nuevo sistema de distribución para los dispositivos iOS con HTTP Live Streaming. Teniendo claro este punto se tuvo que idear la forma de igualar la caracteristica de saltar el tiempo en la tranmisión. \\ 
+El trabajo de memoria significó en grán medida la investigación de las tecnologias de Apple Inc. entre otras. En un principio se tuvo como fin lograr compatibilizar el contenido distribuido con tecnologías de Adobe Inc. (RTMP) en iOS. 
+Sin embargo se descubrió las grandes trabas que Apple pone entorno a sus aplicaciones, instando y casi obligando a utilizar sus tecnologías. 
+Por lo tanto se tuvo que presentar estos motivos y explicar a la empresa interesada la conveniencia de adoptar un nuevo sistema de distribución para los dispositivos iOS con HTTP Live Streaming. Teniendo claro este punto se tuvo que idear la forma de igualar la caracteristica de saltar el tiempo en la tranmisión. \\ 
 
-Llegando a utilizar la cadena de consultas del URL que el cliente utiliza para pedir los contenidos al servidor, y que este entregue una lista de reproducción \textquotedblleft en vivo\textquotedblright \ personalizada a ese instante dio paso al desarrollo de una aplicación cliente que permite al usuario manejar el punto de reproducción. Esto significó la investigación del lenguaje de programación \textbf{Objective-C} y el Kit de desarrollo de iOS.\\
+Se buscó llegar a utilizar la cadena de consultas del URL que el cliente utiliza para pedir los contenidos al servidor, y que este pudiera entregarle una lista de reproducción \textquotedblleft en vivo\textquotedblright \ personalizada a ese instante dio paso al desarrollo de una aplicación cliente que permite al usuario manejar el punto de reproducción. Esto significó la investigación del lenguaje de programación \textbf{Objective-C} y el Kit de desarrollo de iOS.\\
 
-En materia de diseño se siguieron los patrones sugeridos por Apple para sus aplicaciones, buscando simpleza para el usuario en seleccionar un punto en especifico.\\
+En materia de diseño se siguieron los patrones sugeridos por Apple para sus aplicaciones \cite{apple-interface-user-control}, buscando simpleza para el usuario en seleccionar un punto en especifico.\\
 
-Además se debe tomar en cuenta que las sugerencias para el protocolo HTTP Live Streaming se indican con el fin de entregar la mejor experiencia en lo que respecta el consumo de la transmisión. Materia que tuvo que se conversada con la empresa interesada debido a reluctancias por parte de esta en seguir al pie de la letra ciertas sugerencias, como por ejemplo la duración de cada segmento, sólo por el hecho de haber utilizado otro valor con el sistema desarrollado para RTMP.\\
+Además se debe tener en cuenta que las sugerencias para el protocolo HTTP Live Streaming se indican con el fin de entregar la mejor experiencia en lo que respecta el consumo de la transmisión. Materia que tuvo que ser conversada con la empresa interesada debido a reluctancias por parte de esta en seguir al pie de la letra ciertas sugerencias, como por ejemplo la duración de cada segmento, sólo por el hecho de haber utilizado otro valor con el sistema desarrollado para RTMP.\\
 
 El desarrollo para el alumno significó adoptar nuevos lenguajes de programación que no fueron una dificultad gracias a la formación en la universidad con lenguajes de programación similares. El desarrollo con PHP y Objective-C fueron fundamentales para incorporar las caracteristicas claves de este proyecto.\\
 
@@ -49,7 +49,7 @@ Si bien pudo haber existido otros caminos para el fin conseguido de este proyect
 %	destacados del editor
 %	inclusión de favoritos
 %	boton rtune
-La version del cliente desarrollado para este trabajo de memoria cumple con los requisitos iniciales de permitir saltos en el tiempo en la transmisión que provee el servidor encargado del dispatcher. Sin embargo el gran potencial de las aplicaciones en iOS permiten expandir la experiencia de usuario aun más. En un trabajo futuro se puede mejorar el cliente con:
+La version del cliente desarrollado para este trabajo de memoria cumple con los requisitos iniciales de permitir saltos en el tiempo en la transmisión que provee el servidor encargado del dispatcher. Sin embargo el gran potencial de las aplicaciones en iOS permiten expandir la experiencia de usuario aun más. En un trabajo futuro se puede mejorar el cliente con medidas tales como:
 \begin{itemize}
 \item Diseñar e implementar un modelo de datos que entregue momentos destacados de la transmisión desde el servidor, controlado por el gestor de los contenidos para generar más audiencia en momentos precisos.
 
