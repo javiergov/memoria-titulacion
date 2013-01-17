@@ -331,15 +331,15 @@ Con estos parámetros el playlist dispatcher retorna una lista de variantes con 
 	\subsection{Cliente iOS}
 %		descripcion general.
 %		como se conecta al server, reachability, entrega a avplayer
-Ha de entenderse por cliente una aplicación ejecutada sobre el sistema operativo \textbf{iOS}, su funcion consiste en mantener un enlace al servidor contactándose directamente con el playlist dispatcher y descargar los segmentos que éste le indique.\\
+Ha de entenderse por cliente una aplicación ejecutada sobre el sistema operativo \textbf{iOS}, su función consiste en mantener un enlace al servidor contactándose directamente con el playlist dispatcher y descargar los segmentos que éste le indique.\\
 
 Además debe presentar en la pantalla del dispositivo el video, o reproducir el audio, según el tipo de stream. Para realizar esto se utilizan componentes de la interfaz de programación de aplicaciones (\textbf{API} - \textit{Application Programming Interface}). El cliente debe permitir al usuario controlar el contenido del stream con una interfaz gráfica simple y precisa.
 
 		\subsubsection{Reproducción con AV Framework}
 %		avplayer, playeritem, asset tracks		
-Apple en su documentación indica referencias a componentes en iOS que son capaces de reproducir streams HLS, componentes de nivel más alto como por ejemplo un reproductor de video HTML5 anidado en una página web o la clase \textbf{MPMoviePlayerViewController} que pertenece a \textbf{Media Player Framework}, la que consiste en una pantalla que incorpora controles como barras deslizadoras para video y botones de control, facilitando de gran manera a los desarrolladores presentar contenidos multimedia. \\
+Apple en su documentación indica referencias a componentes en iOS que son capaces de reproducir streams HLS, componentes de nivel más alto como por ejemplo un reproductor de video HTML5 anidado en una página web o la clase \textbf{MPMoviePlayerViewController} que pertenece a \textbf{Media Player Framework}, la que consiste en una pantalla que incorpora controles como barras deslizables para video y botones de control, facilitando de gran manera a los desarrolladores presentar contenidos multimedia. \\
 
-Sin embargo como este trabajo buscó presentar una característica nueva a lo que es la reproducción de streams, se debió desarrollar un componente que se asemeje al estandar MPMoviePlayerViewController (fig. \ref{IMG-mpmpvc-example}) incluyendo la característica de control de contenido y compartir información a través de Twitter.\\
+Sin embargo como este trabajo buscó presentar una característica nueva a lo que es la reproducción de streams, se debió desarrollar un componente que se asemeje al estándar MPMoviePlayerViewController (figura \ref{IMG-mpmpvc-example}) incluyendo la característica de control de contenido y compartir información a través de Twitter.\\
 
 Uno de los componentes que significó una gran ayuda en el desarrollo del cliente es \textit{AV Foundation Framework}, la cual es una estructura de más bajo nivel que \textbf{Media Player Framework}. 
 En la figura \ref{IMG-ios-tech-frameworks} se interpreta que los módulos de AV Foundation se encuentran bajo \textbf{UIKit}, el cual es la infraestructura para interfaces gráficas en iOS, por lo tanto al utilizar AV Foundation para reproducir contenido temporal del tipo audio o video es necesario implementar con los componentes de UIKit la salida gráfica para el usuario.\\
@@ -352,7 +352,7 @@ El motivo de utilizar AV Foundation, además de una interfaz gráfica personaliz
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{imgs/ios-tech-frameworks.png}
-	\caption{Infraestructuras tecnologicas para el manejo de multimedia en iOS}
+	\caption{Infraestructuras tecnológicas para el manejo de multimedia en iOS}
 	\label{IMG-ios-tech-frameworks}	
 \end{figure}
 
@@ -366,7 +366,7 @@ El motivo de utilizar AV Foundation, además de una interfaz gráfica personaliz
 
 		\subsubsection{Recopilación de datos del Stream}
 %		kvo, notificaciones, periodic observers, la fecha y que se hace con ella
-Utilizando observadores de notificaciones centralizadas (\textit{Notification Center} \cite{bib:ios-nsnotificationcenter}), observadores de cambio de valor (KVO - \textit{Key Value Observing} \cite{bib:kvo-guide}) y observadores periodicos (\textit{Periodic Observers} \cite{bib:avplayer-periodic}), es posible llevar un registro del contenido del stream, como tambien la mayoría de los cambios de estado del reproductor.\\
+Utilizando observadores de notificaciones centralizadas (\textit{Notification Center} \cite{bib:ios-nsnotificationcenter}), observadores de cambio de valor (KVO - \textit{Key Value Observing} \cite{bib:kvo-guide}) y observadores periódicos (\textit{Periodic Observers} \cite{bib:avplayer-periodic}), es posible llevar un registro del contenido del stream, como también la mayoría de los cambios de estado del reproductor.\\
 
 Para mantener de forma continua la información temporal del stream se han asociado a la instancia de la clase AVPlayer dedicada a la reproducción del stream entregado por URL, los siguientes datos.\\
 % enumerar los datos obtenidos
@@ -374,7 +374,7 @@ Para mantener de forma continua la información temporal del stream se han asoci
 \textbf{Revisión periódica}:
 
 \begin{enumerate}
-\item \textbf{Tiempo de reproducción}: Este se supervisa en un intervalo de 1/10 de segundo de forma que con esta razon de cambio la interfaz gráfica se actualice, se ajusta a  este valor de tiempo (100 ms) de forma que el usuario no identifique irregularidad en el temporizador y a la vez la carga en ciclos se ejución no afecte el desempeño de la máquina.
+\item \textbf{Tiempo de reproducción}: Este se supervisa en un intervalo de 1/10 de segundo de forma que con esta razón de cambio la interfaz gráfica se actualice, se ajusta a  este valor de tiempo (100 ms) de forma que el usuario no identifique irregularidad en el temporizador y a la vez la carga en ciclos de ejecución no afecte el desempeño de la máquina.
 \item \textbf{Fecha asociada al stream}: Este valor es parte fundamental en el funcionamiento del stream con saltos en el tiempo, su origen se debe al tag asociado a la lista de reproducción del stream.
 \label{observer-date}
 % esto no está en la memoria, se hizo después para Janus.
@@ -382,13 +382,13 @@ Para mantener de forma continua la información temporal del stream se han asoci
 
 \end{enumerate}
 
-En el caso de la observación periódica de datos, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproducctor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.\\
+En el caso de la observación periódica de datos, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproductor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.\\
 
 
 \textbf{Notificación en base a cambios}:
 
 La mayoría de los valores observados sirven como guía para controlar el funcionamiento del reproductor. En caso de cualquier cambio en el estado de los atributos observados se dispara una notificación desde el objeto con el cambio con destino al observador asociado. 
-En el desarrollo de esta aplicación la clase encargada de gestionar la interfaz gráfica de los objetos (\textit{View Controller}) actua también como observador.\\
+En el desarrollo de esta aplicación la clase encargada de gestionar la interfaz gráfica de los objetos (\textit{View Controller}) actúa también como observador.\\
 
 Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la figura \ref{exampleCodeObserver}, donde \textit{player} es el objeto, \textit{self} es la instancia del \textit{ViewController} que recibirá los avisos de cambio, y \textit{rate} es el atributo a indagar. Además se pueden ajustar opciones adicionales para la recepción de las notificaciones y asociar un contexto a la notificación. De esta forma cuando el valor de \textit{rate} en el reproductor \textit{player} cambie, ya sea por algún evento en la transmisión o alguna interacción por parte del usuario, se notificará al \textit{ViewController} para tomar curso de acción.
 \begin{figure}[H]
@@ -404,11 +404,11 @@ Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la f
 \end{figure}	
  
  
- Teniendo claro el sistema de observación de instancias, se explican a continuación los campos de interes para este proyecto:
+ Teniendo claro el sistema de observación de instancias, se explican a continuación los campos de interés para este proyecto:
 \begin{itemize}
 \item \textbf{Estado}: El atributo \textit{status} de la clase AVPlayer es del tipo sólo-lectura e indica si la instancia de AVPlayer es capaz de reproducir el flujo multimedia. Este atributo puede tener tres valores del tipo integer: \textit{AVPlayerStatusUnknown}, \textit{AVPlayerStatusReadyToPlay} y \textit{AVPlayerStatusFailed}.
 
-\item \textbf{Razón de reproducción}: Consiste en un valor flotante en el rango entre 0.0 y 1.0. El atributo rate indica si el audio y/o video se reproduce a velocidad normal (1.0) o se encuentra detenido (0.0). Valores intermedios se asocian a una menor velocidad de reproducción, en el caso de este proyecto no se buscó entregar un control de velocidad de reproducción al usuario fuera de la normal. También se debe tener en cuenta que este atributo se puede ajustar por intrucciones externas.
+\item \textbf{Razón de reproducción}: Consiste en un valor flotante en el rango entre 0.0 y 1.0. El atributo rate indica si el audio y/o video se reproduce a velocidad normal (1.0) o se encuentra detenido (0.0). Valores intermedios se asocian a una menor velocidad de reproducción, en el caso de este proyecto no se buscó entregar un control de velocidad de reproducción al usuario fuera de la normal. También se debe tener en cuenta que este atributo se puede ajustar por instrucciones externas.
 
 \item \textbf{Búfer de Datos}: El reproductor AVPlayer posee un atributo que es una instancia de AVPlayerItem, esta clase es una abstracción del flujo de datos \textit{currentItem}. Tomando en cuenta esto se deben observar tres propiedades de este \textit{currentItem}, estas son: 
 \begin{itemize}
@@ -420,7 +420,7 @@ Ellas gatillan notificaciones al cambiar su valor BOOL a verdadero para informar
 
 \item \textbf{Pistas de medios}: Debido a que el flujo de datos puede solamente audio, o video y audio. Es necesario supervisar el tipo de medio que se está presentando. Para esto se utiliza el atributo \textit{tracks} del flujo de datos (\textit{currentItem}). Este atributo consiste en un arreglo (NSArray) de instancias de AVPlayerItemTrack, clase que representa cada pista multimedia del flujo de datos, cada pista puede ser texto (AVMediaCharacteristicLegible), audio (AVMediaCharacteristicAudible) o video (AVMediaCharacteristicVisual). Observando el cambio de componentes en el flujo es posible adecuar el reproductor según el tipo de medio que se presenta al usuario.
 
-\item \textbf{Rango de reproducción}: \textit{seekableTimeRanges} se refiere al atributo asociado a la disponibilidad temporal del item en reproducción, el rango donde es posible realizar busqueda de cuadros de reproducción. Este valor cambia constantemente debido a que el contenido recibido por HTTP Live Streaming se encuentra en actualización permanente guardando tiempo adicional para reproducción. Este atributo se observa con el fin de rastrear si se están obteniendo segmentos del contenido.
+\item \textbf{Rango de reproducción}: \textit{seekableTimeRanges} se refiere al atributo asociado a la disponibilidad temporal del item en reproducción, el rango donde es posible realizar búsqueda de cuadros de reproducción. Este valor cambia constantemente debido a que el contenido recibido por HTTP Live Streaming se encuentra en actualización permanente guardando tiempo adicional para reproducción. Este atributo se observa con el fin de rastrear si se están obteniendo segmentos del contenido.
 % StreamPlayerVC.m: 748 start: 630.415833, duration: -15.000000
 \end{itemize}
 \label{item:seekableTimeRanges}
@@ -432,16 +432,16 @@ Ellas gatillan notificaciones al cambiar su valor BOOL a verdadero para informar
 
 Se debe considerar que el intercambio de información se realiza entre el dispatcher y la aplicación cliente como se muestra en la figura \ref{diagramaGral}. Para esto se insta usar el reproductor de clase AVPlayer mediante su método de inicialización:
 
-\textit{initWithURL:(\textbf{NSURL} *)url}, que toma como argumento un URL al dispatcher con los parámetros explicados anteriormente. Luego que el reproductor se ha inicializado, se procede a asociar los observadores a la instancia para luego llamar a la reproducción.\\
+\textit{initWithURL:(\textbf{NSURL} *)url}, que toma como argumento un URL al dispatcher con los parámetros explicados anteriormente. Luego que el reproductor se ha iniciado, se procede a asociar los observadores a la instancia para luego llamar a la reproducción.\\
 
 % cookies ref: http://es.wikipedia.org/wiki/Cookie_(informática)
 El método de inicialización se basa en una petición HTTP. La administración de datos de usuario en el cliente (\textit{cookies}) son establecidos por el servidor y el sistema del cliente (iOS) se encarga de devolver la información con cada petición. Esto simplifica de gran manera cada nuevo enlace que la aplicación cliente debe hacer, liberando la carga a solamente establecer las nuevas URLS.
 
-Por el lado del servidor, aparte de los campos en la cadena de consulta (query string), se establece cada conexión utilizando las siguientes cookies:
+Por el lado del servidor, aparte de los campos en la cadena de consulta (\textit{query string}), se establece cada conexión utilizando las siguientes cookies:
 
 \begin{itemize}
-\item \textbf{t0}: Tiempo pedido en el parametro t, de la cadena de consulta.
-\item \textbf{tp}: Tiempo actual de ejecucion del script en el servidor.
+\item \textbf{t0}: Tiempo pedido en el parámetro t, de la cadena de consulta.
+\item \textbf{tp}: Tiempo actual de ejecución del script en el servidor.
 \item \textbf{si}: Secuencia inicial de la lista de reproducción HLS.
 \item \textbf{sf}: Secuencia final de la lista de reproducción HLS.
 \item \textbf{ti}: Tiempo inicial encontrado en los archivos, corresponde a la marca de tiempo más cercana al valor de t0, ya que puede ocurrir que el tiempo pedido no coincida con el nombre de archivo de los segmentos.
@@ -458,7 +458,7 @@ Con todos estos valores el servidor calcula y contesta al cliente un stream HLS 
 \clearpage
 \section{Interfaz Gráfica}
 
-Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia por HTTP Live Streaming, es tarea del cliente mostrar el contenido ya sea video y/o audio. La versatilidad de los dispositivos iOS permiten variadas formas de entregar la información al usuario, sin embargo Apple se mantiene sobreprotector respecto al diseño funcional de las aplicaciones con documentos guía que hacen a la vez de pauta en el proceso de evaluación de aplicaciones para ser ingresadas a la App Store.
+Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia por HTTP Live Streaming, es tarea del cliente mostrar el contenido ya sea video y/o audio. La versatilidad de los dispositivos iOS permiten variadas formas de entregar la información al usuario, sin embargo Apple se mantiene sobre-protector respecto al diseño funcional de las aplicaciones con documentos guía que hacen a la vez de pauta en el proceso de evaluación de aplicaciones para ser ingresadas a la App Store.
 
   \subsection{Directrices de diseño de Apple}
 % http://developer.apple.com/library/ios/#documentation/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html 
@@ -466,7 +466,7 @@ Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia po
 
 Las Directrices de interfaz humana de iOS (\textit{iOS Human Interface Guidelines}) describen los principios que ayudan a diseñar una interfaz y experiencia de usuario para las aplicaciones iOS.\\
 
-Estas guias no describen los diseños en código, abarcan convenciones como características de la plataforma, casos de transición entre pantallas, gestos que el usuario espera y tecnologías de comunicación entre componentes.
+Estas guías no describen los diseños en código, abarcan convenciones como características de la plataforma, casos de transición entre pantallas, gestos que el usuario espera y tecnologías de comunicación entre componentes.
 Para desarrollar la aplicación se revisaron puntos de estas guías con tal de obtener un producto acorde a lo esperado por los usuarios de iOS. No se quiso innovar en materia de controles y gestos, por lo tanto se utilizaron componentes estándar del framework UIKit.
 	
 	\subsection{Componentes de UIKit}
@@ -475,7 +475,7 @@ Para desarrollar la aplicación se revisaron puntos de estas guías con tal de o
 		\subsubsection{UIDatePicker}
 		\label{subsec:datepicker}
 % 	foto, como se usa, el hack para horizontal
-Para el trato de valores de fechas, el framework de interfaz gráfica UIKit pone a disposición la clase UIDatePicker, que presenta en pantalla una rueda con distintas secciones asociadas a cierta fecha con la que se ajuste. Además permite llamar métodos al seleccionar una fecha en particular. Sin embargo este control no permite seleccionar una fecha especificandola desde el año hasta los segundos, permite especificar sólo hasta los minutos. \\
+Para el trato de valores de fechas, el framework de interfaz gráfica UIKit pone a disposición la clase UIDatePicker, que presenta en pantalla una rueda con distintas secciones asociadas a cierta fecha con la que se ajuste. Además permite llamar métodos al seleccionar una fecha en particular. Sin embargo este control no permite seleccionar una fecha especificándola desde el año hasta los segundos, permite especificar sólo hasta los minutos. \\
 
 Para solucionar esto se ideó un control personalizado que presenta una rueda extra con valores de 0 a 59 que se adicionan a los minutos seleccionados con el UIDatePicker. Esta rueda especial es una modificación de la clase UIPicker de propósito más general, se transformó su dibujo rotando en 90º gracias a la API Core Graphics Framework. 
 
@@ -492,11 +492,11 @@ Para solucionar esto se ideó un control personalizado que presenta una rueda ex
 %				play pausa, ibactions
 		\subsubsection{Volume Slider}
 
-		Para presentar el control de volumen se utilizó una clase estandar del sistema operativo, llamada MPVolumeslider, encargada de presentar un deslidador que está directamente relacionado con los botones del hardware de los dispositivos iOS. Tanto así, que en materia de debuggeo, el simulador no permite mostrar en pantalla dicho control. Se agrega ajustando un rectangulo destinado como perimetro para que el sistema presente dicho control mediante una subvista.
+		Para presentar el control de volumen se utilizó una clase estándar del sistema operativo, llamada MPVolumeslider, encargada de presentar un deslizador que está directamente relacionado con los botones del hardware de los dispositivos iOS. Tanto así, que en materia de depuración (\textit{debug}), el simulador no permite mostrar en pantalla dicho control. Se agrega ajustando un rectangulo destinado como perimetro para que el sistema presente dicho control en una subvista.
 		
 		\subsubsection{Vistas de Tablas}
 %		volumen, slider de view controller tipo facebook, etc
-Para representar el cliente de twitter se utilizó una instancia de la clase UITableView, clase que tiene como fin presentar y editar listas jerárquicas de información. La infomación se obtiene del resultado de una llamada a twitter utilizando su API de búsqueda. El resultado consiste en un archivo JSON (\textit{JavaScript Object Notation}) que contiene los tweets de los últimos 6 a 9 días respecto a la consulta realizada. Para el caso de esta aplicación, se utiliza el hashtag \textbf{\#SocialStream} como se puede ver en la figura \ref{sshot-twitterclientvc}.\\
+Para representar el cliente de twitter se utilizó una instancia de la clase UITableView, clase que tiene como fin presentar y editar listas jerárquicas de información. La información se obtiene del resultado de una llamada a twitter utilizando su API de búsqueda. El resultado consiste en un archivo JSON (\textit{JavaScript Object Notation}) que contiene los tweets de los últimos 6 a 9 días respecto a la consulta realizada. Para el caso de esta aplicación, se utiliza el hashtag \textbf{\#SocialStream} como se puede ver en la figura \ref{sshot-twitterclientvc}.\\
 
 Para poder presentar la tabla sin perder parte de la transmisión se muestra el cliente de twitter bajo la vista del reproductor. Utilizando la clase ZUUIRevealController fue posible apilar en pantalla dos controladores de vista: TwitterClientVC y StreamPlayerVC. Para lograr presentar el controlador de vista inferior, fue necesario asociar a la vista del reproductor un botón que permita arrastrar con el dedo o desplazar con un toque la vista que lo posee. Esto se realizó asociando la acción de tocar dentro del botón y el gesto \textit{navigationBarPanGestureRecognizer} a la barra que lo contiene. El método asociado \textit{revealToggle:} de la instancia de ZUUIRevealController permite mostrar, ocultar o arrastrar las vistas superpuestas. En la figura \ref{sshot-twitterclientvc} se muestra el instante donde el usuario arrastra la vista del reproductor a través del botón \textbf{Twitter}.
 
@@ -512,7 +512,7 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 %\clearpage
 \section{Integración Redes Sociales}
 	%diagrama de como funciona el posteo y recepcion de twitts
-	Para destacar la connotación de caracter social de la aplicación, se incorporó un sistema de compartimiento en base a la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
+	Para destacar la connotación de carácter social de la aplicación, se incorporó un sistema de compartimiento en base a la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
 	
 	En resumen, el usuario al pulsar el botón \textbf{\textquotedblleft t\textquotedblright} visible en la imagen \ref{sshot-twitterclientvc} genera un URL en base a la fecha de la transmisión que está viendo, este URL se comprime a través del servicio bit.ly con tal de aminorar la cantidad de caracteres en el mensaje y luego se entrega al usuario en un campo de texto donde se le permite describir lo que comparte. Una vez en la red Twitter, usuarios que observen este mensaje a través de la misma aplicación pueden llegar a reproducir el instante compartido por el autor del mensaje (figura \ref{diagramaTwitterShare}).
 	
@@ -533,7 +533,7 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 		
 		\begin{itemize}
 		\item Su historial dura no más de una semana, el indice de mensajes abarca entre 6 a 9 días.
-		\item La búsqueda no requiere de autenticación, se realiza anonimamente.
+		\item La búsqueda no requiere de autenticación, se realiza anónimamente.
 		\item El resultado de la búsqueda se basa en relevancia del tema en vez de la totalidad de sus mensajes. Esto debido a las políticas del servicio de Twitter donde se privilegia el alcance de los mensajes según la reputación de los usuarios \cite{twitter-relevance}.
 		\end{itemize}
 
@@ -542,7 +542,7 @@ Tomando en cuenta estos puntos Search API satisface la obtención de mensajes co
 %		las llamadas de twitter que se utilizarán
 		\subsubsection{Sharekit vs. Twitter Framework}
 %		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
-Durante el desarrollo de la aplicación cliente Apple Inc. lanzó al público el sistema operativo iOS 5, el cual permite entre muchas caracteristicas, la integración del sistema con la red social Twitter mediante \textbf{Twitter.framework} . Por simpleza y compatibilidad con versiones anteriores de iOS se descartó utilizar esta nueva herramienta para utilizar la biblioteca de código libre \textbf{Sharekit}\cite{library-sharekit}, destinada a integrar todo tipo de redes sociales incluyendo twitter. Otro motivo de esto es la posibilidad de expandir a otras redes el contenido que se comparte a través de la aplicación cliente. \\
+Durante el desarrollo de la aplicación cliente Apple Inc. lanzó al público el sistema operativo iOS 5, el cual permite entre muchas características, la integración del sistema con la red social Twitter mediante \textbf{Twitter.framework} . Por simpleza y compatibilidad con versiones anteriores de iOS se descartó utilizar esta nueva herramienta para utilizar la biblioteca de código libre \textbf{Sharekit}\cite{library-sharekit}, destinada a integrar todo tipo de redes sociales incluyendo twitter. Otro motivo de esto es la posibilidad de expandir a otras redes el contenido que se comparte a través de la aplicación cliente. \\
 
 En caso que se desee, es posible utilizando Sharekit modificar el mensaje a compartir de forma que el usuario no elimine el URL relacionado al contenido compartido.
 
@@ -599,7 +599,7 @@ En caso que se desee, es posible utilizando Sharekit modificar el mensaje a comp
 		
 		\subsubsection{Extracción de información de un Tweet}
 %		como se parseó el json con los twitts y saber si eran sstream
-Para presentar los mensajes de forma simple para el usuario fue necesario serializar el objeto JSON obtenido de Seach API. Gracias al componente \textbf{NSJSONSerialization} del entorno de desarrollo de iOS, como se muestra en \ref{json-serialization}, es posible generar un objeto del tipo NSDictionary para ser entregada a la clase encargada de generar la tabla con los mensajes.
+Para presentar los mensajes de forma simple para el usuario fue necesario serializar el objeto JSON obtenido de Search API. Gracias al componente \textbf{NSJSONSerialization} del entorno de desarrollo de iOS, como se muestra en \ref{json-serialization}, es posible generar un objeto del tipo NSDictionary para ser entregada a la clase encargada de generar la tabla con los mensajes.
 
 \begin{figure}[H]
 	\centering
@@ -667,7 +667,7 @@ Para una respuesta exitosa se recibe una cadena de caracteres con el URL comprim
 
 En caso de cualquier falla, el texto entregado es la causal misma del error, por lo tanto cual sea la respuesta debe ser analizada su integridad como URL antes de ser entregada al resto de las instancias de las clases que componen la aplicación. Esta comprobación se realiza comparando el \textit{scheme} del \textbf{NSURL} creado a partir del texto resultante, en caso de ser \textbf{http} o \textbf{https} se considera conforme por parte de la aplicación.\\ 
 
-Algunas respuestas erroneas pueden ser:
+Algunas respuestas erróneas pueden ser:
 \begin{itemize}
 \item INVALID\_APIKEY: Clave para acceder a la API es inválida o no concuerda con el usuario. 
 \item INVALID\_LOGIN: El nombre de usuario no corresponde a la clave de API o no existe.
@@ -677,7 +677,7 @@ Algunas respuestas erroneas pueden ser:
 
 		\subsubsection{Expansión de atajo bit.ly}
 %		como se expande un url de bitly y se usa en la app
-Para expandir un URL comprimido por Bit.ly se utiliza la llamada a la API de forma similar al método de compresión, se diferencia con el comando \textit{\textbf{expand}} en vez de \textit{shorten} y entregando el hash comprimido del enlace corto obtenido del valor de la clave \textit{\textbf{\textquotedblleft expanded\_url"}} includo en un tweet (\ref{tweet-json}, línea 8). El hash comprimido corresponde a la ruta del URL.
+Para expandir un URL comprimido por Bit.ly se utiliza la llamada a la API de forma similar al método de compresión, se diferencia con el comando \textit{\textbf{expand}} en vez de \textit{shorten} y entregando el hash comprimido del enlace corto obtenido del valor de la clave \textit{\textbf{\textquotedblleft expanded\_url"}} incluido en un tweet (\ref{tweet-json}, línea 8). El hash comprimido corresponde a la ruta del URL.
 
 \begin{figure}[H]
 	\centering
@@ -707,8 +707,8 @@ Nótese que en el URL de la figura \ref{bitly-expand} no especifica formato de r
 	\caption{Respuesta exitosa de tipo JSON al expandir URL Bit.ly}
 	\label{bitly-json-response}
 \end{figure}	
-Los datos del resultado de la llamada se entregan a una instancia de NSJSONSerialization con el mismo método utilizado para desmenuzar la información de los tweets (fig. \ref{json-serialization}). De esta forma se obtiene un objeto del tipo NSDictionary y para luego facilmente obtener el valor asociado a la clave \textbf{\textquotedblleft long\_url"}.
-En caso de obtener como respuesta un error los datos serán de igual forma del tipo JSON, sólo que la información de la clave \textbf{\textquotedblleft status\_txt"} correspondrá a la causa del error en vez del OK que se obtiene al realizar una operación exitosa (fig. \ref{bitly-json-response}). El valor de las causas de error son las mismas que las indicadas anteriormente.
+Los datos del resultado de la llamada se entregan a una instancia de NSJSONSerialization con el mismo método utilizado para desmenuzar la información de los tweets (figura \ref{json-serialization}). De esta forma se obtiene un objeto del tipo NSDictionary y para luego fácilmente obtener el valor asociado a la clave \textbf{\textquotedblleft long\_url"}.
+En caso de obtener como respuesta un error los datos serán de igual forma del tipo JSON, sólo que la información de la clave \textbf{\textquotedblleft status\_txt"} corresponderá a la causa del error en vez del OK que se obtiene al realizar una operación exitosa (figura \ref{bitly-json-response}). El valor de las causas de error son las mismas que las indicadas anteriormente.
 
 %NOT_FOUND
 		\subsubsection{Seguimiento de un Hipervínculo}		
@@ -730,7 +730,7 @@ En el caso de la aplicación cliente, se registra un scheme como \textquotedblle
 
 % http://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/AdvancedAppTricks/AdvancedAppTricks.html#//apple_ref/doc/uid/TP40007072-CH7-SW50
 
-	\subsection{Redireccionamiento via Web}
+	\subsection{Redireccionamiento vía Web}
 %	explicar breve como funcionará la carga del scheme sstream, en web y mobile
 La forma más simple que se ideó para entregar la información, según las variadas plataformas que se conectan a internet, consiste en comunicar a través de la herramienta común que poseen los móviles y computadores: el navegador web.\\
 
@@ -748,7 +748,7 @@ El agente de usuario se identifica llamando la función PHP \textbf{\$\_SERVER['
 
 		\subsubsection{Respuestas según User Agent}
 %		describir los casos según user agents
-\textbf{Apple Device}: En caso que el cliente que hace una petición al script en el servidor para redirección (figura \ref{diagramaTwitterShare}) sea un dispositivo móvil Apple, entiendase iPod, iPhone o iPad, se genera un URL especial con el scheme registrado por la aplicación en el sistema operativo iOS, en el caso de este proyecto \textquotedblleft socialstream\textquotedblright . Este URL se entrega al cliente como redirección, teniendo como metodo de respaldo en caso que el cliente no tenga instalada una aplicación que maneje este scheme, un redireccionamiento al sitio de descarga de la aplicación en iTunes Store, utilizando el scheme "itms" que es manejado por el sistema para efectos de descarga de aplicaciones. \\ 
+\textbf{Apple Device}: En caso que el cliente que hace una petición al script en el servidor para redirección (figura \ref{diagramaTwitterShare}) sea un dispositivo móvil Apple, entiéndase iPod, iPhone o iPad, se genera un URL especial con el scheme registrado por la aplicación en el sistema operativo iOS, en el caso de este proyecto \textquotedblleft socialstream\textquotedblright . Este URL se entrega al cliente como redirección, teniendo como método de respaldo en caso que el cliente no tenga instalada una aplicación que maneje este scheme, un redireccionamiento al sitio de descarga de la aplicación en iTunes Store, utilizando el scheme "itms" que es manejado por el sistema para efectos de descarga de aplicaciones. \\ 
 
 Tomando en consideración que este proyecto es un desarrollo experimental que no se ha llevado a producción, la redirección en la tienda oficial de Apple lleva a otra aplicación desarrollada y lanzada por el alumno en: \url{itms://itunes.apple.com/cl/app/df-mercados/id483602458?mt=8\&uo=6} \\
 
