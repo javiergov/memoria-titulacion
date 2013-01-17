@@ -505,8 +505,15 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 	%diagrama de como funciona el posteo y recepcion de twitts
 	Para destacar la connotación de caracter social de la aplicación, se incorporó un sistema de compartimiento en base a la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
 	
-	En resumen, el usuario al pulsar el botón \textbf{\textquotedblleft t\textquotedblright} visible en la imagen \ref{sshot-twitterclientvc} genera un URL en base a la fecha de la transmisión que está viendo, este URL se comprime a través del servicio bit.ly con tal de aminorar la cantidad de caracteres en el mensaje y luego se entrega al usuario en un campo de texto donde se le permite describir lo que comparte. Una vez en la red Twitter, usuarios que observen este mensaje a través de la misma aplicación pueden llegar a reproducir el instante compartido por el autor del mensaje.
+	En resumen, el usuario al pulsar el botón \textbf{\textquotedblleft t\textquotedblright} visible en la imagen \ref{sshot-twitterclientvc} genera un URL en base a la fecha de la transmisión que está viendo, este URL se comprime a través del servicio bit.ly con tal de aminorar la cantidad de caracteres en el mensaje y luego se entrega al usuario en un campo de texto donde se le permite describir lo que comparte. Una vez en la red Twitter, usuarios que observen este mensaje a través de la misma aplicación pueden llegar a reproducir el instante compartido por el autor del mensaje (figura \ref{diagramaTwitterShare}).
 	
+	%insertar imagen del sistema
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.6]{imgs/twitter-share-diagram.eps}
+		\caption{Flujo de enlaces compartidos a través de Twitter.}
+		\label{diagramaTwitterShare}
+	\end{figure}		
 	
 	\subsection{Twitter}
 	%http://www.alexa.com/siteinfo/twitter.com
@@ -532,7 +539,7 @@ En caso que se desee, es posible utilizando Sharekit modificar el mensaje a comp
 
 		\subsubsection{Post en Twitter}
 %		como postear en twitter desde la app, action sheet
-		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase \textbf{NSDate}, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{\textbf{timeIntervalSince1970}} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir el valor a NSString, cadena de caracteres.
+		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase \textbf{NSDate}, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{\textbf{timeIntervalSince1970}} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir el valor a NSString, cadena de caracteres. Una vez generado el URL con el valor temporal en su cadena de consultas se procede a un campo de texto que incluye el URL, de manera que el usuario agregue algún comentario y dé la instrucción de enviar si lo desea.
 		
 		
 		En caso de no tener el valor para la fecha en reproducción la aplicación no permite compartir.
@@ -723,7 +730,7 @@ El navegador web al iniciar la conexión través del protocolo HTTP con cierta p
 		\subsubsection{PHP Script}
 		\label{subsec:php-redir}
 %		explicar brevemente el script php 
-Se desarrolló un script en PHP, encargado de identificar el cliente que se está conectando al servidor y según el tipo de dispositivo o navegador redirecciona a un URL con scheme personalizado, o presenta una página web con información a social stream.\\
+Se desarrolló un script en PHP encargado de identificar el cliente que se está conectando al servidor del stream, y según el tipo de dispositivo o navegador redirecciona a un URL con scheme personalizado, o presenta una página web con información a social stream.\\
 
 El acceso al script requiere, para su buen funcionamiento, ciertos campos como mínimo relacionados con la transmisión que se compartió y se incluyen en el URL, como query strings (cadena de consulta), estos son el tipo de canal y la marca de tiempo, similares a los entregados al dispatcher por parte del cliente se hace una petición de lista de reproducción.
 El script se encarga de analizar las marcas de tiempo y tipo de señal para entregar un URL especial según el agente de usuario del cliente que hace la petición.\\
@@ -732,7 +739,7 @@ El agente de usuario se identifica llamando la función PHP \textbf{\$\_SERVER['
 
 		\subsubsection{Respuestas según User Agent}
 %		describir los casos según user agents
-\textbf{Apple Device}: En caso que el cliente que hace una petición al script en el servidor sea un dispositivo movil Apple, entiendase iPod, iPhone o iPad, se genera un URL especial con el scheme registrado por la aplicación en el sistema operativo iOS, en el caso de este proyecto \textquotedblleft socialstream\textquotedblright . Este URL se entrega al cliente como redirección, teniendo como metodo de respaldo en caso que el cliente no tenga instalada una aplicación que maneje este scheme, un redireccionamiento al sitio de descarga de la aplicación en iTunes Store, utilizando el scheme "itms" que es manejado por el sistema para efectos de descarga de aplicaciones. \\ 
+\textbf{Apple Device}: En caso que el cliente que hace una petición al script en el servidor para redirección (figura \ref{diagramaTwitterShare}) sea un dispositivo móvil Apple, entiendase iPod, iPhone o iPad, se genera un URL especial con el scheme registrado por la aplicación en el sistema operativo iOS, en el caso de este proyecto \textquotedblleft socialstream\textquotedblright . Este URL se entrega al cliente como redirección, teniendo como metodo de respaldo en caso que el cliente no tenga instalada una aplicación que maneje este scheme, un redireccionamiento al sitio de descarga de la aplicación en iTunes Store, utilizando el scheme "itms" que es manejado por el sistema para efectos de descarga de aplicaciones. \\ 
 
 Tomando en consideración que este proyecto es un desarrollo experimental que no se ha llevado a producción, la redirección en la tienda oficial de Apple lleva a otra aplicación desarrollada y lanzada por el alumno en: \url{itms://itunes.apple.com/cl/app/df-mercados/id483602458?mt=8\&uo=6} \\
 
