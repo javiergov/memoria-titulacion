@@ -134,7 +134,7 @@ Las bases de esta herramienta se fundan sobre Adobe Flash gracias a su protocolo
 
 	En las siguientes figuras se puede notar claramente el problema que genera en iOS la falta de soporte de tecnologías Adobe. 
 	En la captura de pantalla del navegador web de un celular con el sistema operativo Android (\ref{sshot_Android_sstream}) se presenta de forma íntegra la página web, nótese que el reproductor hecho con tecnología Flash se presenta de la misma forma que en un navegador web de computador de escritorio. 
-	En la siguiente captura, Mobile Safari (\ref{sshot_iOS_sstream}) presenta el problema de la falta de soporte de tecnologías Flash, la página web muestra sus componentes HTML ausentando el reproductor de video.
+	En la siguiente captura Mobile Safari (\ref{sshot_iOS_sstream}) presenta el problema de la falta de soporte para Flash, la página web muestra sus componentes HTML ausentando el reproductor de video.
 
 %\clearpage 
 \begin{figure}[h!]
@@ -155,7 +155,7 @@ Las bases de esta herramienta se fundan sobre Adobe Flash gracias a su protocolo
 \newpage
 \subsection{Posibles Soluciones}
 
-A la fecha, las herramientas de distribución de audio y/o video por streaming, están limitadas a los reproductores provistos por la interfaz de programación de aplicaciones (API) de iOS. En donde al reproducir contenido por streaming presentan la opción de retroceder la cantidad de  tiempo almacenada en el buffer de datos. \\
+Las herramientas de distribución de audio y/o video por streaming están limitadas a los reproductores provistos por la interfaz de programación de aplicaciones (API) de iOS. El reproductor por defecto del sistema operativo permite reproducir un stream multimedia dando la posibilidad de retroceder la reproducción según el contenido disponible en el buffer de datos del mismo reproductor, este tiempo se limita a 30 segundos.
 
 %\clearpage
 \begin{figure}[h!]
@@ -167,11 +167,13 @@ A la fecha, las herramientas de distribución de audio y/o video por streaming, 
 
 De la figura \ref{sshot_iOS_hls} se puede notar el botón a la izquierda en la barra inferior de  la pantalla, este hace retroceder en 30 segundos la reproducción.\\
 
-Esta característica es propia del framework MediaPlayer. que simplifica de gran manera la necesidad de mostrar video en el dispositivo. Este uso también se puede aplicar para la reproducción  de  audio y video.
-Se debe dejar claro que Apple es sumamente restrictivo en el uso de la API de iOS. \\
-Para el desarrollo de aplicaciones, estas deben utilizar solo llamadas al sistema que estén indicadas en sus documentos guía, por lo tanto una vía para desarrollar una solución de reproductor que provea la posibilidad de saltar en la línea del tiempo de reproducción sin importar que tan larga sea la transmisión en vivo, depende de las bases MediaPlayer. \\
+Esta característica es propia del componente \textit{MPMoviePlayerController} del marco de trabajo de la API de iOS \textit{\textbf{MediaPlayer Framework}} \cite{cap1:mediaplayerframework}, éste simplifica de gran manera la necesidad de mostrar video o reproducir audio en el dispositivo.\\
 
-En la documentación actual de iOS v4.3 se encuentra AVPlayer (audio video player) [link] que pone a disposición las llamadas y manejo de datos de audio y/o video.
+Se debe dejar claro que Apple es sumamente restrictivo en el uso de la API de iOS debido a que velan que sus componentes sean utilizados por los programadores de la forma que ellos establecieron originalmente. Para controlar el comportamiento de las aplicaciones publicadas en la tienda de aplicaciones App Store los desarrolladores deben pasar por un proceso de revisión basado en las \textbf{directrices de revisión de aplicaciones} \cite{cap1:appstoreguidelines}, y que cada programador debe tener en cuenta antes de entregar una \textit{App} a revisión.\\
+
+Para el desarrollo de aplicaciones, éstas deben utilizar solo llamadas al sistema que estén indicadas en sus documentos guía, por lo tanto una vía para desarrollar una solución de reproductor que provea la posibilidad de saltar en la línea del tiempo de reproducción sin importar que tan larga sea la transmisión en vivo, depende de las bases MediaPlayer. \\
+
+En la documentación actual de iOS v4.3 se encuentra AVPlayer (audio video player) \cite{bib:avplayer-periodic} que pone a disposición las llamadas y manejo de datos de audio y/o video.
 
 
 \subsection{Soluciones actuales}
