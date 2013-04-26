@@ -108,7 +108,7 @@ Considerando estos conceptos se puede encasillar como Smartphone a los teléfono
 \subsection{Trasfondo}
 La mayoría de los smartphones permiten el acceso a Internet a través de la red celular utilizando distintas tecnologías de transmisión de datos (no sólo WiFi), como lo son actualmente EDGE, HSPA y LTE \cite{cap1:tecnologias-celulares}. Estas se encuentran en incesante desarrollo, presentando mejoras en la velocidad de transferencia de datos.\\
 
-La constante mejoría en la velocidad de transmisión en redes celulares ha permitido la reproducción de contenidos multimedia. Un avance similar a lo experimentado en la década de 1990 por los computadores multimedia de escritorio. En primera instancia con aplicaciones de contenido audiovisual (imagen, audio, video, texto) ejecutadas localmente, para luego evolucionar y llegar a recibir y transmitir este contenido a través de la world wide web.\\
+La constante mejoría en la velocidad de transmisión en redes celulares ha permitido la reproducción de contenidos multimedia. Un avance similar a lo experimentado en la década de 1990 por los computadores multimedia de escritorio. En primera instancia con aplicaciones de contenido audiovisual (imagen, audio, video, texto) ejecutadas localmente, para luego evolucionar y llegar a recibir y transmitir este contenido a través de la \textit{World Wide Web}.\\
 
 Los smartphones actuales ejecutan sistemas operativos avanzados que proveen módulos de conexión  a redes, ya sea celular, WiFi, o Bluetooth, si es que el hardware lo incorpora. Además de navegadores web diseñados especialmente para estos dispositivos, con características como presentar en pantalla reducida o ajustada a la resolución, interfaz táctil, teclado numérico, etc.\\
 
@@ -125,14 +125,16 @@ Este sistema nos significan los siguientes beneficios:
 \item La posibilidad de portar a otras plataformas como consolas de videojuegos o dispositivos móviles.
 \end{itemize}
 
-Las bases de esta herramienta se fundan sobre Adobe Flash gracias a su protocolo RTMP. Y considerando las diferencias tecnológicas entre Apple y Adobe (ver \cite{sota:steve-flash} carta de Steve Jobs, ex-CEO de Apple Inc.) surge nuestro principal problema:
+Las bases de esta herramienta se fundan sobre Adobe Flash gracias a su protocolo RTMP, y considerando las diferencias tecnológicas entre Apple y Adobe (ver \cite{sota:steve-flash} carta de Steve Jobs, ex-CEO de Apple Inc.) surge el problema principal:
 
 \begin{itemize}
-\item Las aplicaciones que cumplen la función de reproducción de los contenidos están desarrolladas en el lenguaje de programación ActionScript, propio de Adobe.
+\item Las aplicaciones que cumplen la función de reproducción para este producto están desarrolladas en el lenguaje de programación ActionScript, propio de Adobe.
 \item En las plataformas de escritorio y algunos smartphones, esto no significa un problema. Sin embargo los dispositivos de Apple con el sistema operativo iOS no presentan compatibilidad con estas tecnologías Flash.
 \end{itemize}
 
-	En las siguientes figuras \ref{sshot_Android_sstream} y \ref{sshot_iOS_sstream} se puede notar claramente el problema que genera en iOS la falta de soporte de tecnologías Adobe.
+	En las siguientes figuras se puede notar claramente el problema que genera en iOS la falta de soporte de tecnologías Adobe. 
+	En la captura de pantalla del navegador web de un celular con el sistema operativo Android (\ref{sshot_Android_sstream}) se presenta de forma íntegra la página web, nótese que el reproductor hecho con tecnología Flash se presenta de la misma forma que en un navegador web de computador de escritorio. 
+	En la siguiente captura, Mobile Safari (\ref{sshot_iOS_sstream}) presenta el problema de la falta de soporte de tecnologías Flash, la página web muestra sus componentes HTML ausentando el reproductor de video.
 
 %\clearpage 
 \begin{figure}[h!]
