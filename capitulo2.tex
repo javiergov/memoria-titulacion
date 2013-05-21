@@ -5,7 +5,7 @@ En el siguiente capítulo se describen las etapas recorridas para llegar a la so
 El siguiente capítulo consta de las bases necesarias para realizar la solución, la que se compone de dos elementos principales. 
 \begin{itemize}
 \item Servidor: Encargado de recodificar (si es necesario) la fuente de audio o video y segmentarla para su distribución.
-\item Cliente: Aplicación ejecutada en iOS, encargada de comunicarse al servidor para pedir el flujo de video y entregar información en twitter.
+\item Cliente: Aplicación ejecutada en iOS, encargada de comunicarse al servidor para pedir el flujo de video y entregar información en Twitter.
 \end{itemize}
 % poner figura aqui
 La figura \ref{diagramaGral} presenta una idea general del sistema.\\
@@ -200,9 +200,9 @@ En la figura \ref{ejemploVariantPLS} se observan tres variantes asociadas al mis
 
 Por defecto la primera variante será la utilizada para comenzar la transmisión, y además se utilizará para revisar la calidad del enlace, si la velocidad de descarga de los segmentos da como resultado un mayor ancho de banda, el cliente cambiará a la variante con el mayor valor que pueda cubrir este calculo de ancho de banda.\\
 
-En el caso que exista por distintos motivos una caida en la calidad del enlace, la baja de velocidad de descarga debe ser alertada por el cliente de forma que pueda cambiar la variante en reproducción por otra asociada a un menor ancho de banda. Estos cambios deben ocurrir de manera automatica de modo que al usuario no se le vea afectado el flujo que está consumiendo.\\
+En el caso que exista por distintos motivos una caída en la calidad del enlace, la baja de velocidad de descarga debe ser alertada por el cliente de forma que pueda cambiar la variante en reproducción por otra asociada a un menor ancho de banda. Estos cambios deben ocurrir de manera automática, de modo que el reproductor vea afectado su flujo bajo reproducción.\\
 
-Tomando en cuenta este comportamiento, se debe considerar al armar la lista de variantes según el tipo de enlace que utilizarán sus clientes. Por ejemplo si tiene identificado que sus clientes se conectarán al servidor mediante WiFi es preferible que la lista de variantes tenga como primer elemento la variante de 550000 Kbps y en caso de que sus clientes se conecten al servidor mediante red celular, es preferible presentar como primer variante la de 110000 Kbps.
+Tomando en cuenta este comportamiento, se debe considerar, el tipo de enlace de los reproductores al armar la lista de variantes. Por ejemplo si tiene identificado que sus clientes se conectarán al servidor mediante WiFi es preferible que la lista de variantes tenga como primer elemento la variante de 550000 Kbps y en caso que los clientes se conecten al servidor mediante red celular, es preferible presentar como primer variante la de 110000 Kbps.
 	De esta forma el cliente reproducirá inmediatamente un stream acorde a su enlace. \\
 	
 En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el cliente podrá reproducir el contenido rápidamente con velocidades EDGE, y si el enlace lo permite podrá cambiar a una mejor variante. En caso de que el cliente se conecte mediante WiFi, cargará el enlace de menor ancho de banda para realizar pruebas e inmediatamente descartarlo por uno de mejor calidad que satisfaga sus requerimientos.
@@ -215,22 +215,22 @@ En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el c
 	\subsection{Herramientas dispuestas por Apple}
 	Apple Inc. como desarrollador y promotor de esta tecnología ha dispuesto para los desarrolladores un set de aplicaciones de línea de comandos para la creación de transmisiones con HTTP Live Streaming.
 		\subsubsection{MediaFile Segmenter}
-Esta aplicación tiene como funcion multiplexar el contenido multimedia del archivo en un flujo de transporte MPEG2 (MPEG2-TS) y dividirlo en una serie de pequeños archivos de aproximadamente la misma duración. La aplicación también crea una lista de reproducción con referencias a los archivos del tipo Video en demanda (VOD).
+Esta aplicación tiene como función multiplexar el contenido multimedia del archivo en un flujo de transporte MPEG2 (MPEG2-TS) y dividirlo en una serie de pequeños archivos de aproximadamente la misma duración. La aplicación también crea una lista de reproducción con referencias a los archivos del tipo Video en demanda (VOD).
 
 		\subsubsection{MediaStream Segmenter}
-Al igual que MediaFile Segmenter, esta herramienta segmenta el contenido multimedia en varios archivos, sin embargo toma como entrada un flujo de transporte MPEG2 a través de un enlace UDP [dirección:puerto] o también puede hacerlo a través de la entrada estandar (stdin). De igual forma que \textit{mediafilesegmenter} esta aplicación genera una lista de reproducción en formato \textbf{m3u8}.\\
+Al igual que \textit{MediaFile Segmenter}, esta herramienta segmenta el contenido multimedia en varios archivos, sin embargo toma como entrada un flujo de transporte MPEG2 a través de un enlace UDP [dirección:puerto] o también puede hacerlo a través de la entrada estandar (stdin). De igual forma que \textit{mediafilesegmenter} esta aplicación genera una lista de reproducción en formato \textbf{m3u8}.\\
 
 Como recibe de entrada un flujo de datos, permite generar listas de reproducción en vivo, generando segmentos mientras se reciben y actualizando la lista de reproducción con las referencias. Este tipo de flujo de medios es recomendable para difusión contínua, permitiendo además eliminar los segmentos que ya expiraron en la ventana de transmisión.
 
 		\subsubsection{Variant Playlist Creator}
-		Esta aplicación se utiliza en conjunto con MediaFile Segmenter para crear una lista de variantes a partir de multiples streams del tipo VOD. Esto se realiza indicando la opcion en MediaFile Segmenter \textit{--generate-variant-plist} que genera un archivo property list (XML) por cada variante del stream, estos archivos se entregan junto a las listas de reproducción para obtener la lista de variante.
+		Esta aplicación se utiliza en conjunto con MediaFile Segmenter para crear una lista de variantes a partir de múltiples streams del tipo VOD. Esto se realiza indicando la opcion en \textit{MediaFile Segmenter} \textit{\textbf{--generate-variant-plist}} que genera un archivo \textit{property list} (XML) por cada variante del stream, estos archivos se entregan junto a las listas de reproducción para obtener la lista de variante.
 			
 		\subsubsection{MediaStream Validator}		
-		Esta herramienta simula una sesión HLS y verifica que las listas de variantes y reproducción junto a los segmentos cumplen la especificación HTTP Live Streaming. Si se encuentra algún problema en las pruebas de reproducción, se entrega un informe para diagnostico.
+		Esta herramienta simula una sesión HLS y verifica que las listas de variantes y reproducción junto a los segmentos cumplen la especificación \textit{HTTP Live Streaming}. Si se encuentra algún problema en las pruebas de reproducción, se entrega un informe para diagnóstico.
 		
 	\subsection{Ejemplo de transmisión}
 
-Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una pelicula ya comprimida en audio AAC y video h.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}. Para realizar esta transimisión se utiliza el \textit{asistente de emisión/transcodificación}.\\
+Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una película ya comprimida en audio AAC y video h.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}. Para realizar esta transimisión se utiliza el \textit{asistente de emisión/transcodificación}.\\
 
 \begin{figure}[H]
 	\centering
@@ -240,7 +240,7 @@ Con las herramientas provistas por Apple, se procedió a realizar una transmisi�
 \end{figure}
 
 
-Considerando las herramientas y el escenario del contenido, la más indicada para transmitir a través de HLS es MediaStream Segmenter ya que puede tomar como entrada el flujo de datos emitidos por UDP y luego entregar su salida a un servidor web Apache que provea a través de internet. De esta forma clientes del tipo iPhone, iPad o Macintosh pueden acceder al contenido multimedia.\\
+Considerando las herramientas y el escenario del contenido, la más indicada para transmitir a través de HLS es \textit{MediaStream Segmenter} ya que puede tomar como entrada el flujo de datos emitidos por UDP y luego dejar disponible su salida para que un servidor web Apache la provea a través de Internet. De esta forma clientes del tipo iPhone, iPad o Macintosh pueden acceder al contenido multimedia.\\
 
 En la figura \ref{vlc_transmission} se puede observar que la emisión se ha realizado a una ip en específico utilizando el flujo de transporte MPEG2-TS. Este stream se entrega al \textbf{mediastreamsegmenter} con los siguientes parámetros en la línea de comandos.
 
@@ -249,11 +249,11 @@ En la figura \ref{vlc_transmission} se puede observar que la emisión se ha real
 	-f ~/Sites/hlsexample 127.0.0.1:1234
 \end{lstlisting}
 
-Estos parámetros indican a mediastreamsegmenter que para el ejemplo se genere una lista de reproducción con una ventana de transmisión de \textbf{7} segmentos (\textbf{-s}), los cuales tienen \textbf{11} segundos de duración (\textbf{-t}), además se le indica que los segmentos ya caducados deben ser eliminados (\textbf{-D}). \\
+Estos parámetros indican a \textbf{mediastreamsegmenter} que para el ejemplo se genere una lista de reproducción con una ventana de transmisión de \textbf{7} segmentos (\textbf{-s}), los cuales tienen \textbf{11} segundos de duración (\textbf{-t}), además se le indica que los segmentos ya caducados deben ser eliminados (\textbf{-D}), es decir, los segmentos que ya no aparecen en la lista de reproducción debido a que fueron reemplazados por contenido más reciente son eliminados. \\
 
-La lista de reproducción lleva el nombre \textit{ejemplo.m3u8} (\textbf{-i}) y los archivos resultantes se deben guardar en el directorio con ruta \textit{$\sim$/Sites/hlsexample} (\textbf{-f}). Por ultimo se indica que la emisión UDP se halla en la dirección ip y puerto: \textit{127.0.0.1:1234}.\\
+La lista de reproducción lleva el nombre \textit{ejemplo.m3u8} (\textbf{-i}) y los archivos resultantes se deben guardar en el directorio con ruta \textit{$\sim$/Sites/hlsexample} (\textbf{-f}). Por último se indica que la emisión UDP se halla en la dirección ip y puerto: \textit{127.0.0.1:1234}.\\
 
-El resultado de esto es un stream HLS al cual se puede acceder mediante un servidor web como por ejemplo Apache. En caso de este ejemplo los archivos se ubican en el subdirectorio \textit{hlsexample} del directorio asignado a Apache del usuario, para acceder al stream se utilizó un player HTML5 en el archivo \textit{index.html} ubicado junto al resto.
+El resultado de esto es un stream HLS al cual se puede acceder mediante un servidor web como por ejemplo Apache. En caso de este ejemplo los archivos se ubican en el sub-directorio \textit{hlsexample} del directorio asignado a Apache del usuario, para acceder al stream se utilizó un player HTML5 en el archivo \textit{index.html} ubicado junto al resto.
 
  \begin{lstlisting}
 	<html>
@@ -267,7 +267,7 @@ El resultado de esto es un stream HLS al cual se puede acceder mediante un servi
 
 Nótese que la fuente al video es la lista de reproducción generada por \textbf{mediastreamsegmenter}, la cual se encuentra en constante actualización mientras la transmisión se lleva a cabo.\\
 
-Ya con el servidor web funcionando, la carga de esta página web permitirá la reproducción del stream en vivo mientras el navegador web sea compatible con el protocolo HTTP Live Streaming utilizando el player HTML5. En la actualidad los únicos navegadores compatibles son Safari y Mobile Safari, desarrollados por Apple.\\
+Ya con el servidor web funcionando, la carga de esta página web permitirá la reproducción del stream en vivo mientras el navegador web sea compatible con el protocolo \textit{HTTP Live Streaming} utilizando el reproductor HTML5. En la actualidad los únicos navegadores compatibles son Safari y Mobile Safari, desarrollados por Apple.\\
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.6]{imgs/ipad-hlsexample.png}
@@ -291,7 +291,7 @@ En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del st
 \section{Reproducción y Control de Stream de Video}
 
 %	explicar resumido la estructura como se conecta el server y el cliente, con un  diagrama
-	Este trabajo de memoria buscó entregar al usuario control de la linea temporal de un flujo de contenidos en vivo. Para realizar esto se ideó un sistema que intercambia marcas de tiempo entre el cliente y el servidor, de manera que aquel pueda definir desde qué punto el servidor debe crear una lista de reproducción en vivo. \\
+	Este trabajo de memoria buscó entregar al usuario control de la línea temporal de un flujo de contenidos en vivo. Para realizar esto se ideó un sistema que intercambia marcas de tiempo entre el cliente y el servidor, de manera que aquel pueda definir desde qué punto el servidor debe crear una lista de reproducción en vivo. \\
 	
 	Para entregar esta información se utilizó como método de entrada parámetros en la url, que el cliente utiliza para conectarse. Además se puede mejorar la experiencia del usuario indicando al servidor el tipo de enlace que el cliente posee, es decir WiFi o red celular, y expandiendo aun más con un parámetro para definir el canal que se quiere ver, todo desde la misma aplicación.
 	
@@ -299,22 +299,22 @@ En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del st
 	El servidor consiste en dos módulos: segmenter y dispatcher, este último depende de los archivos guardados por el segmentador, a su vez el segmentador recibe los datos a través de una emisión UDP o por la entrada estandar \textbf{stdin}.
 		\subsubsection{Obtención del Stream}
 %		la recepcion de un stream RTMP, codificacion con vlc o ffmpeg y generar un archivo o stream udp
-El contenido puede ser obtenido de distintos tipos de fuentes pero este debe cumplir con la especificación de HTTP Live Streaming, es decir entregar al segmentador un flujo de datos codificados con perfiles compatibles con iOS y encapsulados en MPEG2-TS.
+El contenido destinado a ser segmentado puede ser obtenido de distintos tipos de fuentes, pero debe cumplir con la especificación de \textit{HTTP Live Streaming}, es decir entregar al segmentador un flujo de datos codificados con perfiles compatibles con iOS y encapsulados en MPEG2-TS.
 		\subsubsection{Sementación del Video}
 		% el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
 
-El segmentador utilizado fue desarrollado por la empresa AltaVoz S.A. interesada en llevar a cabo el proyecto. Los motivos de este trabajo se deben a que las herramientas dispuestas por Apple funcionan sólamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar a \textbf{mediastreamsegmenter}, trozando el flujo de entrada en pequeños archivos de cierta duración.\\
+El segmentador utilizado fue desarrollado por la empresa AltaVoz S.A. interesada en llevar a cabo el proyecto. Los motivos de este trabajo se deben a que las herramientas dispuestas por Apple funcionan solamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar a \textbf{mediastreamsegmenter}, trozando el flujo de entrada en pequeños archivos de cierta duración.\\
 
- La gran diferencia con el uso de \textbf{mediastreamsegmenter} recalca en el almacenamiento de los archivos resultantes, estos se guardan sin ser eliminados para mantener un gran registro de las transmisiones, el nombre de cada segmento corresponde a la fecha y hora de la recepción de la emisión en formato Unix time (POSIX time) y con extensión \textbf{.ts}. Para mantener orden en el sistema de archivos los segmentos se guardan en subdirectorios por cada hora de contenido, el nombre de estos subdirectorios también llevan Unix time para su catalogación.\\
+ La gran diferencia con el uso de \textbf{mediastreamsegmenter} recalca en el almacenamiento de los archivos resultantes, los cuales se guardan sin ser eliminados para mantener un gran registro de las transmisiones, el nombre de cada segmento corresponde a la fecha y hora de la recepción de la emisión en formato \textit{\textbf{Unix Time}} (\textit{POSIX time}) y con extensión \textbf{.ts}. Para mantener orden en el sistema de archivos los segmentos se guardan en sub-directorios por cada hora de contenido, el nombre de estos sub-directorios también llevan \textit{Unix Time} para su catalogación.\\
 
-Una última caracteristica especial del segmentador es marcar el segmento más antiguo y el más reciente en dos archivos \textbf{\textit{start.txt}} y \textbf{\textit{last.txt}} respectivamente, de forma que el cliente pueda representar gráficamente al usuario la disponibilidad de contenido en el \textit{stream}.
+Una última característica especial del segmentador es marcar el segmento más antiguo y el más reciente en dos archivos \textbf{\textit{start.txt}} y \textbf{\textit{last.txt}} respectivamente, de forma que el cliente pueda representar gráficamente al usuario la disponibilidad de contenido en el \textit{stream}.
 		
 		\subsubsection{Emisor de la lista de reproducción}
 %		dispatcher que recibe epoch, el tipo (canal) y el bwPARAMETER del tipo de enlace Wifi o cellular		
 El \textit{Playlist Dispatcher} consiste en un script \textbf{php} disponible en Internet gracias a un servidor web que trabaje con un módulo PHP, el script \textit{playlist dispatcher} debe recibir parámetros del cliente a través de la cadena de consulta (\textit{query string}) de la dirección URL. Los parámetros son los siguientes:
 
 \begin{itemize}
-	\item \textbf{t}: Corresponde a la marca de tiempo que el cliente quiere recibir, esta debe ser indicada con el formato Unix Time (POSIX time).
+	\item \textbf{t}: Corresponde a la marca de tiempo que el cliente quiere recibir, debe ser indicada con el formato \textit{Unix Time} (\textit{POSIX time}).
 	\item \textbf{s}: Este parámetro indica al script cual contenido entregar a través del stream. Analogamente se puede considerar como el parámetro para definir cual canal de televisión el usuario quiere ver. El valor corresponde a una cadena de caracteres (\textit{string}).
 	\item \textbf{c}: Este último parámetro corresponde al tipo de conexión con la cual el cliente está conectado a Internet, pueden ser dos valores, 1 para red celular y 0 para WiFi. Este parámetro se utiliza para optimizar la lista de variantes que entrega el script.
 \end{itemize}
@@ -330,12 +330,10 @@ Con estos parámetros el playlist dispatcher retorna una lista de variantes con 
 		\label{diagramaHLSAltaVoz}
 	\end{figure}		
 		
-	\subsection{Cliente iOS}
+	\subsection{Aplicación Cliente iOS}
 %		descripcion general.
 %		como se conecta al server, reachability, entrega a avplayer
-Ha de entenderse por cliente una aplicación ejecutada sobre el sistema operativo \textbf{iOS}, su función consiste en mantener un enlace al servidor contactándose directamente con el playlist dispatcher y descargar los segmentos que éste le indique.\\
-
-Además debe presentar en la pantalla del dispositivo el video, o reproducir el audio, según el tipo de stream. Para realizar esto se utilizan componentes de la interfaz de programación de aplicaciones (\textbf{API} - \textit{Application Programming Interface}). El cliente debe permitir al usuario controlar el contenido del stream con una interfaz gráfica simple y precisa.
+Es la aplicación ejecutada sobre el sistema operativo \textbf{iOS}, su función consiste en mantener un enlace al servidor contactándose directamente con el \textit{playlist dispatcher} y descargar los segmentos que éste le indique. Además debe presentar en la pantalla del dispositivo el video, o reproducir el audio, según el tipo de stream. Para realizar esto se utilizan componentes de la interfaz de programación de aplicaciones (\textbf{API} - \textit{Application Programming Interface}). El cliente debe permitir al usuario controlar el contenido del \textit{stream} con una interfaz gráfica simple y precisa.
 
 		\subsubsection{Reproducción con AV Framework}
 %		avplayer, playeritem, asset tracks		
@@ -373,7 +371,9 @@ Utilizando observadores de notificaciones centralizadas (\textit{Notification Ce
 Para mantener de forma continua la información temporal del stream se han asociado a la instancia de la clase AVPlayer dedicada a la reproducción del stream entregado por URL, los siguientes datos.\\
 % enumerar los datos obtenidos
 
-\textbf{Revisión periódica}:
+\textbf{Observación periódica de parámetros}
+
+Para el funcionamiento de la aplicación cliente, se observan a intervalos regulares de tiempo los valores de los siguientes parámetros:
 
 \begin{enumerate}
 \item \textbf{Tiempo de reproducción}: Este se supervisa en un intervalo de 1/10 de segundo de forma que con esta razón de cambio la interfaz gráfica se actualice, se ajusta a  este valor de tiempo (100 ms) de forma que el usuario no identifique irregularidad en el temporizador y a la vez la carga en ciclos de ejecución no afecte el desempeño de la máquina.
@@ -384,10 +384,10 @@ Para mantener de forma continua la información temporal del stream se han asoci
 
 \end{enumerate}
 
-En el caso de la observación periódica de datos, esta se debe detener previamente al termino de la reproducción de cierto stream, debido a que se debe liberar de memoria el reproductor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.\\
+En el caso de la observación periódica de datos, se debe detener previamente al término de la reproducción de cierto \textit{stream}, debido a que se debe liberar de memoria el reproductor y estos observadores retienen en memoria al reproductor. En caso que no se siga esta sugerencia, al iniciar una nueva reproducción los observadores utilizados anteriormente se vuelven a crear causando duplicidad y por ende pérdida de memoria.\\
 
 
-\textbf{Notificación en base a cambios}:
+\textbf{Notificación en base a cambios}
 
 La mayoría de los valores observados sirven como guía para controlar el funcionamiento del reproductor. En caso de cualquier cambio en el estado de los atributos observados se dispara una notificación desde el objeto con el cambio con destino al observador asociado. 
 En el desarrollo de esta aplicación la clase encargada de gestionar la interfaz gráfica de los objetos (\textit{View Controller}) actúa también como observador.\\
@@ -401,7 +401,8 @@ Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la f
 		        options:NSKeyValueObservingOptionNew
 		        context:TracksChangeContext];
 	\end{lstlisting}
-	\caption{Ejemplo de objeto Reproductor siendo asociado un observador su atributo \textit{rate}}
+	\caption{Método para observar el atributo \textit{rate} de la instancia encargada de la reproducción.}
+	%Ejemplo de objeto Reproductor siendo asociado un observador su atributo \textit{rate}}
 	\label{exampleCodeObserver}	
 \end{figure}	
  
@@ -447,7 +448,7 @@ Por el lado del servidor, aparte de los campos en la cadena de consulta (\textit
 \item \textbf{si}: Secuencia inicial de la lista de reproducción HLS.
 \item \textbf{sf}: Secuencia final de la lista de reproducción HLS.
 \item \textbf{ti}: Tiempo inicial encontrado en los archivos, corresponde a la marca de tiempo más cercana al valor de t0, ya que puede ocurrir que el tiempo pedido no coincida con el nombre de archivo de los segmentos.
-\item \textbf{tl}: Tiempo del ultimo segmento de la lista de reproducción HLS.
+\item \textbf{tl}: Tiempo del último segmento de la lista de reproducción HLS.
 
 \end{itemize}
  
@@ -632,11 +633,11 @@ Al pulsar en algún mensaje representado en la tabla \ref{sshot-twitterclientvc}
 
 	\subsection{Bit.ly}
 %		desmenuzar el enlace de bitly
-Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream (que además incluye marca de tiempo) no utilice demasiados caracteres. El motivo es la limitante de twitter de 140 caracteres por mensaje, los cuales la aplicación debe utilizar lo mínimo para compartir.\\
+Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream (que además incluye marca de tiempo) no utilice demasiados caracteres. El motivo es la limitante de Twitter de 140 caracteres por mensaje, los cuales la aplicación debe utilizar lo mínimo para compartir.\\
 
 Otra característica útil para la supervisión de la aplicación y el servicio \textit{SocialStream} en su totalidad, es la posibilidad de utilizar las llamadas a la API de Bit.ly junto a las credenciales de una cuenta previamente hecha para llevar un registro del uso de los enlaces. \\
 
-La compresión se debe realizar al compartir en twitter un enlace al stream, y descompresión cuando el usuario pulsa en un tweet de la tabla (figura \ref{sshot-twitterclientvc}).
+La compresión se debe realizar al compartir en Twitter un enlace al stream, y descompresión cuando el usuario pulsa en un tweet de la tabla (figura \ref{sshot-twitterclientvc}).
 
 		\subsubsection{API Bit.ly}
 %		las llamadas de la api que se utilizaron
