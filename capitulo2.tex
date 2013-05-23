@@ -405,25 +405,25 @@ Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la f
 	%Ejemplo de objeto Reproductor siendo asociado un observador su atributo \textit{rate}}
 	\label{exampleCodeObserver}	
 \end{figure}	
- 
- 
- Teniendo claro el sistema de observación de instancias, se explican a continuación los campos de interés para este proyecto:
+  
+ %Teniendo claro el sistema de observación de instancias, se explican a continuación los campos de interés para este proyecto:
+ Siguiendo el ejemplo de la figura \ref{exampleCodeObserver} se utiliza el mismo método para observar otros campos que son de interés en el proyecto, se debe modificar la linea 2 de la figura mencionada (después de \textit{forKeyPath:}). Los atributos a observar son los siguientes: 
 \begin{itemize}
-\item \textbf{Estado}: El atributo \textit{status} de la clase AVPlayer es del tipo sólo-lectura e indica si la instancia de AVPlayer es capaz de reproducir el flujo multimedia. Este atributo puede tener tres valores del tipo integer: \textit{AVPlayerStatusUnknown}, \textit{AVPlayerStatusReadyToPlay} y \textit{AVPlayerStatusFailed}.
+\item \textbf{Estado}: El atributo \textit{\textbf{status}} de la clase AVPlayer es del tipo sólo-lectura e indica si la instancia de AVPlayer es capaz de reproducir el flujo multimedia. Este atributo puede tener tres valores del tipo integer: \textit{AVPlayerStatusUnknown}, \textit{AVPlayerStatusReadyToPlay} y \textit{AVPlayerStatusFailed}.
 
-\item \textbf{Razón de reproducción}: Consiste en un valor flotante en el rango entre 0.0 y 1.0. El atributo rate indica si el audio y/o video se reproduce a velocidad normal (1.0) o se encuentra detenido (0.0). Valores intermedios se asocian a una menor velocidad de reproducción, en el caso de este proyecto no se buscó entregar un control de velocidad de reproducción al usuario fuera de la normal. También se debe tener en cuenta que este atributo se puede ajustar por instrucciones externas.
+\item \textbf{Razón de reproducción}: Consiste en un valor flotante en el rango entre 0.0 y 1.0. El atributo \textbf{\textit{rate}} indica si el audio y/o video se reproduce a velocidad normal (1.0) o se encuentra detenido (0.0). Valores intermedios se asocian a una menor velocidad de reproducción, en el caso de este proyecto no se buscó entregar un control de velocidad de reproducción al usuario fuera de la normal. También se debe tener en cuenta que este atributo se puede ajustar por instrucciones externas.
 
-\item \textbf{Búfer de Datos}: El reproductor AVPlayer posee un atributo que es una instancia de AVPlayerItem, esta clase es una abstracción del flujo de datos \textit{currentItem}. Tomando en cuenta esto se deben observar tres propiedades de este \textit{currentItem}, estas son: 
+\item \textbf{Búfer de Datos}: El reproductor AVPlayer posee un atributo que es una instancia de AVPlayerItem, esta clase es una abstracción del flujo de datos \textit{currentItem}. Se deben observar tres propiedades de \textit{\textbf{currentItem}}: 
 \begin{itemize}
 \item \textit{playbackBufferEmpty}
 \item \textit{playbackLikelyToKeepUp}
 \item \textit{playbackBufferFull}
 \end{itemize}
-Ellas gatillan notificaciones al cambiar su valor BOOL a verdadero para informar a las otras clases y tomar curso de acción. Por ejemplo al recibir una notificación de buffer vacío, es necesario avisar al usuario con una representación gráfica del reproductor mientras carga.
+Ellas gatillan notificaciones al cambiar su valor BOOL a verdadero para informar a las otras clases y tomar curso de acción. Por ejemplo al recibir una notificación de búfer vacío, es necesario avisar al usuario con una representación gráfica del reproductor mientras carga.
 
-\item \textbf{Pistas de medios}: Debido a que el flujo de datos puede solamente audio, o video y audio. Es necesario supervisar el tipo de medio que se está presentando. Para esto se utiliza el atributo \textit{tracks} del flujo de datos (\textit{currentItem}). Este atributo consiste en un arreglo (NSArray) de instancias de AVPlayerItemTrack, clase que representa cada pista multimedia del flujo de datos, cada pista puede ser texto (AVMediaCharacteristicLegible), audio (AVMediaCharacteristicAudible) o video (AVMediaCharacteristicVisual). Observando el cambio de componentes en el flujo es posible adecuar el reproductor según el tipo de medio que se presenta al usuario.
+\item \textbf{Pistas de medios}: Debido a que el flujo de datos puede ser emitido como solamente audio, o también como video y audio, es necesario supervisar el tipo de medio que se está presentando. Para esto es necesario observar el atributo \textit{\textbf{tracks}} del flujo de datos (\textit{currentItem}). Este atributo consiste en un arreglo (NSArray) de instancias de AVPlayerItemTrack, clase que representa cada pista multimedia del flujo de datos, cada pista puede ser texto (AVMediaCharacteristicLegible), audio (AVMediaCharacteristicAudible) o video (AVMediaCharacteristicVisual). Observando el cambio de componentes en el flujo es posible adecuar el reproductor según el tipo de medio que se presenta al usuario.
 
-\item \textbf{Rango de reproducción}: \textit{seekableTimeRanges} se refiere al atributo asociado a la disponibilidad temporal del item en reproducción, el rango donde es posible realizar búsqueda de cuadros de reproducción. Este valor cambia constantemente debido a que el contenido recibido por HTTP Live Streaming se encuentra en actualización permanente guardando tiempo adicional para reproducción. Este atributo se observa con el fin de rastrear si se están obteniendo segmentos del contenido.
+\item \textbf{Rango de reproducción}: \textit{\textbf{seekableTimeRanges}} se refiere al atributo asociado a la disponibilidad temporal del item en reproducción, el rango donde es posible realizar búsqueda de cuadros de reproducción. Este valor cambia constantemente debido a que el contenido recibido por \textit{HTTP Live Streaming} se encuentra en actualización permanente guardando tiempo adicional para reproducción. Este atributo se observa con el fin de rastrear si se están obteniendo segmentos del contenido.
 % StreamPlayerVC.m: 748 start: 630.415833, duration: -15.000000
 \end{itemize}
 \label{item:seekableTimeRanges}
@@ -433,7 +433,7 @@ Ellas gatillan notificaciones al cambiar su valor BOOL a verdadero para informar
 \label{subsec:cookies}
 %	conexión, envio de epoch, recepcion de m3u8, start y last txt	
 
-Se debe considerar que el intercambio de información se realiza entre el dispatcher y la aplicación cliente como se muestra en la figura \ref{diagramaGral}. Para esto se insta usar el reproductor de clase AVPlayer mediante su método de inicialización:
+El intercambio de información a través de \textit{HTTP Live Streaming} se realiza entre el dispatcher y la aplicación cliente como se muestra en la figura \ref{diagramaGral}. Para esto se insta usar el reproductor de clase AVPlayer mediante su método de inicialización:
 
 \textit{initWithURL:(\textbf{NSURL} *)url}, que toma como argumento un URL al dispatcher con los parámetros explicados anteriormente. Luego que el reproductor se ha iniciado, se procede a asociar los observadores a la instancia para luego llamar a la reproducción.\\
 
@@ -470,10 +470,10 @@ Si la aplicación ya es capaz de pedir y recibir un flujo de datos multimedia po
 Las Directrices de interfaz humana de iOS (\textit{iOS Human Interface Guidelines}) describen los principios que ayudan a diseñar una interfaz y experiencia de usuario para las aplicaciones iOS.\\
 
 Estas guías no describen los diseños en código, abarcan convenciones como características de la plataforma, casos de transición entre pantallas, gestos que el usuario espera y tecnologías de comunicación entre componentes.
-Para desarrollar la aplicación se revisaron puntos de estas guías con tal de obtener un producto acorde a lo esperado por los usuarios de iOS. No se quiso innovar en materia de controles y gestos, por lo tanto se utilizaron componentes estándar del framework UIKit.
+Para desarrollar la aplicación se revisaron puntos de estas guías con tal de obtener un producto acorde a lo esperado por los usuarios de iOS. No se quiso innovar en materia de controles y gestos, por lo tanto se utilizaron componentes comunes del \textit{framework} UIKit.
 	
 	\subsection{Componentes de UIKit}
-	Para el desarrollo de la aplicación cliente se utilizaron recursos dispuestos en el framework UIKit con tal de mantener la percepción del usuario con la interfaz gráfica respecto al resto de las aplicaciones que ejecuta en su sistema. El mayor cambio respecto al los componentes comunes de la interfaz fue en el selector de segundos debido a que la selección de fecha no abarca totalmente lo requerido por el sistema diseñado.
+	Para el desarrollo de la aplicación cliente se utilizaron recursos dispuestos en el framework UIKit con tal de mantener la percepción del usuario con la interfaz gráfica respecto al resto de las aplicaciones que ejecuta en su sistema. El mayor cambio respecto a los componentes comunes de la interfaz fue en el selector de segundos debido a que la selección de fecha no abarca totalmente lo requerido por el sistema diseñado.
 	
 		\subsubsection{UIDatePicker}
 		\label{subsec:datepicker}
@@ -490,12 +490,12 @@ Para solucionar esto se ideó un control personalizado que presenta una rueda ex
 \end{figure}
  
 		\subsubsection{UIButton}
-		El reproductor presenta botones de control de reproducción en base a un reproductor estándar de MPMoviePlayerViewController, estos son PLAY/PAUSE, Next. Estos botones son lo único que comparten con un reproductor normal ya que además se debe incorporar un botón para compartir el momento de la reproducción a través de redes sociales. Se agrega entonces un botón con el icono de twitter que presenta un formulario de acción con ítems para cerrar la sesión, compartir en twitter o cancelar la acción de compartir.
+		El reproductor presenta botones de control de reproducción en base a un reproductor estándar de MPMoviePlayerViewController, éstos son PLAY/PAUSE, Next. Estos botones son lo único que comparten con un reproductor normal ya que además se debe incorporar un botón para compartir el momento de la reproducción a través de redes sociales. Se agrega entonces un botón con el icono de Twitter que presenta un formulario de acción con ítems para cerrar la sesión, compartir en Twitter o cancelar la acción de compartir.
 		
 %				play pausa, ibactions
 		\subsubsection{Volume Slider}
 
-		Para presentar el control de volumen se utilizó una clase estándar del sistema operativo, llamada MPVolumeslider, encargada de presentar un deslizador que está directamente relacionado con los botones del hardware de los dispositivos iOS. Tanto así, que en materia de depuración (\textit{debug}), el simulador no permite mostrar en pantalla dicho control. Se agrega ajustando un rectangulo destinado como perimetro para que el sistema presente dicho control en una subvista.
+		Para presentar el control de volumen se utilizó una clase estándar del sistema operativo, llamada MPVolumeslider, encargada de presentar un deslizador que está directamente relacionado con los botones del hardware de los dispositivos iOS. Tanto así, que en materia de depuración (\textit{debug}), el simulador no permite mostrar en pantalla dicho control. Se agrega ajustando un rectángulo destinado como perímetro para que el sistema presente dicho control en una subvista, es decir una vista anidada en otra vista de la interfaz gráfica.
 		
 		\subsubsection{Vistas de Tablas}
 %		volumen, slider de view controller tipo facebook, etc
@@ -515,7 +515,7 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 %\clearpage
 \section{Integración Redes Sociales}
 	%diagrama de como funciona el posteo y recepcion de twitts
-	Para destacar la connotación de carácter social de la aplicación, se incorporó un sistema de compartimiento en base a la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
+	Para destacar la connotación de carácter social de la aplicación, se incorporó un sistema para compartir la información que ve el usuario a través de la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
 	
 	En resumen, el usuario al pulsar el botón \textbf{\textquotedblleft t\textquotedblright} visible en la imagen \ref{sshot-twitterclientvc} genera un URL en base a la fecha de la transmisión que está viendo, este URL se comprime a través del servicio bit.ly con tal de aminorar la cantidad de caracteres en el mensaje y luego se entrega al usuario en un campo de texto donde se le permite describir lo que comparte. Una vez en la red Twitter, usuarios que observen este mensaje a través de la misma aplicación pueden llegar a reproducir el instante compartido por el autor del mensaje (figura \ref{diagramaTwitterShare}).
 	
@@ -532,10 +532,11 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en internet, siendo uno los sitios más populares de la web\cite{alexa-twitter} permitiendo que personas no suscritas puedan ver los mensajes.
 	La limitante de cada mensaje se reduce a 140 caracteres, más que suficientes para difundir enlaces desde la aplicación desarrollada y permitiendo además una pequeña descripción por parte del usuario.
 		\subsubsection{API Twitter}
+		\label{subsec:twitter-search-api}
 		Para la muestra de los mensajes compartidos, se utilizó \textit{Twitter Search API}, interfaz dedicada a búsquedas en el índice de mensajes (\textit{tweets}) en tiempo real. Esta se caracteriza por lo siguiente:
 		
 		\begin{itemize}
-		\item Su historial dura no más de una semana, el indice de mensajes abarca entre 6 a 9 días.
+		\item Su historial dura no más de una semana, el índice de mensajes abarca entre 6 a 9 días.
 		\item La búsqueda no requiere de autenticación, se realiza anónimamente.
 		\item El resultado de la búsqueda se basa en relevancia del tema en vez de la totalidad de sus mensajes. Esto debido a las políticas del servicio de Twitter donde se privilegia el alcance de los mensajes según la reputación de los usuarios \cite{twitter-relevance}.
 		\end{itemize}
@@ -547,7 +548,7 @@ Tomando en cuenta estos puntos Search API satisface la obtención de mensajes co
 %		el porqué se utilizó sharekit en vez de twitter framework, el argumento de las apps de twitter
 Durante el desarrollo de la aplicación cliente Apple Inc. lanzó al público el sistema operativo iOS 5, el cual permite entre muchas características, la integración del sistema con la red social Twitter mediante \textbf{Twitter.framework} . Por simpleza y compatibilidad con versiones anteriores de iOS se descartó utilizar esta nueva herramienta para utilizar la biblioteca de código libre \textbf{Sharekit}\cite{library-sharekit}, destinada a integrar todo tipo de redes sociales incluyendo twitter. Otro motivo de esto es la posibilidad de expandir a otras redes el contenido que se comparte a través de la aplicación cliente. \\
 
-En caso que se desee, es posible utilizando Sharekit modificar el mensaje a compartir de forma que el usuario no elimine el URL relacionado al contenido compartido.
+En caso que se desee, utilizando Sharekit, es posible modificar el mensaje a compartir de forma que el usuario no elimine el URL relacionado al contenido compartido.
 
 		\subsubsection{Post en Twitter}
 %		como postear en twitter desde la app, action sheet
@@ -558,7 +559,8 @@ En caso que se desee, es posible utilizando Sharekit modificar el mensaje a comp
 
 		\subsubsection{Seguimiento de Hashtag}
 		%las llamadas de url para el cliente de twitter
-		Para realizar el seguimiento de los mensajes se utilizó Search API como se explicó anteriormente. Para realizar la llamada se realiza una conexión con el URL: 
+		Para realizar el seguimiento de los mensajes se utilizó Search API como se explicó anteriormente  en la sección (\ref{subsec:twitter-search-api}). Para realizar la llamada se realiza una conexión con el URL: \\
+		
 \url{http://search.twitter.com/search.json?include_entities=true&q=%23SocialStream} \\
 		
 		Nótese que el último componente del URL corresponde al hashtag, o marca de seguimiento que se se utiliza en los mensajes. La respuesta por parte de Twitter es un objeto del tipo JSON que contiene un arreglo con los mensajes resultantes.
@@ -633,9 +635,11 @@ Al pulsar en algún mensaje representado en la tabla \ref{sshot-twitterclientvc}
 
 	\subsection{Bit.ly}
 %		desmenuzar el enlace de bitly
-Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream (que además incluye marca de tiempo) no utilice demasiados caracteres. El motivo es la limitante de Twitter de 140 caracteres por mensaje, los cuales la aplicación debe utilizar lo mínimo para compartir.\\
+Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream (que además incluye marca de tiempo) no utilice demasiados caracteres. El motivo es la limitante de Twitter de 140 caracteres por mensaje, de los cuales la aplicación debe utilizar lo mínimo para compartir.\\
 
-Otra característica útil para la supervisión de la aplicación y el servicio \textit{SocialStream} en su totalidad, es la posibilidad de utilizar las llamadas a la API de Bit.ly junto a las credenciales de una cuenta previamente hecha para llevar un registro del uso de los enlaces. \\
+Otra característica útil para la supervisión de la aplicación y el servicio \textit{SocialStream} en su totalidad, es la posibilidad de utilizar las llamadas a la API de Bit.ly junto a las credenciales de una cuenta previamente hecha para llevar un registro del uso de los enlaces, los que tienen como característica, el ser permanentes y también que una vez creados no pueden ser editados en el URL al cual redirigen \cite{bib:bitly-permanent}.\\
+
+
 
 La compresión se debe realizar al compartir en Twitter un enlace al stream, y descompresión cuando el usuario pulsa en un tweet de la tabla (figura \ref{sshot-twitterclientvc}).
 
@@ -710,32 +714,30 @@ Nótese que en el URL de la figura \ref{bitly-expand} no especifica formato de r
 	\caption{Respuesta exitosa de tipo JSON al expandir URL Bit.ly}
 	\label{bitly-json-response}
 \end{figure}	
-Los datos del resultado de la llamada se entregan a una instancia de NSJSONSerialization con el mismo método utilizado para desmenuzar la información de los tweets (figura \ref{json-serialization}). De esta forma se obtiene un objeto del tipo NSDictionary y para luego fácilmente obtener el valor asociado a la clave \textbf{\textquotedblleft long\_url"}.
-En caso de obtener como respuesta un error los datos serán de igual forma del tipo JSON, sólo que la información de la clave \textbf{\textquotedblleft status\_txt"} corresponderá a la causa del error en vez del OK que se obtiene al realizar una operación exitosa (figura \ref{bitly-json-response}). El valor de las causas de error son las mismas que las indicadas anteriormente.
+Los datos del resultado de la llamada se entregan a una instancia de NSJSONSerialization con el mismo método utilizado para desmenuzar la información de los tweets (figura \ref{json-serialization}). De esta forma se obtiene un objeto del tipo NSDictionary para luego fácilmente obtener el valor asociado a la clave \textbf{\textquotedblleft long\_url"}.
+En caso de obtener como respuesta un error, los datos serán de igual forma del tipo JSON, sólo que la información de la clave \textbf{\textquotedblleft status\_txt"} corresponderá a la causa del error en vez del OK que se obtiene al realizar una operación exitosa (figura \ref{bitly-json-response}). El valor de las causas de error son las mismas que las indicadas anteriormente.
 
 %NOT_FOUND
 		\subsubsection{Seguimiento de un Hipervínculo}		
 %		como se monitorean los twitts por bitly y se puede usar pa marketing, saber que es lo popular etc		
-El hecho de entregar las credenciales de una cuenta al comprimir y expandir URL con Bit.ly permite monitorear los enlaces compartidos y la cantidad de aperturas que estos tienen. Esta información puede ser de gran ayuda para identificar qué programas o secciones transmitidas en la señal son más populares, de forma similar a lo que es el \textit{\textquotedblleft people meter"} o rating en la televisión abierta.
+El hecho de entregar las credenciales de una cuenta al comprimir y expandir URL con Bit.ly permite monitorear los enlaces compartidos y la cantidad de aperturas que éstos tienen. Esta información puede ser de gran ayuda para identificar qué programas o secciones transmitidas en la señal son más populares, de forma similar a lo que es el \textit{\textquotedblleft people meter"} o rating en la televisión abierta.
 
 Esta información se encuentra en \textbf{\url{https://bitly.com/a/stats}} donde es necesario acceder con las mismas credenciales configuradas en la aplicación.
 
 \clearpage
 \section{Registro en iOS}
 El sistema operativo iOS permite registrar \textit{schemes}, con lo cual el sistema reconoce qué aplicación debe encargarse de interpretar cierto URL. Esta característica es aprovechada por la aplicación cliente de forma que los enlaces compartidos por los usuarios en Twitter lleven a la aplicación cliente sin que esté necesariamente en ejecución.
-	\subsection{Schemes}
+	\subsection{Registro de la Aplicación en base a Esquema URI}
 %	explicar que son los schemes
-	Un \textbf{\textit{Scheme}} es el prefijo de un \textit{Universal Resource Locator} (\textbf{URL}), el cual define el protocolo a utilizar para ubicar un recurso.
-	Es necesario además que se pueda acceder al contenido compartido a través de la Web o incluso desde otras aplicaciones del sistema.
-
-Para esto es necesario que la aplicación indique en su archivo de información general \textbf{\textquotedblleft info.plist\textquotedblright}  \ los schemes de los URL que tiene interés.
-En el caso de la aplicación cliente, se registra un scheme como \textquotedblleft socialstream\textquotedblright , de manera que URLS de la forma \textbf{\url{socialstream://www.ejemplo.com/}} sean entregados a la aplicación cliente.
+	Un esquema URI o \textbf{\textit{Scheme}} es el prefijo de un \textit{Universal Resource Identifier} (\textbf{URI}), el cual define el protocolo a utilizar para ubicar un recurso. Para efectos de este trabajo se utiliza un URL que a su vez es un URI. Es necesario hacer presente que los mencionados URI se denominan como URL (\textit{Universal Resource Locator}) o URN (\textit{Universal Resource Name}). Lo anterior se plantea como herramienta necesaria para acceder al contenido compartido a través de la Web o incluso desde otras aplicaciones del sistema. Para esto se requiere que la aplicación indique en su archivo de información general \textbf{\textquotedblleft info.plist\textquotedblright}  \ los \textit{schemes} de los URL que tiene interés.
+En el caso de la aplicación cliente, se registra un \textit{scheme} como \textquotedblleft socialstream\textquotedblright , de manera que los URL de la forma \textbf{\url{socialstream://www.ejemplo.com/}} sean entregados a la aplicación cliente.
 
 % http://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/AdvancedAppTricks/AdvancedAppTricks.html#//apple_ref/doc/uid/TP40007072-CH7-SW50
 
-	\subsection{Redireccionamiento vía Web}
+	\subsection{Identificación del tipo de cliente}
+	%	\subsection{Redireccionamiento vía Web}
 %	explicar breve como funcionará la carga del scheme sstream, en web y mobile
-La forma más simple que se ideó para entregar la información, según las variadas plataformas que se conectan a internet, consiste en comunicar a través de la herramienta común que poseen los móviles y computadores: el navegador web.\\
+La forma más simple que se ideó para entregar la información, según las variadas plataformas que se conectan a Internet, consiste en comunicar a través de la herramienta común que poseen los móviles y computadores: el navegador web.\\
 
 El navegador web al iniciar la conexión través del protocolo HTTP con cierta página remota entrega dentro de sus cabeceras el Agente de Usuario \textit{(user agent)}, con lo cual es posible identificar qué cliente se conecta y a la vez personalizar el contenido a entregarle.
 
