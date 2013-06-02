@@ -178,7 +178,7 @@ En el caso de ajustar el valor a 1, la lista de reproducción invierte la priori
 
   \subsection{WiFi: Wireless LAN}
   El comportamiento monitorizado a través del rastreo de paquetes se observa con el dispositivo real (iPhone) para comprobar la práctica de la teoría.
-  En el caso de iniciar el stream en un iPhone con conexión a Internet mediante WiFi se presenta en pantalla el video inmediatamente si es que el ancho de banda da abasto. En caso que no sea suficiente cambiará a la variante de sólo audio.
+  En el caso de iniciar el stream en un iPhone con conexión a Internet mediante WiFi se presenta en pantalla el video inmediatamente si es que el ancho de banda da abasto. En caso que no sea suficiente cambiará a alguna variante capaz de reproducirse según el ancho de banda identificado por el dispositivo, en el ejemplo de la figura \ref{lst:playlistc0} la variante de menor tasa \textbf{65000 bps}, sólo audio.
   
   
   
@@ -209,9 +209,11 @@ En caso de observar cambios entre pistas que incluyen video a sólo pistas de au
 %- se revisa usando safari desktop con script que incluye player
 %Gracias al modo desarrollador disponible en el navegador web para OS X Safari, es posible identificarse con el servidor utilizando un agente de usuario de Mobile Safari (iOS).
 
-Para probar el cambio de stream a través de enlaces distribuidos por twitter se alojó el script \textbf{PHP} (\ref{subsec:php-redir}) en un servidor dispuesto por AltaVoz S.A. La ubicación de éste corresponde a \url{http://tsh.altavoz.net/twitter/index.php}.
+Para probar el cambio de stream a través de enlaces distribuidos por Twitter se alojó el script \textbf{PHP} (\ref{subsec:php-redir}) en un servidor dispuesto por AltaVoz S.A. La ubicación de éste corresponde a \url{http://tsh.altavoz.net/twitter/index.php}.
 El script utiliza los argumentos en la cadena de consulta \textbf{s} y \textbf{t} para generar un URL compatible si corresponde, o en caso contrario mostrar un mensaje de incompatibilidad.
-  \subsection{Dentro de la aplicación}
+
+%  \subsection{Dentro de la aplicación}
+  \subsection{Cambio de transmisión con la aplicación en ejecución}
   \label{subsec:ts-inside}
 Se utiliza la llamada al método \textit{didSelectRowAtIndexPath:(NSIndexPath *)indexPath} gatillado al pulsar en un celda de la vista de tablas (fig. \ref{sshot-twitterclientvc}) utilizada para representar los Tweets asociados al \textit{hashtag} \textbf{\#SocialStream}. \\
 
@@ -224,7 +226,7 @@ Se utiliza la llamada al método \textit{didSelectRowAtIndexPath:(NSIndexPath *)
 	\label{fig:twclient-list}
 \end{figure}
 
-El indice entregado al método se utiliza para identificar los datos del mensaje en el NSDictionary generado a partir del archivo JSON obtenido mediante Twitter Search API. De los datos contenidos en la instancia del diccionario \ref{tweet-json} se utiliza el valor de la clave \textbf{expanded\_url} para extraer la ruta del URL y generar un URL destinado al servicio \textbf{Bit.ly}.  \\
+El índice entregado al método se utiliza para identificar los datos del mensaje en el NSDictionary generado a partir del archivo JSON obtenido mediante Twitter Search API. De los datos contenidos en la instancia del diccionario \ref{tweet-json} se utiliza el valor de la clave \textbf{expanded\_url} para extraer la ruta del URL y generar un URL destinado al servicio \textbf{Bit.ly}.  \\
 
 Del ejemplo en la figura \ref{fig:twclient-list} la primera celda presenta el dato \url{http://t.co/jkNULXnM}, el cual tiene como valor de \textbf{expanded\_url} asociado \url{http://bit.ly/Soxy8c}.
 
@@ -243,9 +245,7 @@ El resultado de esta llamada corresponde a un JSON que debe ser serializado a un
 \end{figure}
 
 
-Si existen valores para \textbf{s} y \textbf{t} se procede a generar una notificación a la clase encargada de entregar el URL del stream a la instancia AVPlayer (fig. \ref{fig:twclient-results}, primera foto).
-
-En caso contrario se presenta al usuario un aviso con la clase \textbf{UIAlertView} indicando que el URL contenido en ese mensaje no corresponde a un stream, dando la opción además de ser abierto en el navegador del sistema Mobile Safari mediante el método \textit{[[UIApplication sharedApplication] openURL:(NSURL*)url]}, logrando además que la aplicación se coloque en \textit{background} (fig. \ref{fig:twclient-results}, segunda foto).
+Si existen valores para \textbf{s} y \textbf{t} se procede a generar una notificación a la clase encargada de entregar el URL del stream a la instancia AVPlayer (fig. \ref{fig:twclient-results}, primera foto). En caso contrario se presenta al usuario un aviso con la clase \textbf{UIAlertView} indicando que el URL contenido en el mensaje no corresponde a un stream, dando la opción además de ser abierto en el navegador del sistema Mobile Safari mediante el método \textit{[[UIApplication sharedApplication] openURL:(NSURL*)url]}, logrando además que la aplicación se coloque en \textit{background} (fig. \ref{fig:twclient-results}, segunda foto).
 
 \begin{figure}[H]
 	\centering
@@ -286,8 +286,8 @@ En caso contrario se presenta al usuario un aviso con la clase \textbf{UIAlertVi
 %    "status_code" = 200;
 %    "status_txt" = OK;
 %}
-
-  \subsection{Scheme registrado en iOS}
+%  \subsection{Scheme registrado en iOS}
+  \subsection{Cambio de transmisión con el scheme registrado en iOS}
   
   Para revisar el comportamiento de la aplicación al ser lanzada por el sistema debido a la apertura de un URL que presenta el \textit{scheme} registrado, es necesario configurar el \textbf{Depurador} (\textit{debugger}) del entorno de desarrollo Xcode de forma que se encuentre a la espera de la apertura de la aplicación (fig. \ref{fig:xcode-waitforapp}), esto es diferente al comportamiento usual donde cada vez que se ejecuta en el compilador se lanza automáticamente en el dispositivo.\\
   
@@ -322,7 +322,7 @@ Al ser iniciada por esta vía, la aplicación gatilla el método de la clase del
 
 \textit{- (BOOL)application:(UIApplication*)application handleOpenURL:(NSURL*)url}\\
 
-Dentro de esta llamada se generan las notificaciones encargadas de entregar un URL correspondiente al stream del instante compartido. Realizando pruebas se descubrió que la entrega de los datos a la aplicación no significaban el comportamiento esperado, es decir la visualización del stream en el preciso instante, esto debido a que el método encargado de manejar el URL se ejecutaba con anterioridad a los métodos de iniciación del reproductor, por lo tanto para asegurar la entrega de la información se programó un observador por notificación \cite{bib:ios-nsnotificationcenter} atento al aviso de carga del controlador de vistas que contiene la instancia del \textbf{AVPlayer} encargado de reproducir. \\
+Dentro de esta llamada se generan las notificaciones encargadas de entregar un URL correspondiente al stream del instante compartido. Realizando pruebas se descubrió que la entrega de los datos a la aplicación no generaban el comportamiento esperado, es decir la visualización del stream en el preciso instante, esto debido a que el método encargado de manejar el URL se ejecutaba con anterioridad a los métodos de iniciación del reproductor, por lo tanto para asegurar la entrega de la información se programó un observador por notificación \cite{bib:ios-nsnotificationcenter} atento al aviso de carga del controlador de vistas que contiene la instancia del \textbf{AVPlayer} encargado de reproducir. \\
 
 El aviso se realiza desde el método \textit{- (void)viewDidAppear:(BOOL)animated} del controlador de vistas, así es posible saber que las vistas, incluyendo la del reproductor, se han cargado en pantalla y proceder a entregar el URL del contenido.
 
