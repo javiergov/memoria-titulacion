@@ -5,16 +5,8 @@
 		\subsection{OSX}
 La décima versión del sistema operativo para computadores Macintosh, la X se refiere al numero romano 10. Esta versión posee un micro-núcleo Mach, junto a servicios de sistema operativo de tipo UNIX basados en FreeBSD.
 Las aplicaciones para OSX se desarrollan utilizando \textbf{Cocoa} API, la interfaz de programación de aplicaciones orientada a objetos.
-\subsubsection{Xcode}
-Para este proyecto se utilizó el entorno de desarrollo \textbf{Xcode}, el cual está solamente disponible para OSX.\\
+%\subsubsection{Xcode}
 
-Xcode se puede obtener desde la tienda de aplicaciones de OSX, el repositorio que integra el mismo sistema de pago utilizado en la tienda de música digital iTunes Store (figura \ref{fig:xcode-appstore}).
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.41]{imgs/xcode-appstore.png} 
-	\caption{Xcode disponible gratis en la Mac App Store, la tienda de aplicaciones para OSX}
-	\label{fig:xcode-appstore}
-\end{figure}  
 %		os x, se empezó el desarrollo en lion, migración de xcode 3 a 4, inestabilidad
 %		explicar como se usa  itunes con ios
 		\subsection{iOS}
@@ -34,7 +26,8 @@ El desarrollo de sus aplicaciones se realiza con \textbf{Cocoa Touch} API (figur
 %		facilidad de actualizacion
 
 	\section{Hardware}
-		Se presentan los implementos utilizados para desarrollar el proyecto de memoria.
+		%Se presentan los implementos utilizados para desarrollar el proyecto de memoria.
+		Este proyecto de memoria tuvo relación con tecnologías y desarrollos de la empresa Apple, razón por la cual se necesitó adquirir dispositivos, tanto por fines de desarrollo como de pruebas.
 		\subsection{Macintosh}
 		Fue necesario utilizar una computadora Macintosh, debido a la obligación de desarrollar en Xcode y por ende, una computadora que ejecutara el sistema operativo OSX.\\
 		
@@ -50,10 +43,6 @@ El desarrollo de sus aplicaciones se realiza con \textbf{Cocoa Touch} API (figur
 	\caption{Macbook 7,1. Lanzado al mercado circa 2010.}
 	\label{img:macbook71}
 \end{figure} 	 
-		 
-		
-		
-		
 		
 %		The Macintosh marketed as Mac, is a line of personal computers (PCs) designed, developed, and marketed by Apple Inc. It is targeted mainly at the home, education, and creative professional markets, and includes the descendants of the original iMac, the entry-level Mac mini desktop model, the Mac Pro tower graphics workstation, and the MacBook Air and MacBook Pro laptops. Its Xserve server was discontinued on January 31, 2011.[2]
 
@@ -81,7 +70,38 @@ En materia de software estos tres dispositivos tienen en común la ejecución de
 	\label{img:ipad-hw}
 \end{figure} 	 
 		 
-		
+	\section{Software}
+Apple pone a disposición de los desarrolladores de aplicaciones para sus productos, una gran cantidad de software accesible desde el sitio web \textit{Downloads for Apple Developers} \cite{apple-repositorio}.
+		\subsection{Xcode}
+		\label{anexo:xcode}
+		Para este proyecto se utilizó el entorno de desarrollo \textbf{Xcode}, el cual está solamente disponible para OSX.\\
+
+Xcode se puede obtener, además del repositorio para desarrolladores \cite{apple-repositorio}, desde la tienda de aplicaciones de OSX, el repositorio que integra el mismo sistema de pago utilizado en la tienda de música digital iTunes Store (figura \ref{fig:xcode-appstore}).
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{imgs/xcode-appstore.png} 
+	\caption{Xcode disponible gratis en la Mac App Store, la tienda de aplicaciones para OSX}
+	\label{fig:xcode-appstore}
+\end{figure}  
+
+		\subsection{Configuración de Xcode para depuración de scheme}
+		\label{anexo:xcode-debug}
+		Este ajuste se logra editando el esquema (\textit{scheme}) de la compilación, no confundir con el esquema (\textit{scheme}) del URL. El entorno de desarrollo Xcode permite administrar distintos esquemas de compilación, siendo \textit{Build}, \textit{Run}, \textit{Analyze} y \textit{Archive} los más utilizados. Para mantener Xcode atento al lanzamiento de la compilación se debe editar el esquema \textbf{\textit{Run}} (ejecutar) como se muestra en la figura \ref{fig:xcode-debug-wait}.
+  
+%	- clientes de twitter en iPhone, twitter y Tweetbot, debug en el método e imprimir en consola la app que lo lanzó.  
+%	- debug con app en background
+%	- debug con app cerrada y a la espera que parta por otra aplicación
+%	explicar que se detuvo la carga del stream cuando está cerrada y que se espera una notificacion de la carga de la UI antes de cargar el stream.
+    
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[scale=0.7]{imgs/xcode-debug-wait.png}
+	\end{tabular}
+	\caption{Configuración de Xcode para pruebas de lanzamiento de la aplicación por scheme.}
+	\label{fig:xcode-debug-wait}
+\end{figure}
+
 %		descripcion de iphone, cuando salió, presentación de steve, revolucion del smartphone, pasar de teclas a nuevas pantallas táctiles.
 %		ipad, nueva forma de leer, reemplaza netbook, 3g pero no llama, creó un nuevo mercado y es lider
 %		ipod, comezó como música, luego de iphone adopta ios, explicar que es alternativa a iphone, gran adopcion en usa.  lider en players.

@@ -289,16 +289,9 @@ Si existen valores para \textbf{s} y \textbf{t} se procede a generar una notific
 %  \subsection{Scheme registrado en iOS}
   \subsection{Cambio de transmisión con el scheme registrado en iOS}
   
-  Para revisar el comportamiento de la aplicación al ser lanzada por el sistema debido a la apertura de un URL que presenta el \textit{scheme} registrado, es necesario configurar el \textbf{Depurador} (\textit{debugger}) del entorno de desarrollo Xcode de forma que se encuentre a la espera de la apertura de la aplicación (fig. \ref{fig:xcode-waitforapp}), esto es diferente al comportamiento usual donde cada vez que se ejecuta en el compilador se lanza automáticamente en el dispositivo.\\
-  
-Este ajuste se logra editando el esquema (\textit{scheme}) de la compilación, no confundir con el esquema (\textit{scheme}) del URL. El entorno de desarrollo Xcode permite administrar distintos esquemas de compilación, siendo \textit{Build}, \textit{Run}, \textit{Analyze} y \textit{Archive} los más utilizados. Para mantener Xcode atento al lanzamiento de la compilación se debe editar el esquema \textbf{\textit{Run}} (ejecutar) como se muestra en la figura \ref{fig:xcode-debug-wait}.
-  
-%	- clientes de twitter en iPhone, twitter y Tweetbot, debug en el método e imprimir en consola la app que lo lanzó.  
-%	- debug con app en background
-%	- debug con app cerrada y a la espera que parta por otra aplicación
-%	explicar que se detuvo la carga del stream cuando está cerrada y que se espera una notificacion de la carga de la UI antes de cargar el stream.
+  Para revisar el comportamiento de la aplicación al ser lanzada por el sistema debido a la apertura de un URL que presenta el \textit{scheme} registrado, es necesario configurar el \textbf{Depurador} (\textit{debugger}) del entorno de desarrollo Xcode (anexo \ref{anexo:xcode-debug}) de forma que se encuentre a la espera de la apertura de la aplicación (fig. \ref{fig:xcode-waitforapp}), esto es diferente al comportamiento usual donde cada vez que se ejecuta en el compilador se lanza automáticamente en el dispositivo.\\
 
-\begin{figure}[H]
+  \begin{figure}[H]
 	\centering
 	\begin{tabular}{cc}
 	\includegraphics[scale=0.7]{imgs/xcode-waitforapp.png}
@@ -306,17 +299,9 @@ Este ajuste se logra editando el esquema (\textit{scheme}) de la compilación, n
 	\caption{Entorno de desarrollo Xcode en modo de espera de apertura de la Aplicación.}
 	\label{fig:xcode-waitforapp}
 \end{figure}
-    
-\begin{figure}[H]
-	\centering
-	\begin{tabular}{cc}
-	\includegraphics[scale=0.7]{imgs/xcode-debug-wait.png}
-	\end{tabular}
-	\caption{Configuración de Xcode para pruebas de lanzamiento de la aplicación por scheme.}
-	\label{fig:xcode-debug-wait}
-\end{figure}
 
-Con esta configuración de depuración, ya es posible revisar el comportamiento con enlaces abiertos desde otra aplicación de iOS, como por ejemplo desde la aplicación de terceros Tweetbot. En la figura \ref{fig:tweetbot-sstream} al pulsar en el URL del tweet, el script desarrollado para la redirección (\ref{subsec:php-redir}) identifica el \textbf{Agente de Usuario} de la clase UIWebView presuntamente utilizada por Tweetbot para redirigir a un URL con el \textit{scheme} asociado por la aplicación cliente. El resultado se muestra en la segunda imagen donde el procedimiento consiste en generar una notificación a la clase que contiene la instancia de \textbf{AVPlayer} de forma que genere el URL necesario para reproducir el stream.\\
+%Con esta configuración de depuración, ya es posible 
+Con el depurador configurado en modo espera (anexo \ref{anexo:xcode-debug}) es posible revisar el comportamiento con enlaces abiertos desde otra aplicación de iOS, como por ejemplo desde la aplicación de terceros Tweetbot. En la figura \ref{fig:tweetbot-sstream} al pulsar en el URL del tweet, el script desarrollado para la redirección (\ref{subsec:php-redir}) identifica el \textbf{Agente de Usuario} de la clase UIWebView presuntamente utilizada por Tweetbot para redirigir a un URL con el \textit{scheme} asociado por la aplicación cliente. El resultado se muestra en la segunda imagen donde el procedimiento consiste en generar una notificación a la clase que contiene la instancia de \textbf{AVPlayer} de forma que genere el URL necesario para reproducir el stream.\\
 
 Al ser iniciada por esta vía, la aplicación gatilla el método de la clase delegada como instancia principal de la aplicación (\textit{AppDelegate}):\\
 
