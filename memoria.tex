@@ -90,63 +90,63 @@
 % 	\listoftables
 % 	\addcontentsline{toc}{chapter}{Índice de Tablas} 
  
-   \input{resumen.tex}
-   \addcontentsline{toc}{chapter}{Resumen}
+	\input{resumen.tex}
+	\addcontentsline{toc}{chapter}{Resumen}
 
-   % \input{abstract.tex} 
-   % \addcontentsline{toc}{chapter}{Abstract} 
+	\input{abstract.tex} 
+	\addcontentsline{toc}{chapter}{Abstract} 
  
- 	\mainmatter
-	%Reiniciar numeración y cambiar a números áraes
-	\renewcommand{\thepage}{\arabic{page}} 
-	\setcounter{page}{1}
-	
-	%Configuración del estilo de las páginas generales.(Como el cuerpo)
-	\pagestyle{fancy}
-	%Colocar el número de página abajo a la derecha
-    \fancyhf{}
-    \rfoot{\thepage}
-    \lhead{\leftmark} 	
-	\thispagestyle{fancy}
- 	
-	%Incluir capítulo 1
-	\input{capitulo1.tex}
-	
-	%Incluir capítulo 2
-	\input{capitulo2.tex}
-
-	%Incluir capítulo 3
-	\input{capitulo3.tex}
-
-	%Incluir capítulo Conclusiones
-	\input{conclusiones.tex}
-	
-	%Para armar Indice que quiere el profe
-	\input{archivo_indice.tex}	
-		
-	%Incluir capítulo 4
-	%	\input{capitulo4.tex}
-	
-	%Incluir capítulo 5
-	%	\input{capitulo5.tex}
-	
-	%Incluir capítulo 5
-	%	\input{capitulo6.tex}
-	
-	\input{bibliografia.tex}
-
-	%Cambiar nombre de Apéndice a Anexos
-	\renewcommand{\appendixname}{Anexo}
-
-	%Comienzo de anexos
-	\appendix
-	%Incluir anexo A
-    %	\input{AnexoProgramacionTinyos.tex}
-    %\
-    %Incluir anexo B
-    %	\input{AnexoWSNSniffer.tex}
-    
-    %Incluir anexo C
-    %	\input{AnexoLPL.tex}
+% 	\mainmatter
+%	%Reiniciar numeración y cambiar a números áraes
+%	\renewcommand{\thepage}{\arabic{page}} 
+%	\setcounter{page}{1}
+%	
+%	%Configuración del estilo de las páginas generales.(Como el cuerpo)
+%	\pagestyle{fancy}
+%	%Colocar el número de página abajo a la derecha
+%    \fancyhf{}
+%    \rfoot{\thepage}
+%    \lhead{\leftmark} 	
+%	\thispagestyle{fancy}
+% 	
+%	%Incluir capítulo 1
+%	\input{capitulo1.tex}
+%	
+%	%Incluir capítulo 2
+%	\input{capitulo2.tex}
+%
+%	%Incluir capítulo 3
+%	\input{capitulo3.tex}
+%
+%	%Incluir capítulo Conclusiones
+%	\input{conclusiones.tex}
+%	
+%	%Para armar Indice que quiere el profe
+%	\input{archivo_indice.tex}	
+%		
+%	%Incluir capítulo 4
+%	%	\input{capitulo4.tex}
+%	
+%	%Incluir capítulo 5
+%	%	\input{capitulo5.tex}
+%	
+%	%Incluir capítulo 5
+%	%	\input{capitulo6.tex}
+%	
+%	\input{bibliografia.tex}
+%
+%	%Cambiar nombre de Apéndice a Anexos
+%	\renewcommand{\appendixname}{Anexo}
+%
+%	%Comienzo de anexos
+%	\appendix
+%	%Incluir anexo A
+%    %	\input{AnexoProgramacionTinyos.tex}
+%    %\
+%    %Incluir anexo B
+%    %	\input{AnexoWSNSniffer.tex}
+%    
+%    %Incluir anexo C
+%    %	\input{AnexoLPL.tex}
     
 \end{document}
