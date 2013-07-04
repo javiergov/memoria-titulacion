@@ -2,18 +2,33 @@
 \chapter{Diseño e Implementación}
 En el siguiente capítulo se describen las etapas recorridas para llegar a la solución que propone este proyecto.
 \section{Arquitectura de la solución}
+
+El proyecto significó re-formular el funcionamiento del sistema de streaming utilizado por AltaVoz S.A. Este desarrollo se ubica en un entorno destinado a dispositivos móviles y por lo tanto las reglas que se verán más adelante, impuestas por los fabricantes de estos dispositivos significaron modificaciones en el servidor encargado de la recolección y transmisión de contenido.\\
+
 El siguiente capítulo consta de las bases necesarias para realizar la solución, la que se compone de dos elementos principales. 
 \begin{itemize}
 \item Servidor: Encargado de recodificar (si es necesario) la fuente de audio o video y segmentarla para su distribución.
 \item Cliente: Aplicación ejecutada en iOS, encargada de comunicarse al servidor para pedir el flujo de video y entregar información en Twitter.
 \end{itemize}
+
+El servidor debe cumplir dos funciones, por un lado almacenar y segmentar el contenido a transmitir, y por otro, la función de transmitir a los dispositivos móviles a través de algún protocolo destinado a ellos.\\
+
 % poner figura aqui
-La figura \ref{diagramaGral} presenta una idea general del sistema.\\
+%La figura \ref{diagramaSegmenter} presenta una idea general del sistema.\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.48]{imgs/diagrama-Segmenter-Tedit.eps}
+	\caption{Recolección y segmentación del contenido en el servidor de medios}
+	\label{diagramaSegmenter}
+\end{figure}
+
+La figura \ref{diagramaSegmenter} presenta el flujo del contenido desde su fuente hasta el almacenamiento como segmentos recodificados en el sistema de archivos del servidor.\\
+
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.8]{imgs/diagrama_general.eps}
-	\caption{Diagrama general de la solución}
+	\includegraphics[scale=0.42]{imgs/diagrama-Dispatcher-Tedit.eps}
+	\caption{Comunicación para la entrega de \textit{stream timeshift} según una petición desde el cliente}
 	\label{diagramaGral}
 \end{figure}
 
