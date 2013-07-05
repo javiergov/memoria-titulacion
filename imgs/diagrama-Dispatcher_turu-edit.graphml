@@ -80,7 +80,7 @@ http://...1344897950.ts<y:LabelModel>
           <y:Geometry height="104.01285714285714" width="66.0" x="-504.78068394978834" y="-206.13602618776895"/>
           <y:Fill color="#CCCCFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="36.9765625" modelName="custom" textColor="#000000" visible="true" width="131.2783203125" x="-32.63916015625" y="108.01285714285711">Usuario realiza 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="36.9765625" modelName="custom" textColor="#000000" visible="true" width="131.2783203125" x="-32.63916015625" y="108.01285714285711">Usuario: realiza 
 petición temporal<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>

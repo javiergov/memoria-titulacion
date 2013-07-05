@@ -22,9 +22,6 @@ El servidor debe cumplir dos funciones, por un lado almacenar y segmentar el con
 	\label{diagramaSegmenter}
 \end{figure}
 
-La figura \ref{diagramaSegmenter} presenta el flujo del contenido desde su fuente hasta el almacenamiento como segmentos recodificados en el sistema de archivos del servidor.\\
-
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.42]{imgs/diagrama-Dispatcher-Tedit.eps}
@@ -33,9 +30,12 @@ La figura \ref{diagramaSegmenter} presenta el flujo del contenido desde su fuent
 \end{figure}
 
 %Respecto a los elementos principales, estos se componen de distintos modulos que serán explicados con más detalle a lo largo del capítulo. 
-Del diagrama \ref{diagramaGral} se describen los componentes:
+La figura \ref{diagramaSegmenter} presenta el flujo del contenido desde su fuente hasta el almacenamiento como segmentos recodificados en el sistema de archivos del servidor. El bloque \textquotedblleft Segmentación del contenido\textquotedblright es una aplicación que recibe como entrada un flujo de audio y/o video encapsulado en MPEG2-Transport Stream, para luego cortar el contenido en archivos de menor duración, estos se guardan en el sistema de archivos del servidor.\\
+
+En la figura \ref{diagramaGral}, se presenta el flujo de comunicación desde el dispositivo móvil que pide un \textit{stream} asociado a una marca temporal, representado por flechas de color negro, que es interpretada por el servidor para luego generar una respuesta en base a lo requerido representado por flechas de color azul.
+
 \begin{itemize}
-\item Segmenter: es una aplicación que recibe como entrada un flujo de audio y/o video encapsulado en MPEG2-Transport Stream, para luego segmentar el contenido en archivos de menor duración, estos se guardan en el sistema de archivos del servidor.
+\item 
 \item Dispatcher: Este es un programa dedicado a recibir peticiones de los clientes, para entregar un flujo de video mediante el protocolo HTTP Live Streaming.
 \item iPhone y Macintosh: Son los dispositivos clientes controlados por el usuario, en éstos se realiza el intercambio de ordenes para recibir el flujo de video que se quiere ver.
 \end{itemize}
