@@ -34,7 +34,7 @@ En la actualidad las transmisiones de audio y video se encuentran en un estado d
 
 Otro medio de transmisión y comunicación global que ha tomado gran significancia en la última década es la Internet. A través de transmisiones de flujos de datos (\textit{streaming}), es posible escuchar radios online, ver videos en YouTube, o utilizar servicios de películas “on-demand” como Netflix, por dar ejemplos disponibles en Chile. Todo esto siendo recibido en un computador u otro dispositivo que presente conectividad a la red.\\
 
-Estos dispositivos alternativos tienen el peso de llevar la recepción de medios audiovisuales por un nuevo rumbo y ya están siendo considerados por las empresas que generan el contenido, al proveer salidas directas a televisores con Internet; consolas de videojuegos con navegador web o aplicaciones cliente para servicios de audio o video on-demand. Otro punto a tener en cuenta es la mayor importancia que tiene el crecimiento del consumo de dispositivos móviles como celulares o reproductores portátiles multimedia, donde se puede llegar a una audiencia aun mayor.\\
+Estos dispositivos alternativos tienen el peso de llevar la recepción de medios audiovisuales por un nuevo rumbo y ya están siendo considerados por las empresas que generan el contenido, al proveer salidas directas a televisores con Internet; consolas de videojuegos con navegador Web o aplicaciones cliente para servicios de audio o video on-demand. Otro punto a tener en cuenta es la mayor importancia que tiene el crecimiento del consumo de dispositivos móviles como celulares o reproductores portátiles multimedia, donde se puede llegar a una audiencia aun mayor.\\
 
 Considerando el gran papel que está tomando Internet en el consumo de contenidos, es necesario enfocar el desarrollo de las transmisiones a resultados que aprovechen este medio y llegar así a la creciente audiencia que lo utiliza. 
 Esto aportaría en el futuro a igualar o incluso superar en importancia a las transmisiones por Internet con las del medio terrestre, tanto digitales como análogas.
@@ -52,12 +52,12 @@ Es un servicio de distribución que permite a los usuarios seleccionar y ver o e
 
 La compañía Netflix también provee este servicio, sin embargo el medio de transmisión es Internet, ofreciendo a sus clientes suscripciones que permiten el acceso al catálogo de películas y documentales.\\
 
-En Chile el servicio de \textit{Video-on-demand} entregado por Netflix se ha posicionado a partir de Septiembre de 2011 buscando simplificar el registro de nuevos usuarios, su potencial captación de nuevos usuarios se magnifica al poner a disposición de sus clientes el acceso a los contenidos a través de variadas plataformas de reproducción, como consolas de videojuegos de sobremesa: Nintendo Wii y PlayStation 3, consolas portátiles como Nintendo 3DS, acceso vía web y aplicaciones para televisores con InternetTV. \\
+En Chile el servicio de \textit{Video-on-demand} entregado por Netflix se ha posicionado a partir de Septiembre de 2011 buscando simplificar el registro de nuevos usuarios, su potencial captación de nuevos usuarios se magnifica al poner a disposición de sus clientes el acceso a los contenidos a través de variadas plataformas de reproducción, como consolas de videojuegos de sobremesa: Nintendo Wii y PlayStation 3, consolas portátiles como Nintendo 3DS, acceso vía Web y aplicaciones para televisores con InternetTV. \\
 
 \subsubsection{Podcast}
 Es una serie de archivos de medios digitales (audio o video) lanzados en forma periódica por episodios, este sistema permite al usuario descargar el material de su interés para poder reproducirlo más tarde.\\
 
-El modo de distribución se diferencia de otras formas de transferencia de Internet como lo son la descarga directa al estar todos los archivos catalogados en un servidor central, éste además provee a los usuarios una vía de distribución a través de RSS Feeds, que son archivos de información en XML (\textit{extended markup language}) diseñados para compartir actualizaciones de sitios web, popularizados por los blogs.\\ 
+El modo de distribución se diferencia de otras formas de transferencia de Internet como lo son la descarga directa al estar todos los archivos catalogados en un servidor central, éste además provee a los usuarios una vía de distribución a través de RSS Feeds, que son archivos de información en XML (\textit{extended markup language}) diseñados para compartir actualizaciones de sitios Web, popularizados por los blogs.\\ 
 El uso de RSS Feed para los podcast permite informar a los suscriptores de nuevos contenidos, aunque no es necesario que la persona esté suscrita para obtener alguna información en especifico. 
 Su uso se ha popularizado por la plataforma iTunes desarrollada por Apple, que en su versión 4.9 de 2005, abrió a una gran base de usuarios este nuevo medio de comunicación. No solo se utiliza para entregar programas de radio, sino que también documentos y programas de televisión, de manera gratuita.\\
 
@@ -73,7 +73,7 @@ Sin embargo existe un protocolo de capa de aplicación desarrollado para realiza
 
 %Aun así existe un protocolo de la capa de aplicación que utiliza TCP para realizar el enlace. Este fue desarrollado originalmente por Macromedia, siendo ahora propietario \textbf{Adobe Systems}. \textit{Real Time Messaging Protocol} (RTMP \cite{bib:rtmp-specs}) fue desarrollado para realizar streaming multimedia a través de TCP con baja latencia, esto lo logra gracias al envío de la mayor cantidad de información por enlace. \\
 	
-	De forma similar al protocolo RTMP \textbf{Apple Inc.} ha desarrollado un nuevo método llamado \textit{\textbf{HTTP Live Streaming}}, se diferencia al utilizar pedazos de audio o video  ordenados en una lista de reproducción de extensión \textbf{m3u} (\cite{sota:m3u-specs}) manteniéndose actualizada a medida que nuevos contenidos son creados. A diferencia del \textit{streaming} nombrado anteriormente, este flujo de datos se transmite a través del protocolo HTTP (\textit{Hypertext Transfer Protocol} \cite{sota:rfc-http}), el cual siendo de una capa superior (de aplicación) posibilita la transferencia de los datos multimedia con un servidor web ordinario, como por ejemplo Apache. Además permite la transmisión en redes donde firewalls o proxies puedan bloquear el contenido, ya que se enmascara como tráfico de hipertexto. Cabe destacar que el enlace realizado a través del protocolo de la capa de aplicación HTTP utiliza TCP en su capa de transporte, al igual que RTMP.
+	De forma similar al protocolo RTMP \textbf{Apple Inc.} ha desarrollado un nuevo método llamado \textit{\textbf{HTTP Live Streaming}}, se diferencia al utilizar pedazos de audio o video  ordenados en una lista de reproducción de extensión \textbf{m3u} (\cite{sota:m3u-specs}) manteniéndose actualizada a medida que nuevos contenidos son creados. A diferencia del \textit{streaming} nombrado anteriormente, este flujo de datos se transmite a través del protocolo HTTP (\textit{Hypertext Transfer Protocol} \cite{sota:rfc-http}), el cual siendo de una capa superior (de aplicación) posibilita la transferencia de los datos multimedia con un servidor Web ordinario, como por ejemplo Apache. Además permite la transmisión en redes donde firewalls o proxies puedan bloquear el contenido, ya que se enmascara como tráfico de hipertexto. Cabe destacar que el enlace realizado a través del protocolo de la capa de aplicación HTTP utiliza TCP en su capa de transporte, al igual que RTMP.
 
 
 \subsection{Almacenamiento del Contenido}
@@ -88,7 +88,7 @@ Otra tecnología relacionada son los llamados \textbf{DVR} (\textbf{digital vide
 
 Se puede implementar este concepto de DVR en software de computadores de escritorio, desarrollando alguna aplicación que permita registrar los segmentos transmitidos por streaming para ser reproducidos en otra ocasión. \\
 
-	Servicios de streaming populares como Justin.TV, UStream o Twittcam permiten transmitir video a través de sus plataformas web, y permiten la revisión del contenido tiempo después que éste ha finalizado. En cierta parte este comportamiento se asemeja al DVR, pero no posibilita moverse en el tiempo mientras se transmite.\\
+	Servicios de streaming populares como Justin.TV, UStream o Twittcam permiten transmitir video a través de sus plataformas Web, y permiten la revisión del contenido tiempo después que éste ha finalizado. En cierta parte este comportamiento se asemeja al DVR, pero no posibilita moverse en el tiempo mientras se transmite.\\
 
 En Chile, se ha desarrollado una aplicación más sofisticada por parte de la empresa AltaVoz S.A. con su proyecto \textquotedblleft SocialStream, Video TimeShift\textquotedblright \ , el cual permite retroceder y revisar el contenido mientras la transmisión se encuentra en curso. Este registro es encargado al servidor quien administra los pedazos de información multimedia, una aplicación cliente entabla conexión para realizar pedidos de la información en el tiempo que desea el usuario.
 Esta característica lleva como nombre \textbf{\textit{TimeShift}} \cite{cap1:time-shift}, sin embargo la empresa utiliza el nombre \textbf{Janus} \cite{cap1:altavoz-janus} para comercializarla.
@@ -110,7 +110,7 @@ La mayoría de los smartphones permiten el acceso a Internet a través de la red
 
 La constante mejoría en la velocidad de transmisión en redes celulares ha permitido la reproducción de contenidos multimedia. Un avance similar a lo experimentado en la década de 1990 por los computadores multimedia de escritorio. En primera instancia con aplicaciones de contenido audiovisual (imagen, audio, video, texto) ejecutadas localmente, para luego evolucionar y llegar a recibir y transmitir este contenido a través de la \textit{World Wide Web}.\\
 
-Los smartphones actuales ejecutan sistemas operativos avanzados que proveen módulos de conexión  a redes, ya sea celular, WiFi, o Bluetooth, si es que el hardware lo incorpora. Además de navegadores web diseñados especialmente para estos dispositivos, con características como presentar en pantalla reducida o ajustada a la resolución, interfaz táctil, teclado numérico, etc.\\
+Los smartphones actuales ejecutan sistemas operativos avanzados que proveen módulos de conexión  a redes, ya sea celular, WiFi, o Bluetooth, si es que el hardware lo incorpora. Además de navegadores Web diseñados especialmente para estos dispositivos, con características como presentar en pantalla reducida o ajustada a la resolución, interfaz táctil, teclado numérico, etc.\\
 
 Considerando estas dos importantes bases, conectividad y sistema operativo capaz, es posible implementar una aplicación que se asemeje a la experiencia en computadores de escritorio.\\
 
@@ -133,8 +133,8 @@ Las bases de esta herramienta se fundan sobre Adobe Flash gracias a su protocolo
 \end{itemize}
 
 	En las siguientes figuras se puede notar claramente el problema que genera en iOS la falta de soporte de tecnologías Adobe. 
-	En la captura de pantalla del navegador web de un celular con el sistema operativo Android (\ref{sshot_Android_sstream}) se presenta de forma íntegra la página web, nótese que el reproductor hecho con tecnología Flash se presenta de la misma forma que en un navegador web de computador de escritorio. 
-	En la siguiente captura Mobile Safari (\ref{sshot_iOS_sstream}) presenta el problema de la falta de soporte para Flash, la página web muestra sus componentes HTML ausentando el reproductor de video.
+	En la captura de pantalla del navegador Web de un celular con el sistema operativo Android (\ref{sshot_Android_sstream}) se presenta de forma íntegra la página Web, nótese que el reproductor hecho con tecnología Flash se presenta de la misma forma que en un navegador Web de computador de escritorio. 
+	En la siguiente captura Mobile Safari (\ref{sshot_iOS_sstream}) presenta el problema de la falta de soporte para Flash, la página Web muestra sus componentes HTML ausentando el reproductor de video.
 
 %\clearpage 
 \begin{figure}[h!]

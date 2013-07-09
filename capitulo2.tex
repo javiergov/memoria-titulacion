@@ -51,7 +51,7 @@ Se describen los componentes de la figura \ref{diagramaGral}:
 % https://developer.apple.com/news/index.php?id=02162010a
 	El protocolo utilizado para entregar el contenido audiovisual es \textit{HTTP Live Streaming} (HLS), elegido debido a requerimientos obligatorios designados por Apple para la distribución de contenidos multimedia para su sistema operativo iOS.\\
 	
-	En un anuncio realizado por Apple en su sitio web destinado a desarrolladores, indica como obligación que la entrega de contenido del tipo audio y/o video con una una duración mayor a 10 minutos debe utilizar necesariamente el protocolo \textit{HTTP Live Streaming} ya sea el enlace mediante WiFi o red celular. Además las aplicaciones deben incluir un flujo de datos (\textit{stream}) de baja calidad con una cadencia de datos no superior a 64 Kilobits/segundo, de manera que estas aplicaciones mantengan fluidez de contenido a pesar de encontrarse en condiciones desfavorables en la red. En caso de no seguir esta indicación, el desarrollador arriesga que su aplicación no sea admitida en la plataforma principal para la distribución de aplicaciones: iTunes Store.\\
+	En un anuncio realizado por Apple en su sitio Web destinado a desarrolladores, indica como obligación que la entrega de contenido del tipo audio y/o video con una una duración mayor a 10 minutos debe utilizar necesariamente el protocolo \textit{HTTP Live Streaming} ya sea el enlace mediante WiFi o red celular. Además las aplicaciones deben incluir un flujo de datos (\textit{stream}) de baja calidad con una cadencia de datos no superior a 64 Kilobits/segundo, de manera que estas aplicaciones mantengan fluidez de contenido a pesar de encontrarse en condiciones desfavorables en la red. En caso de no seguir esta indicación, el desarrollador arriesga que su aplicación no sea admitida en la plataforma principal para la distribución de aplicaciones: iTunes Store.\\
 
 	Considerando que este trabajo de memoria busca incorporar a los dispositivos iOS como consumidores del contenido multimedia utilizando saltos temporales (\textit{TimeShift}), se tuvo que diseñar la solución alrededor de este protocolo.
 
@@ -76,7 +76,7 @@ También existe una variante donde la lista de reproducción contiene referencia
 % In the Apple App Store, if you produce an app that delivers video longer then ten minutes or greater than 5MB of data, you must use  HTTP Live Streaming, and provide at least one stream at 64Kbps or lower bandwidth. Any streaming publisher targeting iOS devices via a website or app should know the basics of HLS and how it’s implemented.
 	\subsection{Especificación}
 		El protocolo HLS consiste en ordenar la entrega de archivos discretos a través de HTTP.
-		El procedimiento general consiste en segmentar el contenido multimedia (audio y/o video) en pequeños archivos de manera que a través de un servidor web regular el cliente pueda descargar y unir los segmentos para verlos de manera continua. Esta forma de entregar el contenido puede ser utilizada para contenido pre-grabado o en vivo, difiriendo levemente en el componente encargado de ordenar los segmentos.\\
+		El procedimiento general consiste en segmentar el contenido multimedia (audio y/o video) en pequeños archivos de manera que a través de un servidor Web regular el cliente pueda descargar y unir los segmentos para verlos de manera continua. Esta forma de entregar el contenido puede ser utilizada para contenido pre-grabado o en vivo, difiriendo levemente en el componente encargado de ordenar los segmentos.\\
 		
 \begin{figure}[H]
 	\centering
@@ -88,13 +88,13 @@ También existe una variante donde la lista de reproducción contiene referencia
 		
 Por el lado del servidor de contenidos primero se debe obtener material multimedia como un archivo fijo o un flujo de datos, este contenido debe ser codificado para que sea compatible con los dispositivos que corren iOS, generalmente por recomendación de Apple se deben utilizar los codec de video H.264 y de audio AAC (\textit{Advanced Audio Coding}). El empaquetado de este contenido ya codificado debe ser entregado a una aplicación encargada de segmentarlo en pequeños archivos. \\
 
-	El flujo de transporte a utilizar es MPEG2-TS (\textit{MPEG2 Transport Stream}), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, éste pueda proveer una lista de reproducción en formato \textbf{m3u8} que mantiene el orden de reproducción de los archivos.\\
+	El flujo de transporte a utilizar es MPEG2-TS (\textit{MPEG2 Transport Stream}), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor Web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, éste pueda proveer una lista de reproducción en formato \textbf{m3u8} que mantiene el orden de reproducción de los archivos.\\
 	
-Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor web pueda proveerlos. En el caso de que el contenido sea un gran archivo, la codificación y segmentación se realiza una sola vez.
+Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor Web pueda proveerlos. En el caso de que el contenido sea un gran archivo, la codificación y segmentación se realiza una sola vez.
 
 \subsubsection{Lista de reproducción}
 \label{TAG-SECTION}
-La lista de reproducción en formato \textbf{m3u8} es lo que se entrega a un cliente que puede ser una aplición iOS o el navegador web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra reservada por el protocolo se le denomina marca (tag).
+La lista de reproducción en formato \textbf{m3u8} es lo que se entrega a un cliente que puede ser una aplición iOS o el navegador Web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra reservada por el protocolo se le denomina marca (tag).
 Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 
 \begin{prop}
@@ -102,7 +102,7 @@ Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 \item \textbf{\#EXTM3U}: Corresponde a la primera marca que inicia una lista de reproducción, siempre debe estar al principio.
 
 \item \textbf{\#EXT-X-TARGETDURATION}: Esta marca corresponde a la mayor duración que puede poseer cualquier segmento, es decir los segmentos enumerados en la lista no pasarán del tiempo especificado por esta marca.
-Además este valor indica al cliente cada cuanto tiempo debe realizar una petición al servidor web por la lista.
+Además este valor indica al cliente cada cuanto tiempo debe realizar una petición al servidor Web por la lista.
 \label{TAG-targetduration}
 
 \item \label{TAG-mediasequence} \textbf{\#EXT-X-MEDIASEQUENCE}: Corresponde a la secuencia o versión de la lista de reproducción según los segmentos que se incluyen dentro de ella. Este valor se representa por un número entero y debe ser consecuente a los cambios en la lista de reproducción, es decir, si se agregan nuevos segmentos en la lista de reproducción pedida por el cliente, el valor de la secuencia debe aumentar, de esta forma el reproductor del cliente puede saber que el flujo multimedia está siendo actualizado con más contenido.
@@ -131,13 +131,13 @@ Además este valor indica al cliente cada cuanto tiempo debe realizar una petici
 
 El ejemplo visto en la figura \ref{ejemploM3U8} destaca una marca extra: \#EXT-X-ENDLIST, la cual indica al cliente que la lista de reproducción está completa y no necesita ser actualizada. Esta marca toma gran importancia al definir un flujo de medios ``en vivo'' ya que al estar ausente el cliente pedirá una nueva versión de la lista de reproducción que incluya nuevos segmentos, el tiempo que indica la actualización depende de la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}.\\
 
-En el caso de contenido en vivo, la lista de reproducción toma el rol de \textbf{ventana de reproducción}. A medida que más contenido se almacena en el servidor, la lista de reproducción se actualiza con nuevos segmentos en un intervalo de segundos dados por la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}, de esta forma se evita que el servidor web entregue a los clientes un archivo \textbf{m3u8} de gran tamaño, ya que se eliminan los segmentos ya pasados.\\
+En el caso de contenido en vivo, la lista de reproducción toma el rol de \textbf{ventana de reproducción}. A medida que más contenido se almacena en el servidor, la lista de reproducción se actualiza con nuevos segmentos en un intervalo de segundos dados por la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}, de esta forma se evita que el servidor Web entregue a los clientes un archivo \textbf{m3u8} de gran tamaño, ya que se eliminan los segmentos ya pasados.\\
 
 Cabe destacar que la marca \#EXT-X-MEDIA-SEQUENCE \ref{TAG-mediasequence} debe mantener consistencia con los nuevos segmentos, es decir, si la lista elimina un segmento pasado y agrega uno nuevo, el número de secuencia debe aumentar su valor. Si el cliente al iniciar una reproducción recibe una lista de reproducción sin un valor de \#EXT-X-MEDIA-SEQUENCE, asume el valor inicial como 0, sin embargo, al leer nuevamente la lista de reprodución actualizada desde el servidor, debe aparecer en la lista la marca \#EXT-X-MEDIA-SEQUENCE con un valor mayor al anterior.\\
 
 Para efectos de la solución de este trabajo de memoria el modo de flujo de datos a utilizar con HLS es del tipo ``en vivo''.
 \subsubsection{Segmentos}
-Los segmentos consisten en video codificado con H.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio y permitiendo así transmitir un mejor sonido a menor ancho de banda. En el sitio web \cite{apple-hlsencoding} se indican los perfiles recomendados para codificar el contenido a trasmitir con HTTP Live Streaming, para mantener compatibilidad con clientes que estén adoptando el protocolo se utilizó  
+Los segmentos consisten en video codificado con H.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio y permitiendo así transmitir un mejor sonido a menor ancho de banda. En el sitio Web \cite{apple-hlsencoding} se indican los perfiles recomendados para codificar el contenido a trasmitir con HTTP Live Streaming, para mantener compatibilidad con clientes que estén adoptando el protocolo se utilizó  
 \begin{itemize}
 \item Video: H.264 Baseline Profile Level 3.0, resolución 480x320 y tasa de fotogramas 29.97
 
@@ -261,7 +261,7 @@ Con las herramientas provistas por Apple, se procedió a realizar una transmisi�
 \end{figure}
 
 
-Considerando las herramientas y el escenario del contenido, la más indicada para transmitir a través de HLS es \textit{MediaStream Segmenter} ya que puede tomar como entrada el flujo de datos emitidos por UDP y luego dejar disponible su salida para que un servidor web Apache la provea a través de Internet. De esta forma clientes del tipo iPhone, iPad o Macintosh pueden acceder al contenido multimedia.\\
+Considerando las herramientas y el escenario del contenido, la más indicada para transmitir a través de HLS es \textit{MediaStream Segmenter} ya que puede tomar como entrada el flujo de datos emitidos por UDP y luego dejar disponible su salida para que un servidor Web Apache la provea a través de Internet. De esta forma clientes del tipo iPhone, iPad o Macintosh pueden acceder al contenido multimedia.\\
 
 En la figura \ref{vlc_transmission} se puede observar que la emisión se ha realizado a una ip en específico utilizando el flujo de transporte MPEG2-TS. Este stream se entrega al \textbf{mediastreamsegmenter} con los siguientes parámetros en la línea de comandos.
 
@@ -274,7 +274,7 @@ Estos parámetros indican a \textbf{mediastreamsegmenter} que para el ejemplo se
 
 La lista de reproducción lleva el nombre \textit{ejemplo.m3u8} (\textbf{-i}) y los archivos resultantes se deben guardar en el directorio con ruta \textit{$\sim$/Sites/hlsexample} (\textbf{-f}). Por último se indica que la emisión UDP se halla en la dirección ip y puerto: \textit{127.0.0.1:1234}.\\
 
-El resultado de esto es un stream HLS al cual se puede acceder mediante un servidor web como por ejemplo Apache. En caso de este ejemplo los archivos se ubican en el sub-directorio \textit{hlsexample} del directorio asignado a Apache del usuario, para acceder al stream se utilizó un player HTML5 en el archivo \textit{index.html} ubicado junto al resto.
+El resultado de esto es un stream HLS al cual se puede acceder mediante un servidor Web como por ejemplo Apache. En caso de este ejemplo los archivos se ubican en el sub-directorio \textit{hlsexample} del directorio asignado a Apache del usuario, para acceder al stream se utilizó un player HTML5 en el archivo \textit{index.html} ubicado junto al resto.
 
  \begin{lstlisting}
 	<html>
@@ -288,7 +288,7 @@ El resultado de esto es un stream HLS al cual se puede acceder mediante un servi
 
 Nótese que la fuente al video es la lista de reproducción generada por \textbf{mediastreamsegmenter}, la cual se encuentra en constante actualización mientras la transmisión se lleva a cabo.\\
 
-Ya con el servidor web funcionando, la carga de esta página web permitirá la reproducción del stream en vivo mientras el navegador web sea compatible con el protocolo \textit{HTTP Live Streaming} utilizando el reproductor HTML5. En la actualidad los únicos navegadores compatibles son Safari y Mobile Safari, desarrollados por Apple.\\
+Ya con el servidor Web funcionando, la carga de esta página Web permitirá la reproducción del stream en vivo mientras el navegador Web sea compatible con el protocolo \textit{HTTP Live Streaming} utilizando el reproductor HTML5. En la actualidad los únicos navegadores compatibles son Safari y Mobile Safari, desarrollados por Apple.\\
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.6]{imgs/ipad-hlsexample.png}
@@ -296,7 +296,7 @@ Ya con el servidor web funcionando, la carga de esta página web permitirá la r
 	\label{ipad-hlsexample}	
 \end{figure}
 
-En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del stream puede ser llevada a cabo por un dispositivo iOS accediendo a la página web creada.\\
+En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del stream puede ser llevada a cabo por un dispositivo iOS accediendo a la página Web creada.\\
 
 
 
@@ -332,7 +332,7 @@ Una última característica especial del segmentador es marcar el segmento más 
 		
 		\subsubsection{Emisor de la lista de reproducción}
 %		dispatcher que recibe epoch, el tipo (canal) y el bwPARAMETER del tipo de enlace Wifi o cellular		
-El \textit{Playlist Dispatcher} consiste en un \textit{script} \textbf{php} disponible en Internet gracias a un servidor web que trabaje con un módulo PHP, el \textit{script} \textit{playlist dispatcher} debe recibir parámetros del cliente a través de la cadena de consulta (\textit{query string}) de la dirección URL. Los parámetros son los siguientes:
+El \textit{Playlist Dispatcher} consiste en un \textit{script} \textbf{php} disponible en Internet gracias a un servidor Web que trabaje con un módulo PHP, el \textit{script} \textit{playlist dispatcher} debe recibir parámetros del cliente a través de la cadena de consulta (\textit{query string}) de la dirección URL. Los parámetros son los siguientes:
 
 \begin{itemize}
 	\item \textbf{t}: Corresponde a la marca de tiempo que el cliente quiere recibir, debe ser indicada con el formato \textit{Unix Time} (\textit{POSIX time}).
@@ -358,7 +358,7 @@ Es la aplicación ejecutada sobre el sistema operativo \textbf{iOS}, su función
 
 		\subsubsection{Reproducción con AV Framework}
 %		avplayer, playeritem, asset tracks		
-Apple en su documentación indica referencias a componentes en iOS que son capaces de reproducir streams HLS, componentes de nivel más alto como por ejemplo un reproductor de video HTML5 anidado en una página web o la clase \textbf{MPMoviePlayerViewController} que pertenece a \textbf{Media Player Framework}, la que consiste en una pantalla que incorpora controles como barras deslizables para video y botones de control, facilitando de gran manera a los desarrolladores presentar contenidos multimedia. \\
+Apple en su documentación indica referencias a componentes en iOS que son capaces de reproducir streams HLS, componentes de nivel más alto como por ejemplo un reproductor de video HTML5 anidado en una página Web o la clase \textbf{MPMoviePlayerViewController} que pertenece a \textbf{Media Player Framework}, la que consiste en una pantalla que incorpora controles como barras deslizables para video y botones de control, facilitando de gran manera a los desarrolladores presentar contenidos multimedia. \\
 
 Sin embargo como este trabajo buscó presentar una característica nueva a lo que es la reproducción de streams, se debió desarrollar un componente que se asemeje al estándar MPMoviePlayerViewController (figura \ref{IMG-mpmpvc-example}) incluyendo la característica de control de contenido y compartir información a través de Twitter.\\
 
@@ -550,7 +550,7 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 	
 	\subsection{Twitter}
 	%http://www.alexa.com/siteinfo/twitter.com
-	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en Internet, siendo uno los sitios más populares de la web\cite{alexa-twitter} permitiendo que personas no suscritas puedan ver los mensajes.
+	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en Internet, siendo uno los sitios más populares de la Web\cite{alexa-twitter} permitiendo que personas no suscritas puedan ver los mensajes.
 	La limitante de cada mensaje se reduce a 140 caracteres, más que suficientes para difundir enlaces desde la aplicación desarrollada y permitiendo además una pequeña descripción por parte del usuario.
 		\subsubsection{API Twitter}
 		\label{subsec:twitter-search-api}
@@ -668,7 +668,7 @@ La compresión se debe realizar al compartir en Twitter un enlace al stream, y d
 %		las llamadas de la api que se utilizaron
 %		http://dev.bitly.com/api.html
 
-Para utilizar y mantener el registro de los enlaces compartidos, se configuran credenciales obtenidas del sitio web \cite{bitly-settings} (nombre de usuario y Legacy API Key) en un archivo de cabecera de la biblioteca Sharekit.
+Para utilizar y mantener el registro de los enlaces compartidos, se configuran credenciales obtenidas del sitio Web \cite{bitly-settings} (nombre de usuario y Legacy API Key) en un archivo de cabecera de la biblioteca Sharekit.
 
 
 		
@@ -758,14 +758,14 @@ En el caso de la aplicación cliente, se registra un \textit{scheme} como \textq
 	\subsection{Identificación del tipo de cliente}
 	%	\subsection{Redireccionamiento vía Web}
 %	explicar breve como funcionará la carga del scheme sstream, en web y mobile
-La forma más simple que se ideó para entregar la información, según las variadas plataformas que se conectan a Internet, consiste en comunicar a través de la herramienta común que poseen los móviles y computadores: el navegador web.\\
+La forma más simple que se ideó para entregar la información, según las variadas plataformas que se conectan a Internet, consiste en comunicar a través de la herramienta común que poseen los móviles y computadores: el navegador Web.\\
 
-El navegador web al iniciar la conexión través del protocolo HTTP con cierta página remota entrega dentro de sus cabeceras el Agente de Usuario \textit{(user agent)}, con lo cual es posible identificar qué cliente se conecta y a la vez personalizar el contenido a entregarle.
+El navegador Web al iniciar la conexión través del protocolo HTTP con cierta página remota entrega dentro de sus cabeceras el Agente de Usuario \textit{(user agent)}, con lo cual es posible identificar qué cliente se conecta y a la vez personalizar el contenido a entregarle.
 
 		\subsubsection{PHP Script}
 		\label{subsec:php-redir}
 %		explicar brevemente el script php 
-Se desarrolló un \textit{script} en PHP encargado de identificar el cliente que se está conectando al servidor del stream, y según el tipo de dispositivo o navegador redirecciona a un URL con scheme personalizado, o presenta una página web con información a social stream.\\
+Se desarrolló un \textit{script} en PHP encargado de identificar el cliente que se está conectando al servidor del stream, y según el tipo de dispositivo o navegador redirecciona a un URL con scheme personalizado, o presenta una página Web con información a social stream.\\
 
 El acceso al \textit{script} requiere, para su buen funcionamiento, ciertos campos como mínimo relacionados con la transmisión que se compartió y se incluyen en el URL, como query strings (cadena de consulta), estos son el tipo de canal y la marca de tiempo, similares a los entregados al \textit{dispatcher} por parte del cliente se hace una petición de lista de reproducción.
 El \textit{script} se encarga de analizar las marcas de tiempo y tipo de señal para entregar un URL especial según el agente de usuario del cliente que hace la petición.\\
@@ -788,12 +788,12 @@ Apple Device - Mobile Safari.
 \end{lstlisting} 
 ~\\ % para forzar una nueva linea \newline ni \*[espacio] funcionan
 
-\textbf{Android}: En el caso de Android, a la fecha del desarrollo de la aplicación cliente, la versión del sistema operativo con mayor adopción por los usuarios es Gingerbread (2.3.x), debido a que Ice Cream Sandwich (4.0.x) aun se encontraba en desarrollo y prueba. Considerando que Gingerbread no es compatible con el protocolo HTTP Live Streaming y para nuevas versiones la compatibilidad se encuentra en desarrollo, se da aviso al navegador web que accede al servidor con el mensaje \textquotedblleft Android no es compatible con HTTP Live Streaming".\\
+\textbf{Android}: En el caso de Android, a la fecha del desarrollo de la aplicación cliente, la versión del sistema operativo con mayor adopción por los usuarios es Gingerbread (2.3.x), debido a que Ice Cream Sandwich (4.0.x) aun se encontraba en desarrollo y prueba. Considerando que Gingerbread no es compatible con el protocolo HTTP Live Streaming y para nuevas versiones la compatibilidad se encuentra en desarrollo, se da aviso al navegador Web que accede al servidor con el mensaje \textquotedblleft Android no es compatible con HTTP Live Streaming".\\
 
 \textbf{Navegadores Web}:
-Para navegadores con la marca HTML5 \textless video\textgreater \ incompatible con HTTP Live Streaming como por ejemplo Firefox y Opera, se da aviso presentando una página web con el mensaje: \textquotedblleft Tu navegador no es compatible con HTTP Live Streaming". \\
+Para navegadores con la marca HTML5 \textless video\textgreater \ incompatible con HTTP Live Streaming como por ejemplo Firefox y Opera, se da aviso presentando una página Web con el mensaje: \textquotedblleft Tu navegador no es compatible con HTTP Live Streaming". \\
 
-En el caso del navegadores que utilizan el motor de renderizado Webkit como Chrome y Safari, se debe diferenciar la compatibilidad con el protocolo HLS, ya que Safari es capaz de mostrar el contenido. Para Chrome se presenta una página web similar al caso de Opera y Firefox, sin embargo para Safari se presenta una página especial con un reproductor generado con la marca \textless video\textgreater , donde la fuente del stream es el URL de la lista de reproducción que se entrega a la aplicación cliente cuando hace una petición de cambio temporal. Como Safari es capaz de reproducir streams HLS es posible ver sólo flujo compartido, no es posible compartir ni controlar el flujo de la transmisión a menos que se desarrolle una aplicación web que se comporte de forma similar al cliente iOS.\\
+En el caso del navegadores que utilizan el motor de renderizado Webkit como Chrome y Safari, se debe diferenciar la compatibilidad con el protocolo HLS, ya que Safari es capaz de mostrar el contenido. Para Chrome se presenta una página Web similar al caso de Opera y Firefox, sin embargo para Safari se presenta una página especial con un reproductor generado con la marca \textless video\textgreater , donde la fuente del stream es el URL de la lista de reproducción que se entrega a la aplicación cliente cuando hace una petición de cambio temporal. Como Safari es capaz de reproducir streams HLS es posible ver sólo flujo compartido, no es posible compartir ni controlar el flujo de la transmisión a menos que se desarrolle una aplicación Web que se comporte de forma similar al cliente iOS.\\
 
 El reproductor recibe como entrada una lista de reproducción generada por el \textit{playlist dispatcher} con los parámetros compartidos en la cadena de consulta \textbf{s} y \textbf{t}.
 
