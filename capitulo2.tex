@@ -68,7 +68,7 @@ El protocolo \textit{HTTP Live Streaming} o HLS (abreviado), es un protocolo des
 
 Su carácteristica principal es la utilización del protocolo para transferencias de hipertexto, HTTP (\textit{hypertext transfer protocol}) por sus siglas en inglés. Si bien HTTP se diseñó originalmente para la \textit{\textbf{World Wide Web}} como vía de entrega del texto en formato HTML, se puede utilizar para distribuir datos de otros formatos codificados para habilitar su distribución.\\
 
-HLS funciona entregando el contenido de forma segmentada al cliente, el cual tiene la responsabilidad de manejar la lógica de cambio de segmentos. Para distribuir el contenido se codifica la fuente de audio y/o video en varios archivos de corta duración, recomendandose 10 segundos \cite{bib:tensec-targetduration}, y que pueden o no tener el mismo bitrate. Estos pequeños archivos se ordenan en una lista de reproducción de formato .M3U8 que se entrega al reproductor del cliente. \\
+HLS funciona entregando el contenido de forma segmentada al cliente, el cual tiene la responsabilidad de manejar la lógica de cambio de segmentos. Para distribuir el contenido se codifica la fuente de audio y/o video en varios archivos de corta duración, recomendandose 10 segundos \cite{bib:tensec-targetduration}, y que pueden o no tener el mismo bitrate. Estos pequeños archivos se ordenan en una lista de reproducción de formato \textbf{m3u8} que se entrega al reproductor del cliente. \\
 
 También existe una variante donde la lista de reproducción contiene referencias a otras listas de reproducción con otras variantes de flujos de datos. \\
 
@@ -88,13 +88,13 @@ También existe una variante donde la lista de reproducción contiene referencia
 		
 Por el lado del servidor de contenidos primero se debe obtener material multimedia como un archivo fijo o un flujo de datos, este contenido debe ser codificado para que sea compatible con los dispositivos que corren iOS, generalmente por recomendación de Apple se deben utilizar los codec de video H.264 y de audio AAC (\textit{Advanced Audio Coding}). El empaquetado de este contenido ya codificado debe ser entregado a una aplicación encargada de segmentarlo en pequeños archivos. \\
 
-	El flujo de transporte a utilizar es MPEG2-TS (\textit{MPEG2 Transport Stream}), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, éste pueda proveer una lista de reproducción en formato M3U8 que mantiene el orden de reproducción de los archivos.\\
+	El flujo de transporte a utilizar es MPEG2-TS (\textit{MPEG2 Transport Stream}), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, éste pueda proveer una lista de reproducción en formato \textbf{m3u8} que mantiene el orden de reproducción de los archivos.\\
 	
 Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor web pueda proveerlos. En el caso de que el contenido sea un gran archivo, la codificación y segmentación se realiza una sola vez.
 
 \subsubsection{Lista de reproducción}
 \label{TAG-SECTION}
-La lista de reproducción en formato M3U8 es lo que se entrega a un cliente que puede ser una aplición iOS o el navegador web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra reservada por el protocolo se le denomina marca (tag).
+La lista de reproducción en formato \textbf{m3u8} es lo que se entrega a un cliente que puede ser una aplición iOS o el navegador web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra reservada por el protocolo se le denomina marca (tag).
 Las marcas primordiales para una trasmision a través de HLS son las siguientes:
 
 \begin{prop}
@@ -131,7 +131,7 @@ Además este valor indica al cliente cada cuanto tiempo debe realizar una petici
 
 El ejemplo visto en la figura \ref{ejemploM3U8} destaca una marca extra: \#EXT-X-ENDLIST, la cual indica al cliente que la lista de reproducción está completa y no necesita ser actualizada. Esta marca toma gran importancia al definir un flujo de medios ``en vivo'' ya que al estar ausente el cliente pedirá una nueva versión de la lista de reproducción que incluya nuevos segmentos, el tiempo que indica la actualización depende de la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}.\\
 
-En el caso de contenido en vivo, la lista de reproducción toma el rol de \textbf{ventana de reproducción}. A medida que más contenido se almacena en el servidor, la lista de reproducción se actualiza con nuevos segmentos en un intervalo de segundos dados por la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}, de esta forma se evita que el servidor web entregue a los clientes un archivo M3U8 de gran tamaño, ya que se eliminan los segmentos ya pasados.\\
+En el caso de contenido en vivo, la lista de reproducción toma el rol de \textbf{ventana de reproducción}. A medida que más contenido se almacena en el servidor, la lista de reproducción se actualiza con nuevos segmentos en un intervalo de segundos dados por la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}, de esta forma se evita que el servidor web entregue a los clientes un archivo \textbf{m3u8} de gran tamaño, ya que se eliminan los segmentos ya pasados.\\
 
 Cabe destacar que la marca \#EXT-X-MEDIA-SEQUENCE \ref{TAG-mediasequence} debe mantener consistencia con los nuevos segmentos, es decir, si la lista elimina un segmento pasado y agrega uno nuevo, el número de secuencia debe aumentar su valor. Si el cliente al iniciar una reproducción recibe una lista de reproducción sin un valor de \#EXT-X-MEDIA-SEQUENCE, asume el valor inicial como 0, sin embargo, al leer nuevamente la lista de reprodución actualizada desde el servidor, debe aparecer en la lista la marca \#EXT-X-MEDIA-SEQUENCE con un valor mayor al anterior.\\
 
