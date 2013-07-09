@@ -86,7 +86,7 @@ También existe una variante donde la lista de reproducción contiene referencia
 \end{figure}		
 		La figura \ref{diagramaHLSwwdc2010} presenta un ejemplo de distribución de multimedia a través de HTTP Live Streaming.\\
 		
-Por el lado del servidor de contenidos primero se debe obtener material multimedia como un archivo fijo o un flujo de datos, este contenido debe ser codificado para que sea compatible con los dispositivos que corren iOS, generalmente por recomendación de Apple se deben utilizar los codec de video h.264 y de audio AAC (\textit{Advanced Audio Coding}). El empaquetado de este contenido ya codificado debe ser entregado a una aplicación encargada de segmentarlo en pequeños archivos. \\
+Por el lado del servidor de contenidos primero se debe obtener material multimedia como un archivo fijo o un flujo de datos, este contenido debe ser codificado para que sea compatible con los dispositivos que corren iOS, generalmente por recomendación de Apple se deben utilizar los codec de video H.264 y de audio AAC (\textit{Advanced Audio Coding}). El empaquetado de este contenido ya codificado debe ser entregado a una aplicación encargada de segmentarlo en pequeños archivos. \\
 
 	El flujo de transporte a utilizar es MPEG2-TS (\textit{MPEG2 Transport Stream}), el resultado de la aplicación segmentadora es guardado en el sistema de archivos donde reside el servidor web (o una ubicación accesible) de manera que al recibir requerimientos de stream HLS, éste pueda proveer una lista de reproducción en formato M3U8 que mantiene el orden de reproducción de los archivos.\\
 	
@@ -137,7 +137,7 @@ Cabe destacar que la marca \#EXT-X-MEDIA-SEQUENCE \ref{TAG-mediasequence} debe m
 
 Para efectos de la solución de este trabajo de memoria el modo de flujo de datos a utilizar con HLS es del tipo ``en vivo''.
 \subsubsection{Segmentos}
-Los segmentos consisten en video codificado con h.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio y permitiendo así transmitir un mejor sonido a menor ancho de banda. En el sitio web \cite{apple-hlsencoding} se indican los perfiles recomendados para codificar el contenido a trasmitir con HTTP Live Streaming, para mantener compatibilidad con clientes que estén adoptando el protocolo se utilizó  
+Los segmentos consisten en video codificado con H.264 y audio en AAC. Apple indica que también es compatible MP3, sin embargo se decidió por AAC debido a su mayor compresión de audio y permitiendo así transmitir un mejor sonido a menor ancho de banda. En el sitio web \cite{apple-hlsencoding} se indican los perfiles recomendados para codificar el contenido a trasmitir con HTTP Live Streaming, para mantener compatibilidad con clientes que estén adoptando el protocolo se utilizó  
 \begin{itemize}
 \item Video: H.264 Baseline Profile Level 3.0, resolución 480x320 y tasa de fotogramas 29.97
 
@@ -251,7 +251,7 @@ Como recibe de entrada un flujo de datos, permite generar listas de reproducció
 		
 	\subsection{Ejemplo de transmisión}
 
-Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una película ya comprimida en audio AAC y video h.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}. Para realizar esta transimisión se utiliza el \textit{asistente de emisión/transcodificación}.\\
+Con las herramientas provistas por Apple, se procedió a realizar una transmisión en vivo de prueba, codificando una película ya comprimida en audio AAC y video H.264, los codificadores especificados como compatibles con iOS. Para generar un Stream de video UDP se utilizó la aplicación \textbf{VLC.app} de VideoLan, la cual permite la encapsulación del contenido en MPEG2-TS y su difusión a la misma máquina por UDP utilizando la dirección por defecto \textbf{udp://localhost:1234}. Para realizar esta transimisión se utiliza el \textit{asistente de emisión/transcodificación}.\\
 
 \begin{figure}[H]
 	\centering
