@@ -321,7 +321,7 @@ En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del st
 		\subsubsection{Obtención del Stream}
 %		la recepcion de un stream RTMP, codificacion con vlc o ffmpeg y generar un archivo o stream udp
 El contenido destinado a ser segmentado puede ser obtenido de distintos tipos de fuentes, pero debe cumplir con la especificación de \textit{HTTP Live Streaming}, es decir entregar al segmentador un flujo de datos codificados con perfiles compatibles con iOS y encapsulados en MPEG2-TS.
-		\subsubsection{Sementación del Video}
+		\subsubsection{Segmentación del Video}
 		% el segmenter que corta su entrada en pedacitos de 10 seg, ademas guarda el tiempo inicial y el final de lo guardado, además se sacarán las fotitos.
 
 El segmentador utilizado fue desarrollado por la empresa AltaVoz S.A. interesada en llevar a cabo el proyecto. Los motivos de este trabajo se deben a que las herramientas dispuestas por Apple funcionan solamente en versiones recientes del sistema operativo Mac OS X. Al ver esta limitante la empresa se encarga de desarrollar un segmentador que se comporte de forma similar a \textbf{mediastreamsegmenter}, trozando el flujo de entrada en pequeños archivos de cierta duración.\\
@@ -534,7 +534,7 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
  
  
 %\clearpage
-\section{Integración Redes Sociales}
+\section{Integración de Redes Sociales}
 	%diagrama de como funciona el posteo y recepcion de twitts
 	Para destacar la connotación de carácter social de la aplicación, se incorporó un sistema para compartir la información que ve el usuario a través de la red social Twitter. Este sistema no se limita solamente a esta red social, es posible incorporar otras, sólo que se utilizó ésta como ejemplo.\\
 	
@@ -552,7 +552,7 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 	%http://www.alexa.com/siteinfo/twitter.com
 	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en Internet, siendo uno los sitios más populares de la Web\cite{alexa-twitter} permitiendo que personas no suscritas puedan ver los mensajes.
 	La limitante de cada mensaje se reduce a 140 caracteres, más que suficientes para difundir enlaces desde la aplicación desarrollada y permitiendo además una pequeña descripción por parte del usuario.
-		\subsubsection{API Twitter}
+		\subsubsection{API de Twitter}
 		\label{subsec:twitter-search-api}
 		Para la muestra de los mensajes compartidos, se utilizó \textit{Twitter Search API}, interfaz dedicada a búsquedas en el índice de mensajes (\textit{tweets}) en tiempo real. Esta se caracteriza por lo siguiente:
 		
