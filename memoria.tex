@@ -16,6 +16,7 @@
 \usepackage{times}
 \usepackage[hypcap]{caption} % para que los vinculos lleven al tope de la figura.
 % \renewcommand{\baselinestretch}{1.5} % para saltar 1.5 el espacio
+\usepackage{needspace} %para evitar huerfanos y viudas.
 
 \urlstyle{same} % same: mismo formato que el texto | rm,sf,tt,same |
 
@@ -65,6 +66,12 @@
  \pagestyle{fancyplain}
  \fancyhf{}
  \rfoot{\thepage}
+
+%para evitar huerfanos y viudas
+%\widowpenalty=900
+%\clubpenalty=900
+%\setlength{\parskip}{3ex plus 2ex minus 2ex}
+%\usepackage[all]{nowidow}
  
  %\pagenumbering{roman} 
 %Estructura del documento
