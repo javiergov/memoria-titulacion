@@ -30,6 +30,8 @@ El servidor debe cumplir dos funciones, por un lado almacenar y segmentar el con
 \end{figure}
 
 %Respecto a los elementos principales, estos se componen de distintos modulos que serán explicados con más detalle a lo largo del capítulo. 
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 La figura \ref{diagramaSegmenter} presenta el flujo del contenido desde su fuente hasta el almacenamiento como segmentos recodificados en el sistema de archivos del servidor. El bloque \textquotedblleft Segmentación del contenido\textquotedblright es una aplicación que recibe como entrada un flujo de audio y/o video encapsulado en MPEG2-Transport Stream, para luego cortar el contenido en archivos de menor duración, estos se guardan en el sistema de archivos del servidor.\\
 
 En la figura \ref{diagramaGral} se presenta el flujo de comunicación desde el dispositivo móvil que pide un \textit{stream} asociado a una marca temporal, siendo representado por flechas de color negro. Luego esta petición es interpretada por el servidor, quien genera una respuesta en base a lo requerido, representada por flechas de color azul. 
@@ -51,7 +53,11 @@ Se describen los componentes de la figura \ref{diagramaGral}:
 % https://developer.apple.com/news/index.php?id=02162010a
 	El protocolo utilizado para entregar el contenido audiovisual es \textit{HTTP Live Streaming} (HLS), elegido debido a requerimientos obligatorios designados por Apple para la distribución de contenidos multimedia para su sistema operativo iOS.\\
 	
-	En un anuncio realizado por Apple en su sitio Web destinado a desarrolladores, indica como obligación que la entrega de contenido del tipo audio y/o video con una una duración mayor a 10 minutos debe utilizar necesariamente el protocolo \textit{HTTP Live Streaming} ya sea el enlace mediante WiFi o red celular. Además las aplicaciones deben incluir un flujo de datos (\textit{stream}) de baja calidad con una cadencia de datos no superior a 64 Kilobits/segundo, de manera que estas aplicaciones mantengan fluidez de contenido a pesar de encontrarse en condiciones desfavorables en la red. En caso de no seguir esta indicación, el desarrollador arriesga que su aplicación no sea admitida en la plataforma principal para la distribución de aplicaciones: iTunes Store.\\
+%\needspace{4\baselineskip}
+\enlargethispage{\baselineskip}
+En un anuncio realizado por Apple en su sitio Web destinado a desarrolladores, indica como obligación que la entrega de contenido del tipo audio y/o video con una una duración mayor a 10 minutos debe utilizar necesariamente el protocolo \textit{HTTP Live Streaming} ya sea el enlace mediante WiFi o red celular. Además las aplicaciones deben incluir un flujo de datos (\textit{stream}) de baja calidad con una cadencia de datos no superior a 64 Kilobits/segundo, de manera que estas aplicaciones mantengan fluidez de contenido a pesar de encontrarse en condiciones desfavorables en la red. \\
+
+En el caso de no seguir la indicación antes mencionada, el desarrollador arriesga que su aplicación no sea admitida en la plataforma principal para la distribución de aplicaciones: iTunes Store.\\
 
 	Considerando que este trabajo de memoria busca incorporar a los dispositivos iOS como consumidores del contenido multimedia utilizando saltos temporales (\textit{TimeShift}), se tuvo que diseñar la solución alrededor de este protocolo.
 
@@ -70,10 +76,12 @@ Su carácteristica principal es la utilización del protocolo para transferencia
 
 HLS funciona entregando el contenido de forma segmentada al cliente, el cual tiene la responsabilidad de manejar la lógica de cambio de segmentos. Para distribuir el contenido se codifica la fuente de audio y/o video en varios archivos de corta duración, recomendandose 10 segundos \cite{bib:tensec-targetduration}, y que pueden o no tener el mismo bitrate. Estos pequeños archivos se ordenan en una lista de reproducción de formato \textbf{m3u8} que se entrega al reproductor del cliente. \\
 
-También existe una variante donde la lista de reproducción contiene referencias a otras listas de reproducción con otras variantes de flujos de datos. \\
+También existe una variante donde la lista de reproducción contiene referencias a otras listas de reproducción con otras variantes de flujos de datos.
 
 % http://www.streamingmedia.com/Articles/Editorial/What-Is-.../What-is-HLS-(HTTP-Live-Streaming)-78221.aspx
 % In the Apple App Store, if you produce an app that delivers video longer then ten minutes or greater than 5MB of data, you must use  HTTP Live Streaming, and provide at least one stream at 64Kbps or lower bandwidth. Any streaming publisher targeting iOS devices via a website or app should know the basics of HLS and how it’s implemented.
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 	\subsection{Especificación}
 		El protocolo HLS consiste en ordenar la entrega de archivos discretos a través de HTTP.
 		El procedimiento general consiste en segmentar el contenido multimedia (audio y/o video) en pequeños archivos de manera que a través de un servidor Web regular el cliente pueda descargar y unir los segmentos para verlos de manera continua. Esta forma de entregar el contenido puede ser utilizada para contenido pre-grabado o en vivo, difiriendo levemente en el componente encargado de ordenar los segmentos.\\
@@ -92,6 +100,8 @@ Por el lado del servidor de contenidos primero se debe obtener material multimed
 	
 Tomando en cuenta el funcionamiento del protocolo HLS, para distribuir el contenido multimedia generado en vivo se debe codificar y segmentar inmediatamente para que el servidor Web pueda proveerlos. En el caso de que el contenido sea un gran archivo, la codificación y segmentación se realiza una sola vez.
 
+%\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 \subsubsection{Lista de reproducción}
 \label{TAG-SECTION}
 La lista de reproducción en formato \textbf{m3u8} es lo que se entrega a un cliente que puede ser una aplición iOS o el navegador Web Safari desarrollado por Apple. Esta lista consiste en enlaces (URL) absolutos o relativos de los segmentos siguiendo el orden del contenido. Además se incluyen comentarios precedidos por el caracter \textbf{\#}, en el caso que un comentario utilice una palabra reservada por el protocolo se le denomina marca (tag).
@@ -108,7 +118,7 @@ Además este valor indica al cliente cada cuanto tiempo debe realizar una petici
 \item \label{TAG-mediasequence} \textbf{\#EXT-X-MEDIASEQUENCE}: Corresponde a la secuencia o versión de la lista de reproducción según los segmentos que se incluyen dentro de ella. Este valor se representa por un número entero y debe ser consecuente a los cambios en la lista de reproducción, es decir, si se agregan nuevos segmentos en la lista de reproducción pedida por el cliente, el valor de la secuencia debe aumentar, de esta forma el reproductor del cliente puede saber que el flujo multimedia está siendo actualizado con más contenido.
 
 
-\item \label{TAG-extinfint} \textbf{\#EXTINF}: Esta marca indica la duración del segmento que se encuentra junto a él. Su valor está indicado por un número entero que representa los segundos.\\
+\item \label{TAG-extinfint} \textbf{\#EXTINF}: Esta marca indica la duración del segmento que se encuentra junto a él. Su valor está indicado por un número entero que representa los segundos.
 \end{prop}
 
 \begin{figure}[H]
@@ -128,7 +138,8 @@ Además este valor indica al cliente cada cuanto tiempo debe realizar una petici
 	\caption{Lista de reproducción del tipo Video-on-Demand}
 	\label{ejemploM3U8}	
 \end{figure}			
-
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 El ejemplo visto en la figura \ref{ejemploM3U8} destaca una marca extra: \#EXT-X-ENDLIST, la cual indica al cliente que la lista de reproducción está completa y no necesita ser actualizada. Esta marca toma gran importancia al definir un flujo de medios ``en vivo'' ya que al estar ausente el cliente pedirá una nueva versión de la lista de reproducción que incluya nuevos segmentos, el tiempo que indica la actualización depende de la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}.\\
 
 En el caso de contenido en vivo, la lista de reproducción toma el rol de \textbf{ventana de reproducción}. A medida que más contenido se almacena en el servidor, la lista de reproducción se actualiza con nuevos segmentos en un intervalo de segundos dados por la marca \#EXT-X-TARGETDURATION \ref{TAG-targetduration}, de esta forma se evita que el servidor Web entregue a los clientes un archivo \textbf{m3u8} de gran tamaño, ya que se eliminan los segmentos ya pasados.\\
@@ -163,15 +174,13 @@ Además de las marcas ya listadas en \ref{TAG-SECTION}, en este trabajo se utili
 \item \textbf{\#EXT-X-VERSION}: Corresponde a la versión de la lista de reproducción, se utiliza para diferenciar distintos streams con protocolo HLS según las características que se van incorporando. Para el trabajo de esta memoria se utiliza la versión 3 del protocolo.
 
 \item \textbf{\#EXTINF}: Si bien ya se ha descrito esta marca en \ref{TAG-extinfint}, a partir de la versión 3 del protocolo HLS se permiten valores flotantes para mejorar por parte del cliente la exactitud en el seguimiento del tiempo de reproducción. 
-
-\item \textbf{\#EXT-X-PROGRAM-DATE-TIME}: Marca correspondiente a la fecha asociada al primer segmento de datos que aparece en la lista de reproducción. La fecha se especifica utilizando el estandar ISO 8601, y opcionalmente se puede incluir zona horaria. Un ejemplo del formato sería:
-
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
+\item \textbf{\#EXT-X-PROGRAM-DATE-TIME}: Marca correspondiente a la fecha asociada al primer segmento de datos que aparece en la lista de reproducción. La fecha se especifica utilizando el estandar ISO 8601, y opcionalmente se puede incluir zona horaria. Por ejemplo el día 18 de diciembre de 2011, a las 14:54:23 con zona horaria GMT-4 equivale a:
 \begin{lstlisting}
 #EXT-X-PROGRAM-DATE-TIME:2011-12-18T14:54:23-04:00
 \end{lstlisting}
-
-Correspondiente al día 18 de diciembre de 2011, a las 14:54:23 en la zona horaria GMT-4.
-
+%Correspondiente al día 18 de diciembre de 2011, a las 14:54:23 en la zona horaria GMT-4.
 \end{itemize}
 		% aqui detallar los mensajes de la playlist utilizados
 		%		http://tools.ietf.org/html/draft-pantos-http-live-streaming-08
@@ -223,8 +232,10 @@ Por defecto la primera variante será la utilizada para comenzar la transmisión
 
 En el caso que exista por distintos motivos una caída en la calidad del enlace, la baja de velocidad de descarga debe ser alertada por el cliente de forma que pueda cambiar la variante en reproducción por otra asociada a un menor ancho de banda. Estos cambios deben ocurrir de manera automática, de modo que el reproductor vea afectado su flujo bajo reproducción.\\
 
+%\needspace{4\baselineskip}
+\enlargethispage{\baselineskip}
 Tomando en cuenta este comportamiento, se debe considerar, el tipo de enlace de los reproductores al armar la lista de variantes. Por ejemplo si tiene identificado que sus clientes se conectarán al servidor mediante WiFi es preferible que la lista de variantes tenga como primer elemento la variante de 550000 Kbps y en caso que los clientes se conecten al servidor mediante red celular, es preferible presentar como primer variante la de 110000 Kbps.
-	De esta forma el cliente reproducirá inmediatamente un stream acorde a su enlace. \\
+	De esta forma el cliente reproducirá inmediatamente un stream acorde a su enlace.\\
 	
 En el ejemplo de la figura \ref{ejemploVariantPLS} a través de red celular el cliente podrá reproducir el contenido rápidamente con velocidades EDGE, y si el enlace lo permite podrá cambiar a una mejor variante. En caso de que el cliente se conecte mediante WiFi, cargará el enlace de menor ancho de banda para realizar pruebas e inmediatamente descartarlo por uno de mejor calidad que satisfaga sus requerimientos.
 
@@ -242,7 +253,8 @@ Esta aplicación tiene como función multiplexar el contenido multimedia del arc
 Al igual que \textit{MediaFile Segmenter}, esta herramienta segmenta el contenido multimedia en varios archivos, sin embargo toma como entrada un flujo de transporte MPEG2 a través de un enlace UDP [dirección:puerto] o también puede hacerlo a través de la entrada estandar (stdin). De igual forma que \textit{mediafilesegmenter} esta aplicación genera una lista de reproducción en formato \textbf{m3u8}.\\
 
 Como recibe de entrada un flujo de datos, permite generar listas de reproducción en vivo, generando segmentos mientras se reciben y actualizando la lista de reproducción con las referencias. Este tipo de flujo de medios es recomendable para difusión contínua, permitiendo además eliminar los segmentos que ya expiraron en la ventana de transmisión.
-
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 		\subsubsection{Variant Playlist Creator}
 		Esta aplicación se utiliza en conjunto con MediaFile Segmenter para crear una lista de variantes a partir de múltiples streams del tipo VOD. Esto se realiza indicando la opcion en \textit{MediaFile Segmenter} \textit{\textbf{--generate-variant-plist}} que genera un archivo \textit{property list} (XML) por cada variante del stream, estos archivos se entregan junto a las listas de reproducción para obtener la lista de variante.
 			
@@ -285,7 +297,8 @@ El resultado de esto es un stream HLS al cual se puede acceder mediante un servi
 		</video>
 	</body>
 </html>\end{lstlisting}
-
+%\needspace{4\baselineskip}
+\enlargethispage{\baselineskip}
 Nótese que la fuente al video es la lista de reproducción generada por \textbf{mediastreamsegmenter}, la cual se encuentra en constante actualización mientras la transmisión se lleva a cabo.\\
 
 Ya con el servidor Web funcionando, la carga de esta página Web permitirá la reproducción del stream en vivo mientras el navegador Web sea compatible con el protocolo \textit{HTTP Live Streaming} utilizando el reproductor HTML5. En la actualidad los únicos navegadores compatibles son Safari y Mobile Safari, desarrollados por Apple.\\
@@ -308,7 +321,8 @@ En la figura \ref{ipad-hlsexample} se puede observar que la reproducción del st
 	
 %	explicar como se probó con resident evil y motorstorm
 %	con variantes VOD y live
-	
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 \section{Reproducción y Control de Stream de Video}
 
 %	explicar resumido la estructura como se conecta el server y el cliente, con un  diagrama
@@ -328,6 +342,8 @@ El segmentador utilizado fue desarrollado por la empresa AltaVoz S.A. interesada
 
  La gran diferencia con el uso de \textbf{mediastreamsegmenter} recalca en el almacenamiento de los archivos resultantes, los cuales se guardan sin ser eliminados para mantener un gran registro de las transmisiones, el nombre de cada segmento corresponde a la fecha y hora de la recepción de la emisión en formato \textit{\textbf{Unix Time}} (\textit{POSIX time}) y con extensión \textbf{.ts}. Para mantener orden en el sistema de archivos los segmentos se guardan en sub-directorios por cada hora de contenido, el nombre de estos sub-directorios también llevan \textit{Unix Time} para su catalogación.\\
 
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 Una última característica especial del segmentador es marcar el segmento más antiguo y el más reciente en dos archivos \textbf{\textit{start.txt}} y \textbf{\textit{last.txt}} respectivamente, de forma que el cliente pueda representar gráficamente al usuario la disponibilidad de contenido en el \textit{stream}.
 		
 		\subsubsection{Emisor de la lista de reproducción}
@@ -351,6 +367,8 @@ Con estos parámetros el \textit{playlist dispatcher} retorna una lista de varia
 		\label{diagramaHLSAltaVoz}
 	\end{figure}		
 		
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 	\subsection{Aplicación Cliente iOS}
 %		descripcion general.
 %		como se conecta al server, reachability, entrega a avplayer
@@ -442,6 +460,8 @@ Un ejemplo de observación por cambio de valor (\textbf{KVO}) se muestra en la f
 \end{itemize}
 Ellas gatillan notificaciones al cambiar su valor BOOL a verdadero para informar a las otras clases y tomar curso de acción. Por ejemplo al recibir una notificación de búfer vacío, es necesario avisar al usuario con una representación gráfica del reproductor mientras carga.
 
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 \item \textbf{Pistas de medios}: Debido a que el flujo de datos puede ser emitido como solamente audio, o también como video y audio, es necesario supervisar el tipo de medio que se está presentando. Para esto es necesario observar el atributo \textit{\textbf{tracks}} del flujo de datos (\textit{currentItem}). Este atributo consiste en un arreglo (NSArray) de instancias de AVPlayerItemTrack, clase que representa cada pista multimedia del flujo de datos, cada pista puede ser texto (AVMediaCharacteristicLegible), audio (AVMediaCharacteristicAudible) o video (AVMediaCharacteristicVisual). Observando el cambio de componentes en el flujo es posible adecuar el reproductor según el tipo de medio que se presenta al usuario.
 
 \item \textbf{Rango de reproducción}: \textit{\textbf{seekableTimeRanges}} se refiere al atributo asociado a la disponibilidad temporal del item en reproducción, el rango donde es posible realizar búsqueda de cuadros de reproducción. Este valor cambia constantemente debido a que el contenido recibido por \textit{HTTP Live Streaming} se encuentra en actualización permanente guardando tiempo adicional para reproducción. Este atributo se observa con el fin de rastrear si se están obteniendo segmentos del contenido.
@@ -459,8 +479,11 @@ El intercambio de información a través de \textit{HTTP Live Streaming} se real
 \textit{initWithURL:(\textbf{NSURL} *)url}, que toma como argumento un URL al \textit{dispatcher} con los parámetros explicados anteriormente. Luego que el reproductor se ha iniciado, se procede a asociar los observadores a la instancia para luego llamar a la reproducción.\\
 
 % cookies ref: http://es.wikipedia.org/wiki/Cookie_(informática)
-El método de inicialización se basa en una petición HTTP. La administración de datos de usuario en el cliente (\textit{cookies}) son establecidos por el servidor y el sistema del cliente (iOS) se encarga de devolver la información con cada petición. Esto simplifica de gran manera cada nuevo enlace que la aplicación cliente debe hacer, liberando la carga a solamente establecer las nuevas URLS.
+El método de inicialización se basa en una petición HTTP. La administración de datos de usuario en el cliente (\textit{cookies}) son establecidos por el servidor y el sistema del cliente (iOS) se encarga de devolver la información con cada petición. Esto simplifica de gran manera cada nuevo enlace que la aplicación cliente debe hacer, liberando la carga a solamente establecer las nuevas URLS.\\
 
+\clearpage
+%\needspace{5\baselineskip}
+%\enlargethispage{2\baselineskip}
 Por el lado del servidor, aparte de los campos en la cadena de consulta (\textit{query string}), se establece cada conexión utilizando las siguientes cookies:
 
 \begin{itemize}
@@ -514,8 +537,9 @@ Para solucionar esto se ideó un control personalizado que presenta una rueda ex
 		El reproductor presenta botones de control de reproducción en base a un reproductor estándar de MPMoviePlayerViewController, éstos son PLAY/PAUSE, Next. Estos botones son lo único que comparten con un reproductor normal ya que además se debe incorporar un botón para compartir el momento de la reproducción a través de redes sociales. Se agrega entonces un botón con el icono de Twitter que presenta un formulario de acción con ítems para cerrar la sesión, compartir en Twitter o cancelar la acción de compartir.
 		
 %				play pausa, ibactions
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 		\subsubsection{Volume Slider}
-
 		Para presentar el control de volumen se utilizó una clase estándar del sistema operativo, llamada MPVolumeslider, encargada de presentar un deslizador que está directamente relacionado con los botones del hardware de los dispositivos iOS. Tanto así, que en materia de depuración (\textit{debug}), el simulador no permite mostrar en pantalla dicho control. Se agrega ajustando un rectángulo destinado como perímetro para que el sistema presente dicho control en una subvista, es decir una vista anidada en otra vista de la interfaz gráfica.
 		
 		\subsubsection{Vistas de Tablas}
@@ -548,6 +572,8 @@ Para poder presentar la tabla sin perder parte de la transmisión se muestra el 
 		\label{diagramaTwitterShare}
 	\end{figure}		
 	
+%\needspace{4\baselineskip}
+\enlargethispage{\baselineskip}
 	\subsection{Twitter}
 	%http://www.alexa.com/siteinfo/twitter.com
 	La red de microblogging Twitter permite difundir mensajes de forma pública y también privada a millones de usuarios en Internet, siendo uno los sitios más populares de la Web\cite{alexa-twitter} permitiendo que personas no suscritas puedan ver los mensajes.
@@ -573,10 +599,7 @@ En caso que se desee, utilizando Sharekit, es posible modificar el mensaje a com
 
 		\subsubsection{Post en Twitter}
 %		como postear en twitter desde la app, action sheet
-		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase \textbf{NSDate}, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{\textbf{timeIntervalSince1970}} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir el valor a NSString, cadena de caracteres. Una vez generado el URL con el valor temporal en su cadena de consultas se procede a un campo de texto que incluye el URL, de manera que el usuario agregue algún comentario y dé la instrucción de enviar si lo desea.
-		
-		
-		En caso de no tener el valor para la fecha en reproducción la aplicación no permite compartir.
+		Para entregar el momento que se está viendo u oyendo, es necesario tener la fecha de la transmisión, esto se obtiene de uno de los observadores periódicos encargados de la fecha del flujo de datos (\ref{observer-date}). El objeto obtenido es una instancia de la clase \textbf{NSDate}, encargada de registrar información temporal, convenientemente se utiliza el método de la clase: \textit{\textbf{timeIntervalSince1970}} que entrega la cantidad de segundos entre el 1 de enero de 1970 y la fecha en cuestión, el valor obtenido es del tipo \textbf{\textit{double}} por lo tanto es necesario convertir el valor a NSString, cadena de caracteres. Una vez generado el URL con el valor temporal en su cadena de consultas se procede a un campo de texto que incluye el URL, de manera que el usuario agregue algún comentario y dé la instrucción de enviar si lo desea. En caso de no tener el valor para la fecha en reproducción la aplicación no permite compartir.
 
 		\subsubsection{Seguimiento de Hashtag}
 		%las llamadas de url para el cliente de twitter
@@ -658,6 +681,8 @@ Al pulsar en algún mensaje representado en la tabla \ref{sshot-twitterclientvc}
 %		desmenuzar el enlace de bitly
 Para entregar una buena experiencia al usuario se utilizó el servicio de compresión de URL \textbf{Bit.ly}, de forma que el enlace al stream (que además incluye marca de tiempo) no utilice demasiados caracteres. El motivo es la limitante de Twitter de 140 caracteres por mensaje, de los cuales la aplicación debe utilizar lo mínimo para compartir.\\
 
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 Otra característica útil para la supervisión de la aplicación y el servicio \textit{SocialStream} en su totalidad, es la posibilidad de utilizar las llamadas a la API de Bit.ly junto a las credenciales de una cuenta previamente hecha para llevar un registro del uso de los enlaces, los que tienen como característica, el ser permanentes y también que una vez creados no pueden ser editados en el URL al cual redirigen \cite{bib:bitly-permanent}.\\
 
 
@@ -693,6 +718,8 @@ La respuesta entregada depende del campo \textit{format} especificado en la cade
 Para una respuesta exitosa se recibe una cadena de caracteres con el URL comprimido de tipo 
 \textbf{http://bit.ly/\textless hash comprimido\textgreater} \\
 
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 En caso de cualquier falla, el texto entregado es la causal misma del error, por lo tanto cual sea la respuesta debe ser analizada su integridad como URL antes de ser entregada al resto de las instancias de las clases que componen la aplicación. Esta comprobación se realiza comparando el \textit{scheme} del \textbf{NSURL} creado a partir del texto resultante, en caso de ser \textbf{http} o \textbf{https} se considera conforme por parte de la aplicación.\\ 
 
 Algunas respuestas erróneas pueden ser:

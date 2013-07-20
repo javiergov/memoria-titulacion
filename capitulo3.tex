@@ -12,6 +12,8 @@ Además permite poner a la venta las aplicaciones desarrolladas en la \textit{\t
 Las primeras pruebas estuvieron relacionadas con el cambio de tiempo a través de peticiones al dispatcher con argumentos en la cadena de consulta, éstas se realizaron con la aplicación de OS X: \textbf{Quicktime X}, la cual permite reproducir streams que cumplen con las especificaciones de HTTP Live Streaming. Otra alternativa que además se encuentra disponible en otros sistemas operativos es \textbf{VideoLan VLC}. Las pruebas consistieron en modificar los argumentos \textbf{t}, \textbf{s} y \textbf{c} de URLs del tipo:
 \url{http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=tvn&t=1353186024&c=0}, donde el parámetro \textbf{t} corresponde al tiempo Unix del 17 de noviembre de 2012 18:00:24 GMT-3.\\
 
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 El especificar el tiempo en el parámetro \textbf{t} resulta siempre en una lista de reproducción con segmentos asociados al tiempo correspondiente. Además se monitoreó la respuesta a través de la aplicación rastreadora de paquetes Wireshark. Para esto se necesitó aplicar un filtro especial de forma que los paquetes relacionados con HTTP Live Streaming fueran entregados. El filtro corresponde a mostrar paquetes recibidos desde el servidor donde el cliente, en este caso Quicktime, se contacta para obtener una lista de reproducción, y además pedir la entrega de paquetes que tengan en su contenido la palabra \textbf{apple}.
 
 \begin{figure}[H]
@@ -78,7 +80,7 @@ http://ssdemo.altavoz.net/streams/tvn/tvn_1353186085.ts
 \label{lst:setcookies}
 \end{figure}
 
-De la figura \ref{lst:setcookies} se puede observar que el servidor Web Ngnix\cite{bib:ngnix-homepage} entrega en la cabecera HTTP las instrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. \\
+De la figura \ref{lst:setcookies} se puede observar que el servidor Web Ngnix\cite{bib:ngnix-homepage} entrega en la cabecera HTTP las instrucciones Set-Cookie con los valores descritos en \ref{subsec:cookies}. 
 
 En la siguiente conexión con el servidor, se ajustaran los valores de las \textit{cookies} acorde al contenido de la lista de reproducción entregada. Como se describió anteriormente las \textit{cookies} no son manejadas por la aplicación cliente, ya que el sistema operativo iOS se encarga de manejar los valores de éstas.\\
 
