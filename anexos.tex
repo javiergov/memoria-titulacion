@@ -17,7 +17,7 @@ iOS deriva de Mac OSX en su arquitectura de diseño, utilizando también el mism
 El desarrollo de sus aplicaciones se realiza con \textbf{Cocoa Touch} API (figura \ref{fig:ios-cocoatouch}), la capa de abstracción de iOS.
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.35]{imgs/ios-cocoatouch.png} 
+	\includegraphics[scale=0.31]{imgs/ios-cocoatouch.png} 
 	\caption{Características del dispositivo disponibles a través de Cocoa Touch.}
 	\label{fig:ios-cocoatouch}
 \end{figure}  
@@ -31,6 +31,8 @@ El desarrollo de sus aplicaciones se realiza con \textbf{Cocoa Touch} API (figur
 		\subsection{Macintosh}
 		Fue necesario utilizar una computadora Macintosh, debido a la obligación de desarrollar en Xcode y por ende, una computadora que ejecutara el sistema operativo OSX.\\
 		
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 		Los Macintosh, también conocidos simplemente como Mac, son la línea de computadores de escritorio diseñados y manufacturados por Apple Inc. Están enfocados al mercado de computadoras para el hogar, educación y mercado profesional donde además existe la línea \textit{Pro}. Su principal característica es la posibilidad de ejecutar OSX ya que la licencia del sistema operativo sólo permite instalarlo en computadores construidos por Apple Inc \cite{web:license-osx}. Además los Mac que poseen una CPU Intel permiten instalar otros sistemas operativos como Windows y Linux, gracias a la aplicación de OSX \textbf{Bootcamp}.\\
 		
 		 Una gran diferencia de los Macintosh respecto a un computador de escritorio es en su encendido, ya que partir los Macs utilizan \textbf{EFI} (\textit{Extensible Firmware Interface}) , a diferencia de una computador normal con Windows o Linux que utiliza por defecto la tradicional y retrocompatible \textbf{BIOS} (\textit{Basic Input/Output System}). Esta característica dificulta la instalación de OSX en computadores que no han sido manufacturados por Apple, debido a que parte de sus drivers residen en la partición del disco duro utilizada por la EFI.\\
@@ -93,11 +95,13 @@ Xcode se puede obtener, además del repositorio para desarrolladores \cite{apple
 %	- debug con app en background
 %	- debug con app cerrada y a la espera que parta por otra aplicación
 %	explicar que se detuvo la carga del stream cuando está cerrada y que se espera una notificacion de la carga de la UI antes de cargar el stream.
-    
+
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 \begin{figure}[H]
 	\centering
 	\begin{tabular}{cc}
-	\includegraphics[scale=0.7]{imgs/xcode-debug-wait.png}
+	\includegraphics[scale=0.65]{imgs/xcode-debug-wait.png}
 	\end{tabular}
 	\caption{Configuración de Xcode para pruebas de lanzamiento de la aplicación por scheme.}
 	\label{fig:xcode-debug-wait}
