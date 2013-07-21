@@ -121,7 +121,8 @@ Set-Cookie: sf=7
 %http://ssdemo.altavoz.net/playlist/playlist.m3u8?s=video1&t=1353186024&c=0
 
 %escribir en consola el URL, probarlo en quicktime, vlc, navegador, app, wireshark para ver cookies
-
+\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
 \section{Proceso corriendo en fondo} % background
 
 Debido a que se utiliza el protocolo HTTP Live Streaming con el fin de entregar información en vivo, la instancia de AVPlayer se mantiene realizando peticiones por nuevas listas de reproducción a medida que pase el tiempo, sin importar que la reproducción se encuentre \textbf{pausada} o que la aplicación esté corriendo en el \textbf{fondo} (\textit{background}).\\
@@ -177,7 +178,6 @@ En el caso de ajustar el valor a 1, la lista de reproducción invierte la priori
 %se especifica requerimiento a la empresa, se modifica el dispatcher con lista de variantes, se revisa en wireshark.
 %luego se utiliza la herramienta network link conditioner para modificar el BW en plena transmisión, revisar wireshark cuando cambia y ver en la misma app.
 %Luego se prueba con iPhone cambiando entre wifi y 3g
-
   \subsection{WiFi: Wireless LAN}
   El comportamiento monitorizado a través del rastreo de paquetes se observa con el dispositivo real (iPhone) para comprobar la práctica de la teoría.
   En el caso de iniciar el stream en un iPhone con conexión a Internet mediante WiFi se presenta en pantalla el video inmediatamente si es que el ancho de banda da abasto. En caso que no sea suficiente cambiará a alguna variante capaz de reproducirse según el ancho de banda identificado por el dispositivo, en el ejemplo de la figura \ref{lst:playlistc0} la variante de menor tasa \textbf{65000 bps}, sólo audio.
@@ -194,10 +194,10 @@ En el caso de conexión a través de red celular el parámetro \textbf{c = 1} ca
 \begin{figure}[H]
 	\centering
 	\begin{tabular}{cc}
-	\includegraphics[scale=0.2]{imgs/cell-link-1.png} & 
-	\includegraphics[scale=0.2]{imgs/cell-link-2.png} \\
-	\includegraphics[scale=0.2]{imgs/cell-link-3.png} & 
-	\includegraphics[scale=0.2]{imgs/cell-link-4.png} \\
+	\includegraphics[scale=0.21]{imgs/cell-link-1.png} & 
+	\includegraphics[scale=0.21]{imgs/cell-link-2.png} \\
+	\includegraphics[scale=0.21]{imgs/cell-link-3.png} & 
+	\includegraphics[scale=0.21]{imgs/cell-link-4.png} \\
 	\end{tabular}
 	\caption{iPhone reproduciendo stream de una fecha en particular a través de la red celular con enlace 3G.}
 	\label{fig:cell-link}
@@ -217,17 +217,19 @@ El script utiliza los argumentos en la cadena de consulta \textbf{s} y \textbf{t
 %  \subsection{Dentro de la aplicación}
   \subsection{Cambio de transmisión con la aplicación en ejecución}
   \label{subsec:ts-inside}
-Se utiliza la llamada al método \textit{didSelectRowAtIndexPath:(NSIndexPath *)indexPath} gatillado al pulsar en un celda de la vista de tablas (fig. \ref{sshot-twitterclientvc}) utilizada para representar los Tweets asociados al \textit{hashtag} \textbf{\#SocialStream}. \\
+Se utiliza la llamada al método \textit{didSelectRowAtIndexPath:(NSIndexPath *)indexPath} gatillado al pulsar en un celda de la vista de tablas (fig. \ref{sshot-twitterclientvc}) utilizada para representar los Tweets asociados al \textit{hashtag} \textbf{\#SocialStream}. 
 
 \begin{figure}[H]
 	\centering
 	\begin{tabular}{cc}
-	\includegraphics[scale=0.3]{imgs/twclient-list.png}
+	\includegraphics[scale=0.28]{imgs/twclient-list.png}
 	\end{tabular}
 	\caption{Vista de tabla con celdas compuestas de Tweets}
 	\label{fig:twclient-list}
 \end{figure}
 
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
 El índice entregado al método se utiliza para identificar los datos del mensaje en el NSDictionary generado a partir del archivo JSON obtenido mediante Twitter Search API. De los datos contenidos en la instancia del diccionario \ref{tweet-json} se utiliza el valor de la clave \textbf{expanded\_url} para extraer la ruta del URL y generar un URL destinado al servicio \textbf{Bit.ly}.  \\
 
 Del ejemplo en la figura \ref{fig:twclient-list} la primera celda presenta el dato \url{http://t.co/jkNULXnM}, el cual tiene como valor de \textbf{expanded\_url} asociado \url{http://bit.ly/Soxy8c}.
@@ -252,8 +254,8 @@ Si existen valores para \textbf{s} y \textbf{t} se procede a generar una notific
 \begin{figure}[H]
 	\centering
 	\begin{tabular}{cc}
-	\includegraphics[scale=0.2]{imgs/twclient-stream.png} & 
-	\includegraphics[scale=0.2]{imgs/twclient-nostream.png} \\
+	\includegraphics[scale=0.21]{imgs/twclient-stream.png} & 
+	\includegraphics[scale=0.21]{imgs/twclient-nostream.png} \\
 	\end{tabular}
 	\caption{Distintos resultados de apertura de URLs contenidos en mensaje de Twitter}
 	\label{fig:twclient-results}
@@ -302,6 +304,8 @@ Si existen valores para \textbf{s} y \textbf{t} se procede a generar una notific
 	\label{fig:xcode-waitforapp}
 \end{figure}
 
+%\needspace{4\baselineskip}
+\enlargethispage{\baselineskip}
 %Con esta configuración de depuración, ya es posible 
 Con el depurador configurado en modo espera (anexo \ref{anexo:xcode-debug}) es posible revisar el comportamiento con enlaces abiertos desde otra aplicación de iOS, como por ejemplo desde la aplicación de terceros Tweetbot. En la figura \ref{fig:tweetbot-sstream} al pulsar en el URL del tweet, el script desarrollado para la redirección (\ref{subsec:php-redir}) identifica el \textbf{Agente de Usuario} de la clase UIWebView presuntamente utilizada por Tweetbot para redirigir a un URL con el \textit{scheme} asociado por la aplicación cliente. El resultado se muestra en la segunda imagen donde el procedimiento consiste en generar una notificación a la clase que contiene la instancia de \textbf{AVPlayer} de forma que genere el URL necesario para reproducir el stream.\\
 
@@ -314,12 +318,11 @@ Dentro de esta llamada se generan las notificaciones encargadas de entregar un U
 El aviso se realiza desde el método \textit{- (void)viewDidAppear:(BOOL)animated} del controlador de vistas, así es posible saber que las vistas, incluyendo la del reproductor, se han cargado en pantalla y proceder a entregar el URL del contenido.
 
 
-
 \begin{figure}[H]
 	\centering
 	\begin{tabular}{cc}
-	\includegraphics[scale=0.3]{imgs/tweetbot-sstream.png} &
-	\includegraphics[scale=0.3]{imgs/tweetbot-appopened.png} \\
+	\includegraphics[scale=0.28]{imgs/tweetbot-sstream.png} &
+	\includegraphics[scale=0.28]{imgs/tweetbot-appopened.png} \\
 	\end{tabular}
 	\caption{Solicitud de Tweetbot para abrir una aplicación externa y su posterior resultado.}
 	\label{fig:tweetbot-sstream}
@@ -338,10 +341,11 @@ El navegador Web Safari al ser producto de las tecnologías desarrolladas por Ap
 Además también en pruebas se utilizó el widget dispuesto por Twitter \cite{bib:twitter-widget} para embeber tweets relacionados a cierto hashtag, en este caso: \#SocialStream. El uso de este widget solo fue por motivos de experimentación.
 %      safari muestra un player html5
 %    foto del player
-
+%\needspace{4\baselineskip}
+\enlargethispage{2\baselineskip}
   \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.4]{imgs/uagent-safari.png} 
+	\includegraphics[scale=0.38]{imgs/uagent-safari.png} 
 	\caption{Apertura de enlace compartido desde la aplicación cliente en Safari.}
 	\label{fig:uagent-safari}
 \end{figure}  
@@ -350,16 +354,18 @@ Además también en pruebas se utilizó el widget dispuesto por Twitter \cite{bi
   \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.6]{imgs/uagent-chrome.png} 
-	\caption{Apertura de enlace compartido desde la aplicación cliente en Google Chrome.}
+	\caption{Apertura de enlace compartido desde la aplicación cliente en Chrome.}
 	\label{fig:uagent-chrome}
 \end{figure}  
     \subsubsection{Firefox}
   \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.6]{imgs/uagent-firefox.png} 
-	\caption{Apertura de enlace compartido desde la aplicación cliente en Mozilla Firefox.}
+	\caption{Apertura de enlace compartido desde la aplicación cliente en Firefox.}
 	\label{fig:uagent-firefox}
 \end{figure}  
+%\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
     \subsubsection{Opera}
   \begin{figure}[H]
 	\centering
@@ -371,21 +377,24 @@ Además también en pruebas se utilizó el widget dispuesto por Twitter \cite{bi
   En el caso del celulares con el sistema operativo Android se presenta el mensaje de la figura \ref{fig:uagent-android}. Si bien desde la versión 4.0, Android OS es compatible con HTTP Live Streaming, es necesario desarrollar una aplicación similar a la hecha para iOS.
  \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.7]{imgs/uagent-android.png} 
+	\includegraphics[scale=0.52]{imgs/uagent-android.png} 
 	\caption{Apertura de enlace compartido desde la aplicación cliente en Safari.}
 	\label{fig:uagent-android}
  \end{figure}  
-
 %  pantallazo del cell de la esperanza
 %  explicar que tampoco es compatible con HLS, por lo menos 2.3, 4.0 ICS en adelante es compatible, pero para reproducir el stream se debe desarrollar una aplicación cliente similar a la hecha en iOS
 
+%\needspace{4\baselineskip}
+%\enlargethispage{2\baselineskip}
+%\pagebreak
+\enlargethispage{2\baselineskip}
 \section{Comparación con SocialStream Flash}
-
 En las figuras \ref{sshot_iOS_sstream} y \ref{fig:eag-player} se puede observar el reproductor del stream de video distribuido a través del protocolo RTMP. El reproductor fue desarrollado por un alumno de la Universidad Técnica Federico Santa María para demostrar la capacidad de cambiar el tiempo del contenido en un reproductor de video desarrollado con las tecnologías de Adobe Flash.
+%\needspace{4\baselineskip}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.6]{imgs/eag-player.png} 
+	\includegraphics[scale=0.42]{imgs/eag-player.png} 
 	\caption{Reproductor Flash para Timeshift en Navegador Web Safari.}
 	\label{fig:eag-player}
 \end{figure}  
@@ -396,9 +405,9 @@ En esta sección se destacan las diferencias de usabilidad de los reproductores 
 
 \begin{itemize}
 \item \textbf{Protocolo:} El reproductor Flash utiliza protocolo RTMP mientras que el reproductor para iOS recibe el contenido a través de HTTP Live Streaming.
-\item \textbf{Salto de Tiempo:} la forma de saltar en el tiempo en el reproductor flash precisa de clicks con mouse, ya sea para cambiar la escala de su linea de tiempo como para moverse el punto central de reproducción, lo cual dificulta en gran medida el consumo del contenido mientras se busca otro instante.\\
 
-En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, que permite elegir un tiempo en especifico pulsando el botón \textbf{Cargar} o cancelar la selección de fecha pulsando fuera del área del selector sin intervenir el contenido en reproducción.
+%\pagebreak
+\item \textbf{Salto de Tiempo:} la forma de saltar en el tiempo en el reproductor flash precisa de clicks con mouse, ya sea para cambiar la escala de su linea de tiempo como para moverse el punto central de reproducción, lo cual dificulta en gran medida el consumo del contenido mientras se busca otro instante. En el caso del reproductor iOS se utiliza el control explicado en la sección \ref{subsec:datepicker}, que permite elegir un tiempo en especifico pulsando el botón \textbf{Cargar} o cancelar la selección de fecha pulsando fuera del área del selector sin intervenir el contenido en reproducción.
 
 \item \textbf{Entrega de contenido:} El contenido en el reproductor Flash presenta una mayor exactitud al elegir un tiempo en especifico, esto debido a que la segmentación del video es cada 5 segundos. En el caso de HTTP Live Streaming es recomendado por los ingenieros de Apple que desarrollaron el protocolo, utilizar 10 segundos como mínimo para cada segmento de video o audio. El motivo de esta recomendación es evitar paralizaciones (\textit{stalls}) en la transmisión a través de redes celulares \cite{bib:tensec-targetduration}.\\
 
