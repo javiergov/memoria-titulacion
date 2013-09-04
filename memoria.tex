@@ -55,7 +55,7 @@
 %Márgenes
 \marginsize{4cm}{3cm}{3cm}{3cm}
 %Fecha	
-\date{Julio de 2013}
+\date{Agosto de 2013}
 \sloppy
 
 
@@ -86,12 +86,13 @@
  	\setcounter{page}{1}
 	
 	%Índice General
-	\tableofcontents
 	\addcontentsline{toc}{chapter}{Índice General}
+	\tableofcontents
+%	\addcontentsline{toc}{chapter}{Índice General}
 
 	%Índice de Figuras 
- 	\listoffigures
- 	\addcontentsline{toc}{chapter}{Índice de Figuras}
+	\listoffigures
+	\addcontentsline{toc}{chapter}{Índice de Figuras}
 
 	%Índice de Tablas
 % 	\listoftables
@@ -104,7 +105,7 @@
 	\addcontentsline{toc}{chapter}{Abstract} 
  
  	\mainmatter
-	%Reiniciar numeración y cambiar a números áraes
+	%Reiniciar numeración y cambiar a números árabes
 	\renewcommand{\thepage}{\arabic{page}} 
 	\setcounter{page}{1}
 	
@@ -137,16 +138,19 @@
 	%Incluir capítulo 5
 	%	\input{capitulo5.tex}
 	
-	%Incluir capítulo 5
-	%	\input{capitulo6.tex}
-	
+	% incluir bibliografía
+	\addcontentsline{toc}{chapter}{Bibliografía} 
 	\input{bibliografia.tex}
+
+	%incluir anexos
+	% \input{anexos.tex}	
 
 	%Cambiar nombre de Apéndice a Anexos
 	\renewcommand{\appendixname}{Anexo}
 
 	%Comienzo de anexos
-	\appendix
+	%\appendix
+	%\input{anexos.tex}	
 	%Incluir anexo A
     %	\input{AnexoProgramacionTinyos.tex}
     %\
