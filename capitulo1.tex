@@ -5,19 +5,9 @@ La manera en que se entregan contenidos audiovisuales a los auditores en la actu
 
 A lo largo de los años estos desarrollos han significado un cambio en el comportamiento de los auditores, que a su vez han generado o destruido industrias relacionadas a los contenidos audiovisuales. Considerando que el fin de este proyecto de memoria busca implementar una nueva forma de entregar contenido utilizando parte de la tecnología actual, es necesario revisar los sucesos desde el génesis de los registros y comunicación de medios audiovisuales.
 
-
-%La relación entre el registro de datos audiovisuales y las comunicaciones se han relacionado desde inicios del siglo XIX, es decir 
-
-%El fin de este proyecto es lograr la entrega de contenidos audiovisuales a una nueva audiencia que ha surgido con los últimos avances tecnológicos del siglo XXI, específicamente Internet y la telefonía móvil. 
-%La entrega de información a gran escala se encuentra constantemente asociada a los avances tecnólogicos para el registro de imagenes y audio.
-%A través de los años el registro de datos de imagen y audio, se ha asociado a la entrega del contenido a una gran cantidad de personas, o auditores. Por lo tanto se deba abordar el inicio de estos registros a el estado actual de las transmisiones.
-
-%Previo al desarrollo del proyecto se debe tener presente la historia y avances tecnológicos relacionados con las transmisiones de medios.
-
-%La historia de los medios es importante por cuanto comprende los avances logrados por el hombre que nos permitieron arribar a los resultados tecnológicos actuales. Lo anterior toda vez que así como la historia de todas las instituciones sociales políticas y económicas del hombre han evolucionado a través de la historia, es la tecnología donde las escalas de avance se han dado en forma más notoria sobre todo en el pasado siglo XX, desde donde por ejemplo de la comunicación por carta manuscrita se logró la comunicación cablegráfica, a mayor abundamiento en materia eléctrica, se logró en menos de 70 años de elevar en vuelo a 2 hombre 1,5 km a poner al hombre en la luna.
 \section{Historia de los medios}
 %Introducción nueva
-%¿Qué son las redes de sensores inalámbricos?
+
 Tomando en cuenta que desde sus inicios la reproducción de medios siempre ha estado relacionada con los últimos avances científicos, los medios de distribución actuales tienen sus orígenes en avances que datan  del siglo XIX.\\
 
 %\needspace{5\baselineskip}
@@ -76,7 +66,6 @@ La base fundamental de este método de distribución, es la utilización de prot
 
 Sin embargo existe un protocolo de capa de aplicación desarrollado para realizar transmisiones de \textit{LiveStreaming} a través de un enlace por TCP llamado \textit{Real Time Messaging Protocol} (RTMP \cite{bib:rtmp-specs}), éste fue hecho por la empresa Macromedia, siendo ahora propietario \textbf{Adobe Systems}. Se destaca por lograr streaming multimedia con baja latencia gracias al envío de una gran cantidad de fragmentos del stream con una pequeña cabecera. \\
 
-%Aun así existe un protocolo de la capa de aplicación que utiliza TCP para realizar el enlace. Este fue desarrollado originalmente por Macromedia, siendo ahora propietario \textbf{Adobe Systems}. \textit{Real Time Messaging Protocol} (RTMP \cite{bib:rtmp-specs}) fue desarrollado para realizar streaming multimedia a través de TCP con baja latencia, esto lo logra gracias al envío de la mayor cantidad de información por enlace. \\
 	
 	De forma similar al protocolo RTMP \textbf{Apple Inc.} ha desarrollado un nuevo método llamado \textit{\textbf{HTTP Live Streaming}}, se diferencia al utilizar pedazos de audio o video  ordenados en una lista de reproducción de extensión \textbf{m3u} (\cite{sota:m3u-specs}) manteniéndose actualizada a medida que nuevos contenidos son creados. A diferencia del \textit{streaming} nombrado anteriormente, este flujo de datos se transmite a través del protocolo HTTP (\textit{Hypertext Transfer Protocol} \cite{sota:rfc-http}), el cual siendo de una capa superior (de aplicación) posibilita la transferencia de los datos multimedia con un servidor Web ordinario, como por ejemplo Apache. Además permite la transmisión en redes donde firewalls o proxies puedan bloquear el contenido, ya que se enmascara como tráfico de hipertexto. Cabe destacar que el enlace realizado a través del protocolo de la capa de aplicación HTTP utiliza TCP en su capa de transporte, al igual que RTMP.
 
@@ -201,9 +190,6 @@ La actualización del servidor de medios Wowza compatible con HTTP Live Streamin
 
 	Otra dificultad a considerar es el hecho que la transmisión por HTTP Live Streaming es reproducida por el MPMediaPlayer estándar, sin mucha versatilidad para características expansivas, como por ejemplo integrar redes sociales como Twitter o Facebook.\\
 
-%	Un punto en contra de Android es la variabilidad del hardware que corre dicho sistema operativo. Existiendo distintos modelos y versiones de aparatos compatibles con él, pueden o no presentar los contenidos de forma correcta, por ejemplo dispositivos con procesadores (CPU) de uno o múltiples núcleos, o también la incorporación de procesadores gráficos (GPU) que permiten la decodificación del video por hardware.\\
-%
-%En el caso de los dispositivos iOS, todos éstos son diseñados y construidos por Apple Inc., siguiendo un estándar que permite una experiencia similar en los distintos productos.
 \subsection{El beneficio de llegar a nuevas audiencias}
 Se debe tomar en cuenta que los dispositivos iOS, entiéndanse iPhone, iPad y iPod Touch; representan una gran participación en cada uno de sus mercados: smartphones, tablet-pc y reproductores  multimedia, respectivamente. Su fuerte y enfoque principal es el mercado de smartphones (fig. \ref{market-share-2012q1}), llegando muy cerca al líder Android de Google 59\% que abarca una gran cantidad de fabricantes de hardware. Si se toma en cuenta que Apple Inc. es el único fabricante del iPhone, su 23\% de participación es de gran importancia.\\
 
@@ -221,80 +207,4 @@ En resumen, del párrafo anterior, se puede entender que iOS es un participante 
 	\caption{Participación de iOS en el mercado de sistemas operativos para Smartphones. Fuente \cite{sota:market-smartphones}}
 	\label{market-share-2012q1}
 \end{figure}
-
-
-
-%¿Cuáles son las áreas de investigación y desarrollo de WSN?
-%buscar como continuar después de una itemezación con dos puntos y separados por comas.
-
-%Presentar el tema del ruteo y recolección de datos
-
-%IR DE LO GENERAL A LO PARTICULAR!
-%El capítulo de introducción debe comenzar explicando que son las 	WSNs.
-	%\section{Redes de sensores inalámbricos}
-	
-	%\section{Aplicaciones}
-%En el mundo
-
-%En Chile
-
-	%\section{Protocolo de ruteo para un sistema de recolección de datos}
-	%\section{Visión general de los requerimientos}
-%Hablar de la aplicación objetivo y cuáles son sus requerimientos 
-
-%Títulos alternativos
-% El objetivo de este trabajo es implementar un protocolo de ruteo multihop como parte de un sistema de recolección de datos que está construido sobre una red de sensores inalámbricos. Este sistema está orientado principalmente al monitoreo de variables físicas principalmente relacionadas con la agricultura, como la humedad y la temperatura de los suelos, en zonas de difícil acceso y que no cuentan con redes de distribución eléctrica.
-
-%En el marco de este trabajo, los objetivos generales son los siguientes:
-%\begin{enumerate}
-%  \item Informar sobre los protocolos de ruteo de mensajes para redes de sensores inalámbricos.
-%  \item Desarrollar una red de sensores inalámbricos, utilizando la plataforma de hardware TmoteSky.
-%  \item Desarrollar una aplicación para la recolección de datos de la red.
-%  \item Evaluar el consumo energético de la red implementada.
-%\end{enumerate}
-
-% El primer objetivo se desarrolla en profundidad en el capítulo 2. El segundo objetivo se desarrolla en los capítulos 3, 4 y 5, donde se plantea un diseño de protocolo y posteriormente como se implementa éste. El tercer objetivo se desarrolla en los capítulos 3 y 5 como parte de las verificaciones del sistema. Finalmente, en el capítulo 5 se evalúa el consumo energético el protocolo.\\
- 
-	%\section{Estado del Arte}
-
-
-%\subsection{Protocolo de ruteo}
-%\begin{figure}[H]
- %\centering
- %\includegraphics[scale=0.8]{imgs/PilaModeloOSI.eps}
- %\caption{Pila de red establecida por el Modelo OSI}
-%\end{figure}
-
-	% \subsection{Algoritmos de ruteo propuestos en la literatura}
-
-%En esta sección debería dar una breve reseña  de cada protocolo, con sus referencias.
-	%\subsection{Protocolos implementados}
-
-	%\subsection{Hardware de desarrollo}
-%De lo general a lo particular
-% Qué tipo de hardware existe?
-
-%Debo incluir info sobre los motes que soportan tinyos
-	% \subsubsection{Plataformas TinyOS}
-	%\subsubsection{Plataformas Zigbee}
-	
-%Debo incluir info sobre los motes que soportan Zigbee, simpliciti.
-	% \subsubsection{Otras plataformas}
-	%\subsection{Software para redes de sensores inalámbricos}
-
-%TinyOS, ZStack, SimpliciTI, etc
-%Breve descripción de tinyOS e indicación para revisar el anexo XX.
-	%\subsubsection{TinyOS}
-	%\subsubsection{Contiki}
-
-%Breve descripción de ZStack, basarse en pagina de ti del zstack
-	%\subsubsection{Z-Stack}
-
-%Breve descripción de SimpliciTI, basarse en pagina de ti de simpliciti
-	% \subsubsection{SimpliciTI}
-
-%Breve descripción de la de los sunspots, basarse en documentacion
-	%\subsubsection{Java y SunSpot}
-
-%Breve descripción de alguna otra de otro fabricante..freescale o atmel.
 

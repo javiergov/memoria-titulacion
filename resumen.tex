@@ -22,55 +22,18 @@
 %Primer parrafo, descripción breve de los objetivos
 El objetivo de este trabajo buscó extender hacia los dispositivos móviles el servicio de \textit{streaming} por Internet desarrollado por la empresa AltaVoz S.A. La característica principal de este desarrollo permite al auditor cambiar el tiempo de la reproducción para ver programas pasados, repetir escenas de interés, o permitir pausar el contenido para ser visto más tarde, esta característica lleva el nombre comercial de \textit{timeshift}.\\
 
-%El objetivo de este trabajo es implementar un protocolo de ruteo multi-hop que permita a un sistema de recolección de datos, construido sobre una red de sensores inalámbricos, transportar los datos generados por los sensores a un punto de recolección en la red.\\ 
 
 %Segundo párrafo, contextualizaciòn del problema
 El servicio de \textit{stream timeshift} está disponible a través de la plataforma Web exclusivamente para computadores capaces de presentar contenido con Adobe Flash. El inconveniente de este sistema se debe al interés de posibles clientes de esta tecnología, por ejemplo canales de televisión, de llegar a la plataforma móvil, entiéndase teléfonos celulares del tipo \textit{smartphone} capaces de reproducir video. Debido a la incapacidad de la gran mayoría de los \textit{smartphones} de cargar el \textit{plug-in} Flash en sus navegadores Web se debe buscar una alternativa para presentar el contenido del \textit{stream} con la característica \textit{timeshift}.
 \\
 
-%El sistema de recolección objetivo está orientado principalmente al monitoreo de variables físicas relacionadas con la agricultura como la humedad y la temperatura de los suelos, en zonas de difícil acceso y que no cuentan con redes de distribución eléctrica. La red de sensores inalámbricos que se utiliza para este trabajo está implementada sobre la plataforma de hardware TmoteSky y la plataforma de software TinyOS. En este contexto, se investigan e implementan protocolos que permitan extender el tiempo de autonomía de los nodos al orden de meses.\\
  
 %Tercer y cuarto párrafo, que y como se realizó
 
 En primera instancia se investigó el protocolo que utiliza el \textit{streaming timeshift} desarrollado por AltaVoz S.A. y se comparó con las opciones de reproducción que dispone el sistema operativo iOS para \textit{smartphones}, en base a ésto se propuso modificaciones al servidor del \textit{stream} de forma que el contenido fuera compatible con los dispositivos iOS. En segunda instancia se desarrolló una aplicación iOS con tal que los dispositivos iPhone e iPad reproduzcan los contenidos del servidor modificado además de permitier el control del tiempo de reproducción. Luego fue necesario implementar un sistema para compartir las marcas temporales integrando la red social Twitter. Finalmente fue necesario comprobar el comportamiento de lo desarrollado en distintos escenarios de conectividad a Internet con el dispositivo móvil.\\
 
-%El desarrollo realizado se tomará como base para futuros productos de la empresa AltaVoz S.A. relacionados con medios audiovisuales.\\
-%Para comenzar, se realiza una investigación de los algoritmos de ruteo para redes de sensores que se han propuesto en la literatura y los protocolos que se han implementado en algunas plataformas. Posteriormente, se realiza una implementación del protocolo PEGASIS y un diseño e implementación de un protocolo de ruteo con topología de árbol que utiliza el componente ''Low Power Listening'' para reducir el consumo energético. Finalmente, se realiza una evaluación energética en la que se determina que con la utilización del componente ''Low Power Listening'' es posible implementar una red con un tiempo de autonomía energética del orden requerido.\\
 
 %Palabras clave.
 \textbf{Palabras Claves:} streaming, smartphone, apple, iOS, android, Twitter.
 %sensores, ruteo, protocolos, algoritmos, energía.
 
-%Primer parrafo, descripción breve de los objetivos
-%Nuevos avances se han realizado en el manejo de transmisiones en vivo de medios como audio y/o video, que permiten emular la característica principal de dispositivos de sobremesa del tipo \textquotedblleft Programmable (Digital) Video Recorders\textquotedblright \ (PVR ó DVR), los cuales permite pausar, retroceder o avanzar, cuando es posible, la linea de tiempo de reproducción. Esto se logra gracias a aplicaciones que interactuan con servidores de flujo de datos de audio y video para lograr un registro de la reproducción, entregando al cliente comunicación eficaz para recibir datos y retornar comandos.\\ 
-%
-%%Segundo párrafo, contextualizaciòn del problema
-%Se busca suplir la necesidad de un reproductor de audio y/o video que permita la interacción con un servidor de \textit{streaming} (flujo) de datos, con habilidad de \textit{Time-Shift} (cambio temporal). Esto es la habilidad de retroceder o avanzar (si es posible) en la linea de tiempo de la reproducción del audio o del video al que el usuario atiende.\\
-%
-%Esto ya se logra en computadores de escritorio gracias a un reproductor de streaming basado en la tecnolog\'ia Flash de Adobe. Los reproductores embebidos en p\'aginas web reproducen el stream en base al protocolo Real Time Messaging Protocol (RTMP), el cual permite llamadas de control entre cliente y servidor para manejar la linea de tiempo. Sin embargo se busca llegar a un mayor público portando la capacidad de reproducci\'on en dispositivos que utilizan el sistema operativo iOS de Apple.\\
-%
-%El objetivo de este trabajo se debe a que Apple por políticas internas, no apoya la distribuci\'on de Adobe Flash. Por lo tanto se busca implementar una soluci\'on que permita la reproducci\'on de la transmisi\'on con \textit{Time-Shift} y que adem\'as concuerde con las pol\'iticas de distribuci\'on para las aplicaciones iOS en la AppStore.
-% 
-%\large
-%%\textbf{Trabajo a Desarrollar:}\\
-%\subsection*{Trabajo a Desarrollar}
-%\normalsize
-%%Tercer y cuarto párrafo, que y como se realizó
-%El trabajo toma como punto de partida la investigaci\'on de los protocolos propuestos por Apple para la distribuci\'on de medios (audio y/o video). En base a estos protocolos buscar similitudes con el sistema de streaming para computadores de escritorio. Adem\'as se busca implementar un m\'etodo de marcaci\'on de tiempo en el stream de datos destinado a dispositivos m\'oviles, de forma que el servidor los env\'ie para que el cliente los interprete. Este cliente debe consistir en una aplicación que reciba y env\'ie comandos compatibles con el servidor Wowza para controlar la informaci\'on del medio a reproducir. Finalmente se busca diseñar una interfaz gr\'afica que represente la disponibilidad de tiempo y permita controlar la reproducción.\\
-%
-%%\textbf{Evaluaciones a Realizar:}
-%\subsubsection*{Evaluaciones a Realizar}
-%\normalsize
-%\begin{itemize}
-%\item	Comprobar la transmisión y recepción de datos en HTTP Live Stream u otro protocolo compatible con iOS, a través de un servidor de streaming dedicado y un dispositivo con iOS.
-%\item	Comprobar el intercambio de mensajes de control a través de un enlace entre el cliente móvil y el servidor de streaming.
-%\item	Pruebas comparativas de la reproducción en dispositivo móviles y computadores de escritorio.
-%\end{itemize}
-%
-%%\textbf{Resultados esperados:}\\
-%\subsubsection*{Resultados esperados}
-%\normalsize
-%Se pretende que la reproducción en dispositivos móviles de las transmisiones en vivo se asemejen a la experiencia de reproducción en computadores de escritorio.\\
-
-%Palabras clave.
-%	\textbf{Palabras Claves:} streaming, iOS, video, audio, apple, iPhone.
